@@ -37,7 +37,7 @@ discharge_price_factor: 1 # how many times more abs(expensive/cheaper) it is to 
 # Charging Network
 ##############################################################################
 v2g_enabled: True # True or False
-number_of_charging_stations: 5 # Play somewhere 5-20
+number_of_charging_stations: 25 # Play somewhere 5-20
 number_of_transformers: 1
 number_of_ports_per_cs: 1
 # Provide path if you want to load a specific charging topology,
@@ -99,7 +99,7 @@ ev_specs_file: ./ev2gym/data/ev_specs_v2g_enabled2024.json # path to the file wi
 
 # Default Transformer model
 transformer:
-  max_power: 100 # in kW
+  max_power: 250 # in kW
 
 # Default Charging Station model
 charging_station:  
@@ -127,8 +127,8 @@ ev:
   transition_soc: 1 # 0-1 (0% - 100%)
 
   #The following values are also used if "heterogeneous_ev_specs = True"
-  min_battery_capacity: 5 # in kWh
-  min_time_of_stay: 60 # in minutes
+  min_battery_capacity: 15 # in kWh
+  min_time_of_stay: 250 # in minutes
   min_emergency_battery_capacity: 25 # in kWh
   desired_capacity: 1 # in (0-1) (0% - 100%)
   #if trasition_soc is < 1, the curve of the line is affected by:
