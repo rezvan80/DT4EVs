@@ -4,6 +4,9 @@ from ev2gym.models import ev2gym_env
 import os
 import tqdm
 
+from ev2gym.models.ev2gym_env import EV2Gym
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+
 from ev2gym.rl_agent.reward import SquaredTrackingErrorReward, ProfitMax_TrPenalty_UserIncentives, profit_maximization, SimpleReward
 
 
@@ -72,6 +75,7 @@ def evaluate_episode(
 
 
 def evaluate_episode_rtg(
+    test_env,
     exp_prefix,
     state_dim,
     act_dim,
@@ -85,7 +89,8 @@ def evaluate_episode_rtg(
     target_return=None,
     mode='normal',
     n_test_episodes=10,
-    config_file="config_files/config.yaml",
+    # config_file="config_files/config.yaml",
+    **kwargs
 ):
 
     model.eval()
@@ -97,12 +102,14 @@ def evaluate_episode_rtg(
 
     test_rewards = []
     test_stats = []
+    
+    env = test_env
 
     global_target_return = 0
-    env = ev2gym_env.EV2Gym(config_file=config_file,                            
-                            generate_rnd_game=True,
-                            reward_function=SimpleReward,
-                            )
+    # env = ev2gym_env.EV2Gym(config_file=config_file,                            
+    #                         generate_rnd_game=True,
+    #                         reward_function=SimpleReward,
+    #                         )
 
     # use tqdm with a fancy bar
     for test_cycle in tqdm.tqdm(range(n_test_episodes)):

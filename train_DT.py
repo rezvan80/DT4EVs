@@ -16,7 +16,8 @@ from DT.models.mlp_bc import MLPBCModel
 from DT.training.act_trainer import ActTrainer
 from DT.training.seq_trainer import SequenceTrainer
 
-from ev2gym.models import ev2gym_env
+from ev2gym.models.ev2gym_env import EV2Gym
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
 
 
 def discount_cumsum(x, gamma):
@@ -27,32 +28,26 @@ def discount_cumsum(x, gamma):
     return discount_cumsum
 
 
-def experiment(
-        exp_prefix,
-        variant,
-):
+def experiment(vars):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    device = torch.device(variant['device'])
-    if device.type == 'cuda' and not torch.cuda.is_available():
-        device = torch.device('cpu')
-    log_to_wandb = variant.get('log_to_wandb', False)
+    log_to_wandb = vars.get('log_to_wandb', False)
 
-    env_name, dataset = variant['env'], variant['dataset']
-    model_type = variant['model_type']
+    env_name, dataset = vars['env'], vars['dataset']
+    model_type = vars['model_type']
     # group_name = f'{exp_prefix}-{env_name}'
 
-    run_name = variant['name']
+    run_name = vars['name']
 
-    exp_prefix = f'{run_name}-{dataset}-{random.randint(int(1e5), int(1e6) - 1)}'
+    exp_prefix = f'{run_name}.{dataset}.{random.randint(int(1e5), int(1e6) - 1)}'
 
     # seed everything
-    seed = variant.get('seed', 0)
+    seed = vars.get('seed', 0)
+    
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    env = "ev_city-v1"
     scale = 1
     env_targets = [0]  # evaluation conditioning targets
 
@@ -60,23 +55,19 @@ def experiment(
         # since BC ignores target, no need for different evaluations
         env_targets = env_targets[:1]
 
-    config_path = f'./config_files/{variant["config_file"]}'
+    config_path = f'./config_files/{vars["config_file"]}'
     config = yaml.load(open(config_path, 'r'),
                        Loader=yaml.FullLoader)
 
     number_of_charging_stations = config["number_of_charging_stations"]
-    n_transformers = config["number_of_transformers"]
     steps = config["simulation_length"]
-    # timescale = config["timescale"]
+    
+    reward_function = PST_V2G_ProfitMax_reward
+    state_function = PST_V2G_ProfitMax_state
 
-    # replay_path = None
-
-    args.env = 'evcity-v1'
-
-    env = ev2gym_env.EV2Gym(config_file=config_path,
-                            generate_rnd_game=True,
-                            save_plots=False,
-                            save_replay=False,
+    env = EV2Gym(config_file=config_path,                            
+                            state_function=state_function,
+                            reward_function=reward_function,
                             )
 
     state_dim = env.observation_space.shape[0]
@@ -85,41 +76,42 @@ def experiment(
         f'Observation space: {env.observation_space.shape[0]}, action space: {env.action_space.shape[0]}')
 
     # load dataset
-    dataset_path = f'trajectories/{env_name}-{dataset}-v2.pkl'
-    
+
     # random trajectories
-    if dataset == 'random':
-        pass
-        dataset_path = f'./trajectories/random_10_cs_1_tr_288_steps_5_timescale_15000_trajectories.pkl'
-    elif dataset == 'OPT_1000':        
-        dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_1000_trajectories.pkl'
-    elif dataset == 'OPT_100000':        
-        dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
-    elif dataset == 'RR_1000':
-        # dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_1000_trajectories2.pkl'
-        dataset_path = f'trajectories/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_100_trajectories2.pkl'
-    elif dataset == 'RR_10_000':
-        dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_10000_trajectories2.pkl'
-    elif dataset == 'RR_SimpleR_10_000':
-        dataset_path = f'./trajectories/PublicPST_RR_SimpleReward_20_cs_1_tr_112_steps_15_timescale_10000.pkl'
-    elif dataset == 'RR_400_000':
-        dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_400000_trajectories2.pkl'
-    elif dataset == 'mixed':
-        dataset_path = f'./trajectories/PublicPST_mixed-RR-Asap_20_cs_1_tr_112_steps_15_timescale_200000_trajectories2.pkl'
-    elif dataset == "optimal":
-        dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_50000_trajectories.pkl'
-    elif dataset == "optimal_100000":
-        dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
+    # if dataset == 'random':
+    #     pass
+    #     dataset_path = f'./trajectories/random_10_cs_1_tr_288_steps_5_timescale_15000_trajectories.pkl'
+    # elif dataset == 'OPT_1000':
+    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_1000_trajectories.pkl'
+    # elif dataset == 'OPT_100000':
+    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
+    # elif dataset == 'RR_1000':
+    #     dataset_path = f'trajectories/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_100_trajectories2.pkl'
+    # elif dataset == 'RR_10_000':
+    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_10000_trajectories2.pkl'
+    # elif dataset == 'RR_SimpleR_10_000':
+    #     dataset_path = f'./trajectories/PublicPST_RR_SimpleReward_20_cs_1_tr_112_steps_15_timescale_10000.pkl'
+    # elif dataset == 'RR_400_000':
+    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_400000_trajectories2.pkl'
+    # elif dataset == 'mixed':
+    #     dataset_path = f'./trajectories/PublicPST_mixed-RR-Asap_20_cs_1_tr_112_steps_15_timescale_200000_trajectories2.pkl'
+    # elif dataset == "optimal":
+    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_50000_trajectories.pkl'
+    # elif dataset == "optimal_100000":
+    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
+
+    if dataset == 'random_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
     else:
         raise NotImplementedError("Dataset not found")
 
     max_ep_len = steps
-    g_name = variant['group_name']
+    g_name = vars['group_name']
 
-    group_name = f'{g_name}_DT_{number_of_charging_stations}cs'
-    
+    group_name = f'{g_name}DT_{number_of_charging_stations}cs'
+
     save_path = f'./saved_models/{exp_prefix}/'
-    #create folder
+    # create folder
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -127,7 +119,7 @@ def experiment(
         trajectories = pickle.load(f)
 
     # save all path information into separate lists
-    mode = variant.get('mode', 'normal')
+    mode = vars.get('mode', 'normal')
     states, traj_lens, returns = [], [], []
     for path in trajectories:
         if mode == 'delayed':  # delayed: all rewards moved to end of trajectory
@@ -137,15 +129,15 @@ def experiment(
         traj_lens.append(len(path['observations']))
         returns.append(path['rewards'].sum())
     traj_lens = np.array(traj_lens)
-    print(trajectories[0])
+    # print(trajectories[0])
     # exit()
-    
+
     # used for input normalization
     states = np.concatenate(states, axis=0)
 
     state_mean, state_std = np.mean(
         states, axis=0), np.std(states, axis=0) + 1e-6
-    
+
     # save state mean and std
     np.save(f'{save_path}/state_mean.npy', state_mean)
     np.save(f'{save_path}/state_std.npy', state_std)
@@ -155,14 +147,15 @@ def experiment(
     print('=' * 50)
     print(f'Starting new experiment: {env_name} {dataset}')
     print(f'{len(traj_lens)} trajectories, {num_timesteps} timesteps found')
-    print(f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
+    print(
+        f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
     print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
     print('=' * 50)
 
-    K = variant['K']
-    batch_size = variant['batch_size']
-    num_eval_episodes = variant['num_eval_episodes']
-    pct_traj = variant.get('pct_traj', 1.)
+    K = vars['K']
+    batch_size = vars['batch_size']
+    num_eval_episodes = vars['num_eval_episodes']
+    pct_traj = vars.get('pct_traj', 1.)
 
     # only train on top pct_traj trajectories (for %BC experiment)
     num_timesteps = max(int(pct_traj*num_timesteps), 1)
@@ -246,11 +239,10 @@ def experiment(
 
     def eval_episodes(target_rew):
         def fn(model):
-            returns, lengths = [], []
-            # for _ in range(num_eval_episodes):
             with torch.no_grad():
                 if model_type == 'dt':
                     stats = evaluate_episode_rtg(
+                        env,
                         exp_prefix,
                         state_dim,
                         act_dim,
@@ -290,40 +282,40 @@ def experiment(
             act_dim=act_dim,
             max_length=K,
             max_ep_len=max_ep_len,
-            hidden_size=variant['embed_dim'],
-            n_layer=variant['n_layer'],
-            n_head=variant['n_head'],
-            n_inner=4*variant['embed_dim'],
-            activation_function=variant['activation_function'],
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
             n_positions=1024,
-            resid_pdrop=variant['dropout'],
-            attn_pdrop=variant['dropout'],
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
         )
     elif model_type == 'bc':
         model = MLPBCModel(
             state_dim=state_dim,
             act_dim=act_dim,
             max_length=K,
-            hidden_size=variant['embed_dim'],
-            n_layer=variant['n_layer'],
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
         )
     else:
         raise NotImplementedError
 
     model = model.to(device=device)
 
-    warmup_steps = variant['warmup_steps']
+    warmup_steps = vars['warmup_steps']
     optimizer = torch.optim.AdamW(
         model.parameters(),
-        lr=variant['learning_rate'],
-        weight_decay=variant['weight_decay'],
+        lr=vars['learning_rate'],
+        weight_decay=vars['weight_decay'],
     )
-    max_iters = variant['max_iters']
+
+    max_iters = vars['max_iters']
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer,
         lambda max_iters: min((max_iters+1)/warmup_steps, 1)
     )
-
 
     if model_type == 'dt':
         trainer = SequenceTrainer(
@@ -352,26 +344,28 @@ def experiment(
         wandb.init(
             name=exp_prefix,
             group=group_name,
-            project='ev2gym',
+            entity='stavrosorf',
+            project='DT4EVs',            
             save_code=True,
-            config=variant
+            config=vars
         )
 
-    num_steps_per_iter = variant['num_steps_per_iter']
+    num_steps_per_iter = vars['num_steps_per_iter']
     # num_steps_per_iter = int(1000/batch_size)
     # if num_steps_per_iter == 0:
-    #     num_steps_per_iter = variant['batch_size']
+    #     num_steps_per_iter = vars['batch_size']
 
     best_reward = -np.Inf
 
-    for iter in range(variant['max_iters']):
+    for iter in range(vars['max_iters']):
         outputs = trainer.train_iteration(
             num_steps=num_steps_per_iter, iter_num=iter+1, print_logs=True)
 
         if outputs['test/mean_test_return'] > best_reward:
             best_reward = outputs['test/mean_test_return']
             # save pytorch model
-            torch.save(model.state_dict(), f'saved_models/{exp_prefix}/model.best')
+            torch.save(model.state_dict(),
+                       f'saved_models/{exp_prefix}/model.best')
 
         outputs['best'] = best_reward
 
@@ -379,26 +373,27 @@ def experiment(
             wandb.log(outputs)
 
     torch.save(model.state_dict(), f'{save_path}/model.last')
-    
+
     if log_to_wandb:
         wandb.finish()
-        
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='ev-city')
-    parser.add_argument('--name', type=str, default='ev')
-    parser.add_argument('--group_name', type=str, default='')
+    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_25')
+    parser.add_argument('--name', type=str, default='')
+    parser.add_argument('--group_name', type=str, default='tests_')
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='RR_1000')
+    parser.add_argument('--dataset', type=str, default='random_1000')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=10)
     parser.add_argument('--pct_traj', type=float, default=1.)
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
-    parser.add_argument('--model_type', type=str, default='dt') #dt
+    parser.add_argument('--model_type', type=str, default='dt')  # dt
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
@@ -412,10 +407,11 @@ if __name__ == '__main__':
     parser.add_argument('--num_steps_per_iter', type=int, default=1000)
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=True)
-    parser.add_argument('--config_file', type=str, default="PublicPST.yaml")
+    parser.add_argument('--config_file', type=str,
+                        default="PST_V2G_ProfixMax_25.yaml")
     parser.add_argument('--conv_window_size', type=int, default=6,
-                    help='Conv window size for "dc" (default: 6)')
+                        help='Conv window size for "dc" (default: 6)')
 
     args = parser.parse_args()
 
-    experiment('gym-experiment', variant=vars(args))
+    experiment(vars=vars(args))

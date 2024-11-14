@@ -163,4 +163,8 @@ cython_debug/
 
 results/
 replay/
+trajectories/
+wandb/
+saved_models/
+
 model.lp

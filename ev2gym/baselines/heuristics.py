@@ -3,6 +3,19 @@ import math
 import numpy as np
 from typing import List
 
+class RandomAgent():
+    
+    algo_name = "Random"
+    
+    def __init__(self, env, **kwargs):
+        self.env = env
+
+        
+    def get_action(self, env) -> np.ndarray:
+        '''
+        This function returns a random action list
+        '''
+        return 2*np.random.rand(self.env.action_space.shape[0]) - 1
 
 class RoundRobin():
     '''

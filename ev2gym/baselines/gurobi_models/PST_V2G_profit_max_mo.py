@@ -64,8 +64,8 @@ class mo_PST_V2GProfitMaxOracleGB():
         print('Creating Gurobi model...')
         self.m = gp.Model("ev_city")
         self.m.setParam('OutputFlag', 0)
-        # self.m.setParam('MIPGap', 1)
-        self.m.setParam('TimeLimit', 60)
+        self.m.setParam('MIPGap', 1)
+        self.m.setParam('TimeLimit', 30)
 
         # energy of EVs t timeslot t
         energy = self.m.addVars(self.number_of_ports_per_cs,
@@ -368,7 +368,7 @@ class mo_PST_V2GProfitMaxOracleGB():
                             GRB.MAXIMIZE)
 
         # print constraints
-        self.m.write("model.lp")
+        # self.m.write("model.lp")
         print(f'Optimizing...')
         self.m.params.NonConvex = 2
 

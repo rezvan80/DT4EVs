@@ -18,7 +18,7 @@ from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, Char
 from ev2gym.rl_agent.reward import SimpleReward, ProfitMax_TrPenalty_UserIncentives
 from ev2gym.rl_agent.state import PublicPST
 
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -57,7 +57,7 @@ def eval():
                  save_plots=save_plots,
                  #  lightweight_plots=True,
                  reward_function=PST_V2G_ProfitMax_reward,
-                 state_function=PST_V2G_ProfitMaxGNN_state,
+                 state_function=PST_V2G_ProfitMax_state,
                  verbose=False,
                  )
 
@@ -98,7 +98,7 @@ def eval():
                  load_from_replay_path=new_replay_path,
                  save_plots=save_plots,
                  reward_function=PST_V2G_ProfitMax_reward,
-                 state_function=PST_V2G_ProfitMaxGNN_state,
+                 state_function=PST_V2G_ProfitMax_state,
                  )
 
     # env = BinaryAction(env)

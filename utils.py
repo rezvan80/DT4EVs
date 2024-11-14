@@ -18,6 +18,69 @@ def PST_V2G_ProfitMax_reward(env, total_costs, user_satisfaction_list, *args):
     return reward
 
 
+def PST_V2G_ProfitMax_state(env, *args):
+    '''
+    This is the state function for the PST_V2GProfitMax scenario.
+    '''
+    
+    state = [
+        env.sim_date.weekday() / 7,
+        # turn hour and minutes in sin and cos
+        math.sin(env.sim_date.hour/24*2*math.pi),
+        math.cos(env.sim_date.hour/24*2*math.pi),      
+    ]
+    
+    if env.current_step < env.simulation_length:
+        setpoint = env.power_setpoints[env.current_step]
+    else:
+        setpoint = 0
+
+    state.append(setpoint)
+
+    state.append(env.current_power_usage[env.current_step-1])
+
+    # charge_prices = abs(env.charge_prices[0, env.current_step:
+    #     env.current_step+20])
+    
+    # if len(charge_prices) < 20:
+    #     charge_prices = np.append(charge_prices, np.zeros(20-len(charge_prices)))
+    if env.current_step < env.simulation_length:
+        charge_prices = abs(env.charge_prices[0, env.current_step])
+    else:
+        charge_prices = 0
+        
+    state.append(charge_prices)
+       
+    # For every transformer
+    for tr in env.transformers:
+        
+        state.append(tr.get_power_limits(env.current_step,horizon=1))
+
+        # For every charging station connected to the transformer
+        for cs in env.charging_stations:
+            state.append(cs.min_charge_current)
+            state.append(cs.max_charge_current)
+            state.append(cs.n_ports)
+            
+            if cs.connected_transformer == tr.id:
+
+                # For every EV connected to the charging station
+                for EV in cs.evs_connected:
+                    # If there is an EV connected
+                    if EV is not None:
+                        state.append([
+                            EV.get_soc(),
+                            EV.time_of_departure - env.current_step,
+                            ])
+
+                    # else if there is no EV connected put zeros
+                    else:
+                        state.append(np.zeros(2))
+
+    state = np.array(np.hstack(state))
+
+    return state
+
 def PST_V2G_ProfitMaxGNN_state(env, *args):
     ''' 
     The state function of the profit maximization model with V2G capabilities for the GNN models.
@@ -45,9 +108,8 @@ def PST_V2G_ProfitMaxGNN_state(env, *args):
     else:
         setpoint = 0
 
-    node_counter = 0
-
     env_features.append(setpoint)
+    env_features.append(env.current_power_usage[env.current_step-1])
 
     node_counter = 0
 
@@ -55,8 +117,7 @@ def PST_V2G_ProfitMaxGNN_state(env, *args):
         env_features.append(abs(env.charge_prices[0, env.current_step]))
     else:
         env_features.append(0)
-
-    env_features.append(env.current_power_usage[env.current_step-1])
+    
     env_features = [env_features]
 
     node_features = [env_features]
@@ -105,7 +166,8 @@ def PST_V2G_ProfitMaxGNN_state(env, *args):
                                                 cs.id
                                                 ]
 
-                            if not registered_tr:
+                            if not registered_tr:                                
+                                
                                 node_features.append([tr.max_power[env.current_step] -
                                                       tr.inflexible_load[env.current_step] +
                                                       tr.solar_power[env.current_step],
