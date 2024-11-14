@@ -30,7 +30,7 @@ def discount_cumsum(x, gamma):
 
 def experiment(vars):
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")   
     log_to_wandb = vars.get('log_to_wandb', False)
 
     env_name, dataset = vars['env'], vars['dataset']
@@ -100,8 +100,10 @@ def experiment(vars):
     # elif dataset == "optimal_100000":
     #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
 
-    if dataset == 'random_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
+    if dataset == 'random_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
+    elif dataset == 'random_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     else:
         raise NotImplementedError("Dataset not found")
 
@@ -386,7 +388,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='random_1000')
+    parser.add_argument('--dataset', type=str, default='random_10000')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=10)

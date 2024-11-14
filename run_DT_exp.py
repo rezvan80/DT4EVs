@@ -9,18 +9,18 @@ import time
 
 # batch_size = 64
 num_steps_per_iter = 1000
-max_iters = 2000
+max_iters = 1000
 num_eval_episodes = 30
 
 counter = 0
-for K in [4, 12]:    
+for K in [12]:    
     for batch_size in [128]:
         # "RR_400_000", "optimal_100000", "RR_10_000"
-        for dataset in ["OPT_100000"]: # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
+        for dataset in ["random_100"]: # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
             for embed_dim in [128]:  # 512
                 #   ' --device cuda:0' + str(counter % 2) + \
                 for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
-                    command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
+                    command = 'tmux new-session -d \; send-keys " /home/sorfanoudakis/.conda/envs/dt3/bin/python /home/sorfanoudakis/DT4EVs/train_DT.py' + \
                         ' --dataset ' + dataset + \
                         ' --K ' + str(K) + \
                         ' --device cuda:0' + \
@@ -31,7 +31,7 @@ for K in [4, 12]:
                         ' --batch_size=' + str(batch_size) + \
                         ' --num_steps_per_iter=' + str(num_steps_per_iter) + \
                         ' --num_eval_episodes=' + str(num_eval_episodes) + \
-                        ' --group_name ' + '"ModelSize_"' + \
+                        ' --group_name ' + '"tests_"' + \
                         ' --name Not_RTG_K=' + str(K) + \
                         ',embed_dim=' + str(embed_dim) + \
                         ',n_layer=' + str(n_layer) +\
