@@ -288,6 +288,8 @@ class EV():
             charge_efficiency = self.charge_efficiency.get(np.round(amps), 1)/100
         else:
             charge_efficiency = self.charge_efficiency
+            
+        assert charge_efficiency > 0, f'charge_efficiency: {charge_efficiency}'
         
         pilot_dsoc = charge_efficiency * pilot * voltage / 1000 / \
             self.battery_capacity / (60 / period)

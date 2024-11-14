@@ -11,7 +11,7 @@ from gurobipy import *
 import pickle
 
 
-class PST_V2GProfitMaxOracleGB():
+class mo_PST_V2GProfitMaxOracleGB():
     '''
     This file contains the EV_City_Math_Model class, which is used to solve the ev_city V2G problem optimally.
     '''
@@ -49,7 +49,8 @@ class PST_V2GProfitMaxOracleGB():
         cs_dis_efficiency = replay.cs_dis_efficiency
 
         ev_max_energy = replay.ev_max_energy
-
+        ev_des_energy = replay.ev_des_energy
+        
         ev_max_ch_power = replay.ev_max_ch_power  # * self.dt
         ev_max_dis_power = replay.ev_max_dis_power  # * self.dt
         ev_max_energy_at_departure = replay.max_energy_at_departure
@@ -62,9 +63,9 @@ class PST_V2GProfitMaxOracleGB():
         # create model
         print('Creating Gurobi model...')
         self.m = gp.Model("ev_city")
-        # self.m.setParam('OutputFlag', 0)
-        # self.m.setParam('MIPGap', 0.01)
-        # self.m.setParam('TimeLimit', 60)
+        self.m.setParam('OutputFlag', 0)
+        self.m.setParam('MIPGap', 1)
+        self.m.setParam('TimeLimit', 60)
 
         # energy of EVs t timeslot t
         energy = self.m.addVars(self.number_of_ports_per_cs,
@@ -72,6 +73,7 @@ class PST_V2GProfitMaxOracleGB():
                                 self.sim_length,
                                 vtype=GRB.CONTINUOUS,
                                 name='energy')
+                
 
         current_ev_dis = self.m.addVars(self.number_of_ports_per_cs,
                                         self.n_cs,
@@ -153,6 +155,16 @@ class PST_V2GProfitMaxOracleGB():
                                       vtype=GRB.CONTINUOUS,
                                       name='power_tr_dis')
 
+        is_exceeding_limit = self.m.addVars(self.sim_length,
+                                            vtype=GRB.BINARY,
+                                            name='is_exceeding_limit')
+        
+        user_satisfaction = self.m.addVars(self.number_of_ports_per_cs,
+                                           self.n_cs,
+                                           self.sim_length,
+                                           vtype=GRB.CONTINUOUS,
+                                           name='user_satisfaction')
+
         costs = self.m.addVar(vtype=GRB.CONTINUOUS,
                               name='total_soc')
         # Constrains
@@ -179,13 +191,23 @@ class PST_V2GProfitMaxOracleGB():
                                                            for i in range(self.n_transformers)),
                              name=f'total_power.{t}')
 
-            # add contraint for aggregated power limit
-            self.m.addConstr(total_power[t] <= power_setpoints[t],
-                             name=f'total_power_limit_max.{t}')
+            M = 1e8
+            self.m.addConstr(power_error[t] >= total_power[t] - power_setpoints[t],
+                             name=f'power_error_max.{t}')
+            self.m.addConstr(power_error[t] <= (total_power[t] - power_setpoints[t])* is_exceeding_limit[t],
+                             name=f'power_error_min.{t}')
+            self.m.addConstr(power_error[t] <= 0,
+                                name=f'power_error_min2.{t}')
+            
+            self.m.addConstr(power_error[t] <= M * is_exceeding_limit[t],
+                                name=f'power_error_max.{t}')
+            self.m.addConstr(power_error[t] >= 1-M * (1-is_exceeding_limit[t]),
+                                name=f'power_error_max2.{t}')
 
-            # power_error[t] = (gp.quicksum(power_tr_ch[i, t] - power_tr_dis[i, t]
-            #                   for i in range(self.n_transformers))
-            #                   - power_setpoints[t])**2
+            # add contraint for aggregated power limit
+            # self.m.addConstr(total_power[t] <= power_setpoints[t],
+            #                  name=f'total_power_limit_max.{t}')
+
 
         costs = gp.quicksum(act_current_ev_ch[p, i, t] * voltages[i] * cs_ch_efficiency[i, t] * dt * charge_prices[i, t] +
                             act_current_ev_dis[p, i, t] * voltages[i] *
@@ -329,19 +351,24 @@ class PST_V2GProfitMaxOracleGB():
             for i in range(self.n_cs):
                 for p in range(self.number_of_ports_per_cs):
                     if t_dep[p, i, t] == 1:
-                        # input(f'Energy at departure: {t_dep[p,i,t]}')
-                        self.m.addLConstr(energy[p, i, t] >= ev_max_energy_at_departure[p, i, t],
-                                          # self.m.addLConstr(energy[p, i, t] >= ev_max_energy_at_departure[p,i,t],
-                                          #    ev_des_energy[p, i, t]),
-                                          name=f'ev_departure_energy.{p}.{i}.{t}')
+                        # self.m.addLConstr(energy[p, i, t] >= ev_max_energy_at_departure[p, i, t],
+
+                        #                   name=f'ev_departure_energy.{p}.{i}.{t}')
+                        
+                        self.m.addConstr(user_satisfaction[p, i, t] == \
+                            (ev_des_energy[p, i, t] - energy[p, i, t])**2,
+                            name=f'ev_user_satisfaction.{p}.{i}.{t}')
+                        
+                        
 
         # self.m.setObjective(costs - 0.01*power_error.sum(),
         #                     GRB.MAXIMIZE)
 
-        self.m.setObjective(costs, GRB.MAXIMIZE)
+        self.m.setObjective(costs + 100 * power_error.sum() - 10 * user_satisfaction.sum(),
+                            GRB.MAXIMIZE)
 
         # print constraints
-        # self.m.write("model.lp")
+        self.m.write("model.lp")
         print(f'Optimizing...')
         self.m.params.NonConvex = 2
 

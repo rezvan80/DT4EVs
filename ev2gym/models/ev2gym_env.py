@@ -408,7 +408,7 @@ class EV2Gym(gym.Env):
         total_costs = 0
         total_invalid_action_punishment = 0
         user_satisfaction_list = []
-        departing_evs = []
+        self.departing_evs = []
 
         self.current_ev_departed = 0
         self.current_ev_arrived = 0
@@ -427,7 +427,7 @@ class EV2Gym(gym.Env):
                 self.charge_prices[cs.id, self.current_step],
                 self.discharge_prices[cs.id, self.current_step])
 
-            departing_evs += ev
+            self.departing_evs += ev
 
             for u in user_satisfaction:
                 user_satisfaction_list.append(u)
@@ -464,7 +464,7 @@ class EV2Gym(gym.Env):
             elif ev.time_of_arrival > self.current_step + 1:
                 break
 
-        self._update_power_statistics(departing_evs)
+        self._update_power_statistics(self.departing_evs)
 
         self.current_step += 1
         self._step_date()

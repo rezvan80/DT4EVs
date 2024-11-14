@@ -1,4 +1,3 @@
-
 import os
 import time
 import numpy as np
@@ -24,10 +23,10 @@ if __name__ == "__main__":
     state_function = PublicPST
     problem = "PublicPST"
 
-    env = ev2gym_env.EV2Gym(config_file=args.config_file,
-                            generate_rnd_game=True,
+    env = ev2gym_env.EV2Gym(config_file=args.config_file,                            
                             state_function=state_function,
-                            reward_function=reward_function)
+                            reward_function=reward_function
+                            )
     
     n_trajectories = args.n_trajectories
     config = yaml.load(open(args.config_file, 'r'), Loader=yaml.FullLoader)
