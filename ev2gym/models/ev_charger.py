@@ -90,6 +90,7 @@ class EV_Charger:
         self.total_profits = 0
         self.total_evs_served = 0
         self.total_user_satisfaction = 0
+        self.all_user_satisfaction = []
 
         self.verbose = verbose
         
@@ -109,6 +110,7 @@ class EV_Charger:
         self.total_profits = 0
         self.total_evs_served = 0
         self.total_user_satisfaction = 0
+        self.all_user_satisfaction = []
 
     def step(self, actions, charge_price, discharge_price):
         '''
@@ -217,6 +219,7 @@ class EV_Charger:
                     ev_user_satisfaction = ev.get_user_satisfaction()
                     self.total_user_satisfaction += ev_user_satisfaction
                     user_satisfaction.append(ev_user_satisfaction)
+                    self.all_user_satisfaction.append(ev_user_satisfaction)
                     departing_evs.append(ev)
                     if self.verbose:
                         print(f'- EV {ev.id} is departing from CS {self.id}' +
@@ -231,7 +234,7 @@ class EV_Charger:
     def __str__(self) -> str:
 
         if self.total_evs_served == 0:
-            user_satisfaction_str = ' Avg. Sat.:  - '
+            user_satisfaction_str = ' Avg. Sat.:  ----- '
         else:
             user_satisfaction_str = f' Avg. Sat.: {self.get_avg_user_satisfaction()*100: 3.1f}%'
 

@@ -18,9 +18,14 @@ def get_statistics(env) -> Dict:
         [cs.total_energy_charged for cs in env.charging_stations]).sum()
     total_energy_discharged = np.array(
         [cs.total_energy_discharged for cs in env.charging_stations]).sum()
-    average_user_satisfaction = np.array(
-        [cs.get_avg_user_satisfaction() for cs in env.charging_stations
-         if cs.total_evs_served > 0]).mean()
+    all_user_satisfaction = [
+        cs.all_user_satisfaction for cs in env.charging_stations]
+    # unroll and make a numpy array
+    all_user_satisfaction = np.array(
+        [item for sublist in all_user_satisfaction for item in sublist])
+    average_user_satisfaction = all_user_satisfaction.mean()
+    std_user_satisfaction = all_user_satisfaction.std()
+    min_user_satisfaction = all_user_satisfaction.min()
 
     # get transformer overload from env.tr_overload
     total_transformer_overload = np.array(env.tr_overload).sum()
@@ -67,6 +72,8 @@ def get_statistics(env) -> Dict:
              'total_energy_charged': total_energy_charged,
              'total_energy_discharged': total_energy_discharged,
              'average_user_satisfaction': average_user_satisfaction,
+             'std_user_satisfaction': std_user_satisfaction,
+             'min_user_satisfaction': min_user_satisfaction,
              'power_tracker_violation': power_tracker_violation,
              'tracking_error': tracking_error,
              'energy_tracking_error': energy_tracking_error,
@@ -104,6 +111,8 @@ def print_statistics(env) -> None:
     total_energy_charged = stats['total_energy_charged']
     total_energy_discharged = stats['total_energy_discharged']
     average_user_satisfaction = stats['average_user_satisfaction']
+    std_user_satisfaction = stats['std_user_satisfaction']
+    min_user_satisfaction = stats['min_user_satisfaction']
     total_transformer_overload = stats['total_transformer_overload']
     tracking_error = stats['tracking_error']
     energy_tracking_error = stats['energy_tracking_error']
@@ -125,17 +134,16 @@ def print_statistics(env) -> None:
         f'  - Total EVs spawned: {env.total_evs_spawned} |  served: {total_ev_served}')
     print(f'  - Total profits: {total_profits:.2f} €')
     print(
-        f'  - Average user satisfaction: {average_user_satisfaction*100:.2f} %')
+        f'  - Average user satisfaction: {average_user_satisfaction*100:.2f}% +/-{std_user_satisfaction*100:.2f}% | Min: {min_user_satisfaction*100:.2f}%')
 
     print(
         f'  - Total energy charged: {total_energy_charged:.1f} | discharged: {total_energy_discharged:.1f} kWh')
     print(
         f'  - Power Tracking squared error: {tracking_error:.2f}, Power Violation: {power_tracker_violation:.2f} kW')
-    print(f' - Actual Energy Tracking error: {energy_tracking_error:.2f} kW')
+    print(f'  - Actual Energy Tracking error: {energy_tracking_error:.2f} kW')
     print(
-        f'  - Mean energy user satisfaction: {energy_user_satisfaction:.2f} % | Min: {min_energy_user_satisfaction:.2f} %')
-    print(
-        f'  - Std Energy user satisfaction: {std_energy_user_satisfaction:.2f} %')
+        f'  - Mean energy user satisfaction: {energy_user_satisfaction:.2f} % +/-{std_energy_user_satisfaction:.2f} % | Min: {min_energy_user_satisfaction:.2f} %')
+
     print(
         f'  - Total Battery degradation: {battery_degradation:.5f}% | Calendar: {battery_degradation_calendar:.5f}%, Cycling: {battery_degradation_cycling:.5f}%')
     print(
@@ -262,7 +270,7 @@ def spawn_single_EV(env,
             charge_efficiency = np.round(1 -
                                          (np.random.rand()+0.00001)/20, 3)  # [0.95-1]
             discharge_efficiency = np.round(1 -
-                                             (np.random.rand()+0.00001)/20, 3)  # [0.95-1]
+                                            (np.random.rand()+0.00001)/20, 3)  # [0.95-1]
 
         return EV(id=port,
                   location=cs_id,

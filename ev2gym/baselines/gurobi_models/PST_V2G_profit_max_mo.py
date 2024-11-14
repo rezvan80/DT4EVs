@@ -64,7 +64,7 @@ class mo_PST_V2GProfitMaxOracleGB():
         print('Creating Gurobi model...')
         self.m = gp.Model("ev_city")
         self.m.setParam('OutputFlag', 0)
-        self.m.setParam('MIPGap', 1)
+        # self.m.setParam('MIPGap', 1)
         self.m.setParam('TimeLimit', 60)
 
         # energy of EVs t timeslot t
