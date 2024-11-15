@@ -85,8 +85,8 @@ class DecisionTransformer(TrajectoryModel):
         # embed each modality with a different head
         state_embeddings = self.embed_state(states)
         action_embeddings = self.embed_action(actions)
-        # returns_embeddings = self.embed_return(returns_to_go)
-        returns_embeddings = self.embed_return(rewards)
+        returns_embeddings = self.embed_return(returns_to_go)
+        # returns_embeddings = self.embed_return(rewards)
         time_embeddings = self.embed_timestep(timesteps)
 
         # time embeddings are treated similar to positional embeddings

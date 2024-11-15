@@ -274,6 +274,7 @@ def evaluate_episode_rtg_from_replays(
             pred_return = target_return[0, -1] - (reward/scale)
         else:
             pred_return = target_return[0, -1]
+            
         target_return = torch.cat(
             [target_return, pred_return.reshape(1, 1)], dim=1)
         timesteps = torch.cat(

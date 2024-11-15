@@ -31,6 +31,12 @@ if __name__ == "__main__":
                             reward_function=reward_function,
                             )
     
+    temp_env = EV2Gym(config_file=args.config_file,
+                 save_replay=True,
+                 reward_function=reward_function,
+                 state_function=state_function,
+                 )
+    
     n_trajectories = args.n_trajectories
         
     config = yaml.load(open(args.config_file, 'r'), Loader=yaml.FullLoader)
@@ -41,7 +47,7 @@ if __name__ == "__main__":
     
     trajectories = []
 
-    trajecotries_type = "random" #args.dataset
+    trajecotries_type = "optimal" #args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"
@@ -63,12 +69,6 @@ if __name__ == "__main__":
             agent = RandomAgent(env)
             
         elif trajecotries_type == "optimal":
-            temp_env = EV2Gym(config_file=args.config_file,
-                 save_replay=True,
-                 reward_function=reward_function,
-                 state_function=state_function,
-                 )
-
             _, _ = temp_env.reset()
             agent = ChargeAsFastAsPossible()
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
         trajectories.append(trajectory_i)
 
-        if i % 10_000 == 0:
+        if i % 1_000 == 0:
             print(f'Saving trajectories to {save_folder_path+file_name}')
             f = open(save_folder_path+file_name, 'wb')
             # source, destination
