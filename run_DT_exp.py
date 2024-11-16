@@ -9,15 +9,15 @@ import time
 
 # batch_size = 64
 num_steps_per_iter = 1000
-max_iters = 250
+max_iters = 350
 num_eval_episodes = 30
 
 counter = 0
-for K in [10]:    
-    for batch_size in [128]:
+for K in [10, 25, 50]:    
+    for batch_size in [256]:
         # "RR_400_000", "optimal_100000", "RR_10_000"
-        for dataset in ["random_10000"]: # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
-            for embed_dim in [128]:  # 512
+        for dataset in ["optimal_10000"]: # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
+            for embed_dim in [256]:  # 512
                 #   ' --device cuda:0' + str(counter % 2) + \
                 for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                     command = 'tmux new-session -d \; send-keys " /home/sorfanoudakis/.conda/envs/dt3/bin/python /home/sorfanoudakis/DT4EVs/train_DT.py' + \

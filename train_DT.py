@@ -30,7 +30,8 @@ def discount_cumsum(x, gamma):
 
 def experiment(vars):
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")   
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")  
+    print(f"Device: {device}") 
     log_to_wandb = vars.get('log_to_wandb', False)
 
     env_name, dataset = vars['env'], vars['dataset']
@@ -102,6 +103,8 @@ def experiment(vars):
 
     if dataset == 'random_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
+    if dataset == 'optimal_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     else:
