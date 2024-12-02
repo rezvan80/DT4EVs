@@ -81,6 +81,9 @@ def PST_V2G_ProfitMax_state(env, *args):
 
     return state
 
+    
+    
+
 def PST_V2G_ProfitMaxGNN_state(env, *args):
     ''' 
     The state function of the profit maximization model with V2G capabilities for the GNN models.
@@ -259,3 +262,164 @@ def PST_V2G_ProfitMaxGNN_state(env, *args):
 
     return data
 
+
+
+def PST_V2G_ProfitMax_state_to_GNN(state, *args):
+    '''
+    This function converts the state of the PST_V2GProfitMax scenario to a GNN state similar to the output of the PST_V2GProfitMaxGNN_state function.  
+    
+    input: state: np.array
+    
+    output: data: torch_geometric.data.Data
+    '''
+    PST_V2G_ProfitMax_state_to_GNN.node_sizes = {
+        'ev': 5, 'cs': 4, 'tr': 2, 'env': 6}
+
+def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
+    '''
+    This function converts the state of the PST_V2GProfitMax scenario to a GNN state similar to the output of the PST_V2G_ProfitMaxGNN_state function.
+
+    Input:
+        state: np.array
+        env: the environment object, which provides structural information
+
+    Output:
+        data: torch_geometric.data.Data
+    '''
+    from torch_geometric.data import Data
+    import numpy as np
+    import math
+
+    idx = 0
+
+    # Extract environment features
+    env_features = state[idx:idx+6]
+    idx += 6
+
+    node_features = [env_features]
+    node_types = [0]  # 0 for env node
+    node_names = ['env']
+    node_counter = 1
+
+    edge_index_from = []
+    edge_index_to = []
+
+    ev_features = []
+    cs_features = []
+    tr_features = []
+
+    ev_indexes = []
+    cs_indexes = []
+    tr_indexes = []
+    env_indexes = [0]
+
+    action_mapper = []
+
+    # Mapping from charging station IDs to their connected transformer IDs
+    cs_id_to_tr_id = {cs.id: cs.connected_transformer for cs in env.charging_stations}
+
+    # Map from charging station IDs to charging station objects
+    cs_id_to_cs = {cs.id: cs for cs in env.charging_stations}
+
+    # For each transformer
+    for tr in env.transformers:
+        # Get transformer feature from state
+        tr_feature = state[idx]
+        idx += 1
+
+        tr_features.append([tr_feature, tr.id])
+        node_features.append([tr_feature, tr.id])
+        node_types.append(1)  # 1 for transformer node
+        node_names.append(f'Tr_{tr.id}')
+        tr_node_index = node_counter
+        tr_indexes.append(tr_node_index)
+        node_counter += 1
+
+        # Add edge between env and transformer
+        edge_index_from.append(0)
+        edge_index_to.append(tr_node_index)
+        edge_index_from.append(tr_node_index)
+        edge_index_to.append(0)
+
+        # For each charging station connected to this transformer
+        cs_list = [cs for cs in env.charging_stations if cs.connected_transformer == tr.id]
+        for cs in cs_list:
+            # Get charging station features from state
+            cs_min_charge_current = state[idx]
+            idx += 1
+            cs_max_charge_current = state[idx]
+            idx += 1
+            cs_n_ports = int(state[idx])
+            idx += 1
+
+            cs_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs.id])
+            node_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs.id])
+            node_types.append(2)  # 2 for charging station node
+            node_names.append(f'Tr_{tr.id}_CS_{cs.id}')
+            cs_node_index = node_counter
+            cs_indexes.append(cs_node_index)
+            node_counter += 1
+
+            # Add edge between transformer and charging station
+            edge_index_from.append(tr_node_index)
+            edge_index_to.append(cs_node_index)
+            edge_index_from.append(cs_node_index)
+            edge_index_to.append(tr_node_index)
+
+            # For each port (EV slot) in the charging station
+            for port_i in range(cs_n_ports):
+                EV_soc = state[idx]
+                idx += 1
+                EV_tod = state[idx]
+                idx += 1
+
+                # Check if an EV is connected (non-zero SOC or time of departure)
+                if EV_soc != 0 or EV_tod != 0:
+                    EV_id = port_i  # Using port index as EV ID for simplicity
+                    ev_features.append([EV_soc, EV_tod, EV_id, cs.id, tr.id])
+                    node_features.append([EV_soc, EV_tod, EV_id, cs.id, tr.id])
+                    node_types.append(3)  # 3 for EV node
+                    node_names.append(f'Tr_{tr.id}_CS_{cs.id}_EV_{EV_id}')
+                    ev_node_index = node_counter
+                    ev_indexes.append(ev_node_index)
+                    action_mapper.append(ev_node_index)
+                    node_counter += 1
+
+                    # Add edge between charging station and EV
+                    edge_index_from.append(cs_node_index)
+                    edge_index_to.append(ev_node_index)
+                    edge_index_from.append(ev_node_index)
+                    edge_index_to.append(cs_node_index)
+
+    # Construct edge_index tensor
+    edge_index = np.array([edge_index_from, edge_index_to], dtype=int)
+
+    # Convert lists to numpy arrays
+    ev_features_array = np.array(ev_features, dtype=float) if ev_features else np.empty((0, 5))
+    cs_features_array = np.array(cs_features, dtype=float) if cs_features else np.empty((0, 4))
+    tr_features_array = np.array(tr_features, dtype=float) if tr_features else np.empty((0, 2))
+    env_features_array = np.array([env_features], dtype=float)
+
+    node_types_array = np.array(node_types, dtype=int)
+    action_mapper_array = np.array(action_mapper, dtype=int)
+    ev_indexes_array = np.array(ev_indexes, dtype=int)
+    cs_indexes_array = np.array(cs_indexes, dtype=int)
+    tr_indexes_array = np.array(tr_indexes, dtype=int)
+    env_indexes_array = np.array(env_indexes, dtype=int)
+
+    data = Data(
+        ev_features=ev_features_array,
+        cs_features=cs_features_array,
+        tr_features=tr_features_array,
+        env_features=env_features_array,
+        edge_index=edge_index,
+        node_types=node_types_array,
+        node_names=node_names,
+        action_mapper=action_mapper_array,
+        ev_indexes=ev_indexes_array,
+        cs_indexes=cs_indexes_array,
+        tr_indexes=tr_indexes_array,
+        env_indexes=env_indexes_array,
+    )
+
+    return data

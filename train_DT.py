@@ -30,7 +30,8 @@ def discount_cumsum(x, gamma):
 
 def experiment(vars):
 
-    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")  
+    # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")  
+    device = torch.device(vars['device'])
     print(f"Device: {device}") 
     log_to_wandb = vars.get('log_to_wandb', False)
 

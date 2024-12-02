@@ -20,6 +20,8 @@ from ev2gym.rl_agent.state import PublicPST
 
 from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
 
+from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
+
 import numpy as np
 import matplotlib.pyplot as plt
 import gymnasium as gym
@@ -63,8 +65,12 @@ def eval():
 
     _, _ = env.reset()
     # agent = RoundRobin_GF(env, verbose=False)
-    agent = ChargeAsFastAsPossible()
-    # agent = eMPC_V2G(env, control_horizon=15, verbose=False)
+    # agent = ChargeAsFastAsPossible()
+    agent = eMPC_V2G_v2(env, 
+                        control_horizon=10,
+                        MIPGap = 0.1,
+                        time_limit=30,
+                        verbose=True)
 
     for _ in range(env.simulation_length):
         # actions = np.ones(env.cs*env.number_of_ports_per_cs)
@@ -90,7 +96,7 @@ def eval():
             # print(stats)
             print_statistics(env)
             break
-    # return
+    return
 
     new_replay_path = f"replay/replay_{env.sim_name}.pkl"
 
@@ -142,8 +148,8 @@ def eval():
 
 if __name__ == "__main__":
 
-    eval()
-    exit()
+    # eval()
+    # exit()
     
     
     successfully_evaluated = 0

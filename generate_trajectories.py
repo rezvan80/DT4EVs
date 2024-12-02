@@ -13,6 +13,8 @@ from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, Char
 from ev2gym.baselines.gurobi_models.PST_V2G_profit_max_mo import mo_PST_V2GProfitMaxOracleGB
 from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
 
+from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
+
 
 if __name__ == "__main__":
 
@@ -47,7 +49,7 @@ if __name__ == "__main__":
     
     trajectories = []
 
-    trajecotries_type = "optimal" #args.dataset
+    trajecotries_type = "mpc" #args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"
@@ -85,6 +87,12 @@ if __name__ == "__main__":
             # delete the new_replay_path file
             os.remove(new_replay_path)
         
+        elif trajecotries_type == "mpc":
+            agent = eMPC_V2G_v2(env, 
+                        control_horizon=10,
+                        MIPGap = 0.1,
+                        time_limit=30,
+                        verbose=False)
         else:
             raise ValueError(f"Trajectories type {trajecotries_type} not supported")
         
@@ -113,7 +121,7 @@ if __name__ == "__main__":
 
         trajectories.append(trajectory_i)
 
-        if i % 1_000 == 0:
+        if i % 100 == 0:
             print(f'Saving trajectories to {save_folder_path+file_name}')
             f = open(save_folder_path+file_name, 'wb')
             # source, destination
