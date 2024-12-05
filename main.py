@@ -29,15 +29,12 @@ from tqdm import tqdm
 import yaml
 import os
 
-# from TD3.TD3_ActionGNN import TD3_ActionGNN
-
-
 def eval():
     """
     Runs an evaluation of the ev2gym environment.
     """
 
-    save_plots = True
+    save_plots = False
 
     replay_path = "./replay/replay_sim_2024_02_21_056441.pkl"
     replay_path = None
@@ -91,7 +88,13 @@ def eval():
         print(f' CSs features: {gnn_state.cs_features}')        
         print(f' CSs features: {gnn_state.tr_features}')  
         print(f' edges: {gnn_state.edge_index}')      
-        print(f' action_mapper: {gnn_state.action_mapper}')                
+        print(f' action_mapper: {gnn_state.action_mapper}')   
+        print(f' ev_indexes: {gnn_state.ev_indexes}')  
+        print(f' cs_indexes: {gnn_state.cs_indexes}')
+        print(f' tr_indexes: {gnn_state.tr_indexes}')
+        print(f' env_indexes: {gnn_state.env_indexes}')
+        print(f' sample node length: {gnn_state.sample_node_length}')
+        print(f' node types: {gnn_state.node_types}')
         
         og_gnn_state = PST_V2G_ProfitMaxGNN_state(env)
         print('---\nOG GNN state:\n', PST_V2G_ProfitMaxGNN_state(env))
@@ -101,8 +104,29 @@ def eval():
         print(f' CSs features: {og_gnn_state.tr_features}')
         print(f' edges: {og_gnn_state.edge_index}')
         print(f' action_mapper: {og_gnn_state.action_mapper}')
+        print(f' ev_indexes: {og_gnn_state.ev_indexes}')
+        print(f' cs_indexes: {og_gnn_state.cs_indexes}')
+        print(f' tr_indexes: {og_gnn_state.tr_indexes}')
+        print(f' env_indexes: {og_gnn_state.env_indexes}')
+        print(f' sample node length: {og_gnn_state.sample_node_length}')      
+        print(f' node types: {og_gnn_state.node_types}')                  
         
-        input("Press Enter to continue...")
+        assert (gnn_state.env_features == og_gnn_state.env_features).all()
+        assert (gnn_state.ev_features == og_gnn_state.ev_features).all()
+        assert (gnn_state.cs_features == og_gnn_state.cs_features).all()
+        assert (gnn_state.tr_features == og_gnn_state.tr_features).all()
+        assert (gnn_state.edge_index == og_gnn_state.edge_index).all()
+        assert (gnn_state.action_mapper == og_gnn_state.action_mapper).all()
+        assert (gnn_state.ev_indexes == og_gnn_state.ev_indexes).all()
+        assert (gnn_state.cs_indexes == og_gnn_state.cs_indexes).all()
+        assert (gnn_state.tr_indexes == og_gnn_state.tr_indexes).all()
+        assert (gnn_state.env_indexes == og_gnn_state.env_indexes).all()
+        assert (gnn_state.sample_node_length == og_gnn_state.sample_node_length)
+        assert (gnn_state.node_types == og_gnn_state.node_types).all()
+        
+        
+        
+        # input("Press Enter to continue...")
         # input("Press Enter to continue...")
         if done:
             # print(stats)
@@ -163,8 +187,8 @@ def eval():
 
 if __name__ == "__main__":
 
-    eval()
-    exit()
+    # eval()
+    # exit()
     
     
     successfully_evaluated = 0

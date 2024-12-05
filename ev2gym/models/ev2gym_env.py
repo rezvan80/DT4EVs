@@ -188,11 +188,16 @@ class EV2Gym(gym.Env):
         else:
             # self.cs_buses = [None] * self.cs
             if self.charging_network_topology is None:
+                assert self.number_of_transformers <= self.cs, "Number of transformers should be less than or equal to the number of charging stations"
                 self.cs_transformers = [
                     *np.arange(self.number_of_transformers)] * (self.cs // self.number_of_transformers)
+                self.cs_transformers = np.arange(self.number_of_transformers)
+                self.cs_transformers = np.repeat(
+                    self.cs_transformers, self.cs // self.number_of_transformers,axis=0)                
+                self.cs_transformers = self.cs_transformers.tolist()
                 self.cs_transformers += random.sample(
                     [*np.arange(self.number_of_transformers)], self.cs % self.number_of_transformers)
-                random.shuffle(self.cs_transformers)
+                # random.shuffle(self.cs_transformers)
 
         # Instatiate Transformers
         self.transformers = load_transformers(self)

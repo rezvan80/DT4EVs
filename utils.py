@@ -58,11 +58,10 @@ def PST_V2G_ProfitMax_state(env, *args):
 
         # For every charging station connected to the transformer
         for cs in env.charging_stations:
-            state.append(cs.min_charge_current)
-            state.append(cs.max_charge_current)
-            state.append(cs.n_ports)
-            
             if cs.connected_transformer == tr.id:
+                state.append(cs.min_charge_current)
+                state.append(cs.max_charge_current)
+                state.append(cs.n_ports)
 
                 # For every EV connected to the charging station
                 for EV in cs.evs_connected:
@@ -279,8 +278,7 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
     PST_V2G_ProfitMax_state_to_GNN.node_sizes = {
         'ev': 5, 'cs': 4, 'tr': 2, 'env': 6}
     
-    assert config['number_of_ports_per_cs'] == 1, 'This function only supports one port per charging station.'
-    
+    assert config['number_of_ports_per_cs'] == 1, 'This function only supports one port per charging station.'    
     idx = 0
 
     # Extract environment features
@@ -305,8 +303,11 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
     env_indexes = [0]
 
     action_mapper = []
+    cs_counter = -1
+    ev_counter = 0
     
     for tr in range(config['number_of_transformers']):
+        any_evs_per_tr = False
         # Get transformer feature from state
         tr_feature = state[idx]
         idx += 1
@@ -324,7 +325,7 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
         edge_index_to.append(tr_node_index)
         edge_index_from.append(tr_node_index)
         edge_index_to.append(0)
-
+        
         
         chargers_per_tr = int(config['number_of_charging_stations'])/int(config['number_of_transformers'])
         
@@ -333,7 +334,7 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
         
         chargers_per_tr = int(chargers_per_tr)
         for cs in range(chargers_per_tr):
-        
+            cs_counter += 1
             # Get charging station features from state
             cs_min_charge_current = state[idx]
             idx += 1
@@ -345,12 +346,13 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
             #check if EVs are connected to the charging station
             if state[idx] == 0 and state[idx+1] == 0:
                 idx += 2
+                ev_counter += cs_n_ports
                 continue
 
-            cs_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs])
-            node_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs])
+            cs_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs_counter])
+            node_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs_counter])
             node_types.append(2)  # 2 for charging station node
-            node_names.append(f'Tr_{tr}_CS_{cs}')
+            node_names.append(f'Tr_{tr}_CS_{cs_counter}')
             cs_node_index = node_counter
             cs_indexes.append(cs_node_index)
             node_counter += 1
@@ -369,13 +371,13 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
                 idx += 1
                 
                 EV_id = port_i  # Using port index as EV ID for simplicity
-                ev_features.append([EV_soc, EV_tod, EV_id, cs, tr])
-                node_features.append([EV_soc, EV_tod, EV_id, cs, tr])
+                ev_features.append([EV_soc, EV_tod, EV_id, cs_counter, tr])
+                node_features.append([EV_soc, EV_tod, EV_id, cs_counter, tr])
                 node_types.append(3)  # 3 for EV node
-                node_names.append(f'Tr_{tr}_CS_{cs}_EV_{EV_id}')
+                node_names.append(f'Tr_{tr}_CS_{cs_counter}_EV_{EV_id}')
                 ev_node_index = node_counter
                 ev_indexes.append(ev_node_index)
-                action_mapper.append(ev_node_index)
+                action_mapper.append(ev_counter)
                 node_counter += 1
 
                 # Add edge between charging station and EV
@@ -383,15 +385,31 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
                 edge_index_to.append(ev_node_index)
                 edge_index_from.append(ev_node_index)
                 edge_index_to.append(cs_node_index)
+                
+                ev_counter += 1
+                any_evs_per_tr = True
+                
+        if not any_evs_per_tr:
+            print(f'edge_index_from: {edge_index_from}')
+            edge_index_from = edge_index_from[:-2]
+            edge_index_to = edge_index_to[:-2]
+            tr_features = tr_features[:-1]
+            tr_indexes = tr_indexes[:-1]
+            node_names = node_names[:-1]
+            node_types = node_types[:-1]
+            node_features = node_features[:-1]
+            node_counter -= 1
     
-    if idx != len(state):
-        raise ValueError('The state was not fully processed.')
+    # if idx != len(state):
+    #     raise ValueError('The state was not fully processed.')
     
-    if len(ev_features) == 0:
-        edge_index_from = []
-        edge_index_to = []        
-        tr_features = []
-        tr_indexes = []
+    # if len(ev_features) == 0:
+    #     edge_index_from = []
+    #     edge_index_to = []        
+    #     tr_features = []
+    #     tr_indexes = []
+    #     node_features = [env_features]
+    #     node_types = [0]
 
     # Construct edge_index tensor
     edge_index = np.array([edge_index_from, edge_index_to], dtype=int)
@@ -415,8 +433,8 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
         tr_features=tr_features_array,
         env_features=env_features_array,
         edge_index=edge_index,
-        node_types=node_types_array,
-        node_names=node_names,
+        node_types=node_types_array,        
+        sample_node_length=[len(node_features)],
         action_mapper=action_mapper_array,
         ev_indexes=ev_indexes_array,
         cs_indexes=cs_indexes_array,
