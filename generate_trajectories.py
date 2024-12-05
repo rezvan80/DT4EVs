@@ -82,7 +82,11 @@ if __name__ == "__main__":
                     break
                 
             new_replay_path = f"./replay/replay_{temp_env.sim_name}.pkl"
-            agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path)
+            
+            agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
+                                                timelimit=60,
+                                                MIPGap=None,
+                                                )
             
             # delete the new_replay_path file
             os.remove(new_replay_path)

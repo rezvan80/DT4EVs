@@ -17,7 +17,11 @@ class mo_PST_V2GProfitMaxOracleGB():
     '''
     algo_name = 'Optimal (Offline)'
 
-    def __init__(self, replay_path=None, **kwargs):
+    def __init__(self,
+                 replay_path=None,
+                 timelimit=None,
+                 MIPGap=0,
+                 **kwargs):
 
         replay = pickle.load(open(replay_path, 'rb'))
 
@@ -64,8 +68,10 @@ class mo_PST_V2GProfitMaxOracleGB():
         print('Creating Gurobi model...')
         self.m = gp.Model("ev_city")
         self.m.setParam('OutputFlag', 0)
-        self.m.setParam('MIPGap', 1)
-        self.m.setParam('TimeLimit', 30)
+        if MIPGap is not None:
+            self.m.setParam('MIPGap', MIPGap)            
+        if timelimit is not None:
+            self.m.setParam('TimeLimit', timelimit)
 
         # energy of EVs t timeslot t
         energy = self.m.addVars(self.number_of_ports_per_cs,

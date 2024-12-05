@@ -65,12 +65,12 @@ def eval():
 
     _, _ = env.reset()
     # agent = RoundRobin_GF(env, verbose=False)
-    # agent = ChargeAsFastAsPossible()
-    agent = eMPC_V2G_v2(env, 
-                        control_horizon=10,
-                        MIPGap = 0.1,
-                        time_limit=30,
-                        verbose=True)
+    agent = ChargeAsFastAsPossible()
+    # agent = eMPC_V2G_v2(env, 
+    #                     control_horizon=10,
+    #                     MIPGap = 0.1,
+    #                     time_limit=30,
+    #                     verbose=True)
 
     for _ in range(env.simulation_length):
         # actions = np.ones(env.cs*env.number_of_ports_per_cs)
@@ -96,7 +96,7 @@ def eval():
             # print(stats)
             print_statistics(env)
             break
-    return
+    # return
 
     new_replay_path = f"replay/replay_{env.sim_name}.pkl"
 
@@ -127,7 +127,10 @@ def eval():
     # agent = V2GProfitMaxOracle(env,verbose=True)
     # agent = PowerTrackingErrorrMin(new_replay_path)
     # agent = PST_V2GProfitMaxOracleGB(new_replay_path)
-    agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path)
+    agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
+                                        timelimit=30,
+                                        MIPGap=None,
+                                        )
     # agent = eMPC_G2V(env, control_horizon=15, verbose=False)
     # agent = RoundRobin(env, verbose=False)
     # agent = ChargeAsLateAsPossible(verbose=False)
@@ -148,8 +151,8 @@ def eval():
 
 if __name__ == "__main__":
 
-    # eval()
-    # exit()
+    eval()
+    exit()
     
     
     successfully_evaluated = 0
