@@ -18,7 +18,7 @@ from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, Char
 from ev2gym.rl_agent.reward import SimpleReward, ProfitMax_TrPenalty_UserIncentives
 from ev2gym.rl_agent.state import PublicPST
 
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state, PST_V2G_ProfitMax_state_to_GNN
 
 from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
 
@@ -62,6 +62,8 @@ def eval():
                  state_function=PST_V2G_ProfitMax_state,
                  verbose=False,
                  )
+    
+    config = yaml.load(open(config_file, 'r'), Loader=yaml.FullLoader)
 
     _, _ = env.reset()
     # agent = RoundRobin_GF(env, verbose=False)
@@ -82,21 +84,31 @@ def eval():
         new_state, reward, done, truncated, stats = env.step(
             actions)  # takes action
         
-        # print(f'actions: {actions}')
-        # print(f'state: {new_state}')
-        # print(f'\n\nenv state: {new_state.env_features}')
-        # print(f'cs state: {new_state.cs_features}')
-        # print(f'ev state: {new_state.ev_features}')
-        # print(f'tr state: {new_state.tr_features}')
+        gnn_state = PST_V2G_ProfitMax_state_to_GNN(new_state,config)
+        print(f"\n\nConverted GNN state:\n{gnn_state}")
+        print(f' env features: {gnn_state.env_features}')
+        print(f' EVs features: {gnn_state.ev_features}')
+        print(f' CSs features: {gnn_state.cs_features}')        
+        print(f' CSs features: {gnn_state.tr_features}')  
+        print(f' edges: {gnn_state.edge_index}')      
+        print(f' action_mapper: {gnn_state.action_mapper}')                
         
-        # print(f'reward: {reward}')
+        og_gnn_state = PST_V2G_ProfitMaxGNN_state(env)
+        print('---\nOG GNN state:\n', PST_V2G_ProfitMaxGNN_state(env))
+        print(f' env features: {og_gnn_state.env_features}')
+        print(f' EVs features: {og_gnn_state.ev_features}')
+        print(f' CSs features: {og_gnn_state.cs_features}')
+        print(f' CSs features: {og_gnn_state.tr_features}')
+        print(f' edges: {og_gnn_state.edge_index}')
+        print(f' action_mapper: {og_gnn_state.action_mapper}')
         
+        input("Press Enter to continue...")
         # input("Press Enter to continue...")
         if done:
             # print(stats)
             print_statistics(env)
             break
-    # return
+    return
 
     new_replay_path = f"replay/replay_{env.sim_name}.pkl"
 

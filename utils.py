@@ -264,32 +264,23 @@ def PST_V2G_ProfitMaxGNN_state(env, *args):
 
 
 
-def PST_V2G_ProfitMax_state_to_GNN(state, *args):
-    '''
-    This function converts the state of the PST_V2GProfitMax scenario to a GNN state similar to the output of the PST_V2GProfitMaxGNN_state function.  
-    
-    input: state: np.array
-    
-    output: data: torch_geometric.data.Data
-    '''
-    PST_V2G_ProfitMax_state_to_GNN.node_sizes = {
-        'ev': 5, 'cs': 4, 'tr': 2, 'env': 6}
-
-def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
+def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
     '''
     This function converts the state of the PST_V2GProfitMax scenario to a GNN state similar to the output of the PST_V2G_ProfitMaxGNN_state function.
 
     Input:
         state: np.array
-        env: the environment object, which provides structural information
+        config: the simulation config, which provides structural information
 
     Output:
         data: torch_geometric.data.Data
     '''
-    from torch_geometric.data import Data
-    import numpy as np
-    import math
-
+    
+    PST_V2G_ProfitMax_state_to_GNN.node_sizes = {
+        'ev': 5, 'cs': 4, 'tr': 2, 'env': 6}
+    
+    assert config['number_of_ports_per_cs'] == 1, 'This function only supports one port per charging station.'
+    
     idx = 0
 
     # Extract environment features
@@ -314,23 +305,16 @@ def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
     env_indexes = [0]
 
     action_mapper = []
-
-    # Mapping from charging station IDs to their connected transformer IDs
-    cs_id_to_tr_id = {cs.id: cs.connected_transformer for cs in env.charging_stations}
-
-    # Map from charging station IDs to charging station objects
-    cs_id_to_cs = {cs.id: cs for cs in env.charging_stations}
-
-    # For each transformer
-    for tr in env.transformers:
+    
+    for tr in range(config['number_of_transformers']):
         # Get transformer feature from state
         tr_feature = state[idx]
         idx += 1
 
-        tr_features.append([tr_feature, tr.id])
-        node_features.append([tr_feature, tr.id])
+        tr_features.append([tr_feature, tr])
+        node_features.append([tr_feature, tr])
         node_types.append(1)  # 1 for transformer node
-        node_names.append(f'Tr_{tr.id}')
+        node_names.append(f'Tr_{tr}')
         tr_node_index = node_counter
         tr_indexes.append(tr_node_index)
         node_counter += 1
@@ -341,9 +325,15 @@ def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
         edge_index_from.append(tr_node_index)
         edge_index_to.append(0)
 
-        # For each charging station connected to this transformer
-        cs_list = [cs for cs in env.charging_stations if cs.connected_transformer == tr.id]
-        for cs in cs_list:
+        
+        chargers_per_tr = int(config['number_of_charging_stations'])/int(config['number_of_transformers'])
+        
+        if chargers_per_tr != int(chargers_per_tr):
+            raise ValueError('The number of charging stations must be divisible by the number of transformers.')
+        
+        chargers_per_tr = int(chargers_per_tr)
+        for cs in range(chargers_per_tr):
+        
             # Get charging station features from state
             cs_min_charge_current = state[idx]
             idx += 1
@@ -351,11 +341,16 @@ def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
             idx += 1
             cs_n_ports = int(state[idx])
             idx += 1
+            
+            #check if EVs are connected to the charging station
+            if state[idx] == 0 and state[idx+1] == 0:
+                idx += 2
+                continue
 
-            cs_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs.id])
-            node_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs.id])
+            cs_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs])
+            node_features.append([cs_min_charge_current, cs_max_charge_current, cs_n_ports, cs])
             node_types.append(2)  # 2 for charging station node
-            node_names.append(f'Tr_{tr.id}_CS_{cs.id}')
+            node_names.append(f'Tr_{tr}_CS_{cs}')
             cs_node_index = node_counter
             cs_indexes.append(cs_node_index)
             node_counter += 1
@@ -372,24 +367,31 @@ def PST_V2G_ProfitMax_state_to_GNN(state, env, *args):
                 idx += 1
                 EV_tod = state[idx]
                 idx += 1
+                
+                EV_id = port_i  # Using port index as EV ID for simplicity
+                ev_features.append([EV_soc, EV_tod, EV_id, cs, tr])
+                node_features.append([EV_soc, EV_tod, EV_id, cs, tr])
+                node_types.append(3)  # 3 for EV node
+                node_names.append(f'Tr_{tr}_CS_{cs}_EV_{EV_id}')
+                ev_node_index = node_counter
+                ev_indexes.append(ev_node_index)
+                action_mapper.append(ev_node_index)
+                node_counter += 1
 
-                # Check if an EV is connected (non-zero SOC or time of departure)
-                if EV_soc != 0 or EV_tod != 0:
-                    EV_id = port_i  # Using port index as EV ID for simplicity
-                    ev_features.append([EV_soc, EV_tod, EV_id, cs.id, tr.id])
-                    node_features.append([EV_soc, EV_tod, EV_id, cs.id, tr.id])
-                    node_types.append(3)  # 3 for EV node
-                    node_names.append(f'Tr_{tr.id}_CS_{cs.id}_EV_{EV_id}')
-                    ev_node_index = node_counter
-                    ev_indexes.append(ev_node_index)
-                    action_mapper.append(ev_node_index)
-                    node_counter += 1
-
-                    # Add edge between charging station and EV
-                    edge_index_from.append(cs_node_index)
-                    edge_index_to.append(ev_node_index)
-                    edge_index_from.append(ev_node_index)
-                    edge_index_to.append(cs_node_index)
+                # Add edge between charging station and EV
+                edge_index_from.append(cs_node_index)
+                edge_index_to.append(ev_node_index)
+                edge_index_from.append(ev_node_index)
+                edge_index_to.append(cs_node_index)
+    
+    if idx != len(state):
+        raise ValueError('The state was not fully processed.')
+    
+    if len(ev_features) == 0:
+        edge_index_from = []
+        edge_index_to = []        
+        tr_features = []
+        tr_indexes = []
 
     # Construct edge_index tensor
     edge_index = np.array([edge_index_from, edge_index_to], dtype=int)
