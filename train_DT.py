@@ -106,10 +106,14 @@ def experiment(vars):
 
     if dataset == 'random_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
-    elif dataset == 'optimal_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
-    elif dataset == 'optimal_1000':
+    # elif dataset == 'optimal_10000':
+    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
+    # elif dataset == 'optimal_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
+    elif dataset == 'optimal_5000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
+    elif dataset == 'suboptimal_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'    
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     else:
@@ -419,7 +423,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='random_100')
+    parser.add_argument('--dataset', type=str, default='optimal_5000')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=3)

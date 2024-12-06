@@ -13,16 +13,16 @@ max_iters = 350
 num_eval_episodes = 30
 
 counter = 0
-for model_type in ["gnn_dt"]:
+for model_type in ["gnn_dt", "dt"]:
     for K in [10]:
         for batch_size in [128]:
             # "RR_400_000", "optimal_100000", "RR_10_000"
             # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
-            for dataset in ["random_100"]:
+            for dataset in ["suboptimal_10000"]: #optimal_5000, suboptimal_10000
                 for embed_dim in [128]:  # 512
                     #   ' --device cuda:0' + str(counter % 2) + \
                     for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
-                        command = 'tmux new-session -d \; send-keys " /home/sorfanoudakis/.conda/envs/dt3/bin/python /home/sorfanoudakis/DT4EVs/train_DT.py' + \
+                        command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
                             ' --dataset ' + dataset + \
                             ' --K ' + str(K) + \
                             ' --device cuda:0' + \
