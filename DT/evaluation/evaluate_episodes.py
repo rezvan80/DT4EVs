@@ -99,6 +99,11 @@ def evaluate_episode_rtg(
     if type(state_mean) is np.ndarray:        
         state_mean = torch.from_numpy(state_mean).to(device=device)
         state_std = torch.from_numpy(state_std).to(device=device)    
+        
+    # set state_mean and state_std to 0 and 1 if not provided
+    
+    state_mean = torch.zeros(state_dim, device=device)
+    state_std = torch.ones(state_dim, device=device)
 
     test_rewards = []
     test_stats = []

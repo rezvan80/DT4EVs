@@ -16,6 +16,8 @@ from DT.models.mlp_bc import MLPBCModel
 from DT.training.act_trainer import ActTrainer
 from DT.training.seq_trainer import SequenceTrainer
 
+from DT.models.gnn_decision_transformer import GNN_DecisionTransformer
+
 from ev2gym.models.ev2gym_env import EV2Gym
 from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
 
@@ -104,8 +106,10 @@ def experiment(vars):
 
     if dataset == 'random_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
-    if dataset == 'optimal_10000':
+    elif dataset == 'optimal_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
+    elif dataset == 'optimal_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     else:
@@ -213,7 +217,7 @@ def experiment(vars):
             tlen = s[-1].shape[1]
             s[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, state_dim)), s[-1]], axis=1)
-            s[-1] = (s[-1] - state_mean) / state_std
+            # s[-1] = (s[-1] - state_mean) / state_std
             a[-1] = np.concatenate([np.ones((1, max_len -
                                    tlen, act_dim)) * -10., a[-1]], axis=1)
             r[-1] = np.concatenate([np.zeros((1, max_len -
@@ -297,6 +301,29 @@ def experiment(vars):
             resid_pdrop=vars['dropout'],
             attn_pdrop=vars['dropout'],
         )
+    elif model_type == 'gnn_dt':
+        model = GNN_DecisionTransformer(
+            state_dim=state_dim,
+            act_dim=act_dim,
+            max_length=K,
+            max_ep_len=max_ep_len,
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
+            n_positions=1024,
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
+            action_tanh=True,
+            fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
+            feature_dim=vars['feature_dim'],
+            GNN_hidden_dim=vars['GNN_hidden_dim'],
+            num_gcn_layers=vars['num_gcn_layers'],
+            config=config,
+            device=device,
+        )
+        
     elif model_type == 'bc':
         model = MLPBCModel(
             state_dim=state_dim,
@@ -323,7 +350,7 @@ def experiment(vars):
         lambda max_iters: min((max_iters+1)/warmup_steps, 1)
     )
 
-    if model_type == 'dt':
+    if model_type == 'dt' or model_type == 'gnn_dt':
         trainer = SequenceTrainer(
             model=model,
             optimizer=optimizer,
@@ -392,14 +419,14 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='random_10000')
+    parser.add_argument('--dataset', type=str, default='random_100')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
-    parser.add_argument('--K', type=int, default=10)
+    parser.add_argument('--K', type=int, default=3)
     parser.add_argument('--pct_traj', type=float, default=1.)
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
-    parser.add_argument('--model_type', type=str, default='dt')  # dt
+    parser.add_argument('--model_type', type=str, default='gnn_dt')  # dt, gnn_dt
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
@@ -412,11 +439,16 @@ if __name__ == '__main__':
     parser.add_argument('--max_iters', type=int, default=500)
     parser.add_argument('--num_steps_per_iter', type=int, default=1000)
     parser.add_argument('--device', type=str, default='cuda')
-    parser.add_argument('--log_to_wandb', '-w', type=bool, default=True)
+    parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
                         default="PST_V2G_ProfixMax_25.yaml")
     parser.add_argument('--conv_window_size', type=int, default=6,
                         help='Conv window size for "dc" (default: 6)')
+    
+    # GNN_DT parameters
+    parser.add_argument('--feature_dim', type=int, default=8)
+    parser.add_argument('--GNN_hidden_dim', type=int, default=32)
+    parser.add_argument('--num_gcn_layers', type=int, default=3)
 
     args = parser.parse_args()
 

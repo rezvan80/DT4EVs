@@ -49,7 +49,7 @@ if __name__ == "__main__":
     
     trajectories = []
 
-    trajecotries_type = "optimal" #args.dataset
+    trajecotries_type = "random" #args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"

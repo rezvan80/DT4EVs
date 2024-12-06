@@ -342,7 +342,7 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
             idx += 1
             cs_n_ports = int(state[idx])
             idx += 1
-            
+            # print(f'cs {cs} : {cs_min_charge_current} {cs_max_charge_current} {cs_n_ports}')
             #check if EVs are connected to the charging station
             if state[idx] == 0 and state[idx+1] == 0:
                 idx += 2
@@ -389,8 +389,7 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
                 ev_counter += 1
                 any_evs_per_tr = True
                 
-        if not any_evs_per_tr:
-            print(f'edge_index_from: {edge_index_from}')
+        if not any_evs_per_tr:            
             edge_index_from = edge_index_from[:-2]
             edge_index_to = edge_index_to[:-2]
             tr_features = tr_features[:-1]
@@ -400,6 +399,8 @@ def PST_V2G_ProfitMax_state_to_GNN(state, config, *args):
             node_features = node_features[:-1]
             node_counter -= 1
     
+    # print(f'idx: {idx}')
+    # print(f'len(state): {len(state)}')
     # if idx != len(state):
     #     raise ValueError('The state was not fully processed.')
     
