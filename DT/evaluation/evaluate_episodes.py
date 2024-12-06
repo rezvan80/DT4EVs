@@ -111,19 +111,8 @@ def evaluate_episode_rtg(
     env = test_env
 
     global_target_return = 0
-    # env = ev2gym_env.EV2Gym(config_file=config_file,                            
-    #                         generate_rnd_game=True,
-    #                         reward_function=SimpleReward,
-    #                         )
 
-    # use tqdm with a fancy bar
     for test_cycle in tqdm.tqdm(range(n_test_episodes)):
-
-        # if test_cycle == 0:
-        # env.set_save_plots(True)
-        # else:
-        #     env.set_save_plots(False)
-
         state, _ = env.reset()
 
         # we keep all the histories on the device
@@ -149,9 +138,7 @@ def evaluate_episode_rtg(
                 (1, act_dim), device=device)], dim=0)
             rewards = torch.cat([rewards, torch.zeros(1, device=device)])
             
-            # print(f'states: {states},\n actions: {actions},\n rewards: {rewards},\n target_return: {target_return},\n timesteps: {timesteps}')
-            # input()
-            if model_type == 'dt':
+            if model_type == 'dt' or model_type == 'gnn_dt':
                 action = model.get_action(
                     (states.to(dtype=torch.float32) - state_mean) / state_std,
                     actions.to(dtype=torch.float32),
@@ -201,6 +188,10 @@ def evaluate_episode_rtg(
     for key in test_stats[0].keys():
         stats[key] = np.mean([test_stats[i][key]
                               for i in range(len(test_stats))])
+    
+    keys_to_keep = [
+        
+    ]
 
     stats['mean_test_return'] = np.mean(test_rewards)
 

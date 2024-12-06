@@ -250,7 +250,7 @@ def experiment(vars):
     def eval_episodes(target_rew):
         def fn(model):
             with torch.no_grad():
-                if model_type == 'dt':
+                if model_type == 'dt' or model_type == 'gnn_dt':
                     stats = evaluate_episode_rtg(
                         env,
                         exp_prefix,
@@ -442,8 +442,6 @@ if __name__ == '__main__':
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
                         default="PST_V2G_ProfixMax_25.yaml")
-    parser.add_argument('--conv_window_size', type=int, default=6,
-                        help='Conv window size for "dc" (default: 6)')
     
     # GNN_DT parameters
     parser.add_argument('--feature_dim', type=int, default=8)
