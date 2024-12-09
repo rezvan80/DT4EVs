@@ -106,9 +106,7 @@ def experiment(vars):
 
     if dataset == 'random_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
-    # elif dataset == 'optimal_10000':
-    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
-    # elif dataset == 'optimal_1000':
+    elif dataset == 'optimal_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
     elif dataset == 'optimal_5000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
