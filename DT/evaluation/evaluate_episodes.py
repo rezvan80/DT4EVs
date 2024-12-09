@@ -92,7 +92,7 @@ def evaluate_episode_rtg(
     # config_file="config_files/config.yaml",
     **kwargs
 ):
-
+    print("Evaluating episodes!")
     model.eval()
     model.to(device=device)
 
@@ -112,8 +112,8 @@ def evaluate_episode_rtg(
 
     global_target_return = 0
 
-    # for test_cycle in tqdm.tqdm(range(n_test_episodes)):
-    for env in test_env:
+    for test_cycle in tqdm.tqdm(range(len(test_env))):
+        env = test_env[test_cycle]
         state, _ = env.reset()
 
         # we keep all the histories on the device

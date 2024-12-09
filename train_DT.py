@@ -207,7 +207,7 @@ def experiment(vars):
             p=p_sample,  # reweights so we sample according to timesteps
         )
 
-        s, a, r, d, rtg, timesteps, mask = [], [], [], [], [], [], []
+        s, a, r, d, rtg, timesteps, mask, action_mask = [], [], [], [], [], [], [], []
         for i in range(batch_size):
             traj = trajectories[int(sorted_inds[batch_inds[i]])]
             si = random.randint(0, traj['rewards'].shape[0] - 1)
@@ -217,6 +217,8 @@ def experiment(vars):
                      [si:si + max_len].reshape(1, -1, state_dim))
             a.append(traj['actions'][si:si + max_len].reshape(1, -1, act_dim))
             r.append(traj['rewards'][si:si + max_len].reshape(1, -1, 1))
+            action_mask.append(traj['action_mask']
+                               [si:si + max_len].reshape(1, -1, act_dim))
             if 'terminals' in traj:
                 d.append(traj['terminals'][si:si + max_len].reshape(1, -1))
             else:
@@ -239,6 +241,8 @@ def experiment(vars):
                                    tlen, act_dim)) * -10., a[-1]], axis=1)
             r[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, 1)), r[-1]], axis=1)
+            action_mask[-1] = np.concatenate(
+                [np.zeros((1, max_len - tlen, act_dim)), action_mask[-1]], axis=1)
             d[-1] = np.concatenate([np.ones((1, max_len - tlen))
                                    * 2, d[-1]], axis=1)
             rtg[-1] = np.concatenate([np.zeros((1, max_len - tlen, 1)),
@@ -260,9 +264,11 @@ def experiment(vars):
             dtype=torch.float32, device=device)
         timesteps = torch.from_numpy(np.concatenate(timesteps, axis=0)).to(
             dtype=torch.long, device=device)
-        mask = torch.from_numpy(np.concatenate(mask, axis=0)).to(device=device)
+        mask = torch.from_numpy(np.concatenate(mask, axis=0)).to(device=device)     
+        action_mask = torch.from_numpy(np.concatenate(action_mask, axis=0)).to(
+            dtype=torch.float32, device=device)   
 
-        return s, a, r, d, rtg, timesteps, mask
+        return s, a, r, d, rtg, timesteps, mask, action_mask
 
     def eval_episodes(target_rew):
         def fn(model):
@@ -366,6 +372,15 @@ def experiment(vars):
         optimizer,
         lambda max_iters: min((max_iters+1)/warmup_steps, 1)
     )
+    
+    if vars['action_masking']:
+        loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, a_masks: torch.mean(
+            ((a_hat - a)**2) * a_masks
+        )
+    else:
+        loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, _: torch.mean(
+                (a_hat - a)**2),
+            
 
     if model_type == 'dt' or model_type == 'gnn_dt':
         trainer = SequenceTrainer(
@@ -374,11 +389,11 @@ def experiment(vars):
             batch_size=batch_size,
             get_batch=get_batch,
             scheduler=scheduler,
-            loss_fn=lambda s_hat, a_hat, r_hat, s, a, r: torch.mean(
-                (a_hat - a)**2),
+            loss_fn=loss_fn,
             eval_fns=[eval_episodes(tar) for tar in env_targets],
         )
     elif model_type == 'bc':
+        raise ValueError
         trainer = ActTrainer(
             model=model,
             optimizer=optimizer,
@@ -437,7 +452,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='optimal_5000')
+    parser.add_argument('--dataset', type=str, default='random_100')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=3)
@@ -463,8 +478,13 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--eval_replay_path', type=str,
-                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_2/")
+                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
 
+    # New parameters
+    parser.add_argument('--action_masking',
+                        type=bool,
+                        default=True)
+    
     # GNN_DT parameters
     parser.add_argument('--feature_dim', type=int, default=8)
     parser.add_argument('--GNN_hidden_dim', type=int, default=32)
