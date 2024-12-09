@@ -145,7 +145,7 @@ if __name__ == "__main__":
                 # move the replay file to the eval replay folder
                 if SAVE_EVAL_REPLAYS:
                     replay_path = env.replay_path + 'replay_' + env.sim_name + '.pkl'
-                    new_replay_path = f"./eval_replays/{file_name}/replay_{env.sim_name}.pkl"
+                    new_replay_path = f"./eval_replays/{file_name}/replay_{env.sim_name}_{i}.pkl"
                     shutil.move(replay_path, new_replay_path)
                     print(f'Stats: {env.optimal_stats}')
                 break
