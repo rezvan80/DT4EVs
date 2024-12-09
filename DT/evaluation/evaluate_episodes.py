@@ -108,11 +108,12 @@ def evaluate_episode_rtg(
     test_rewards = []
     test_stats = []
     
-    env = test_env
+    # env = test_env
 
     global_target_return = 0
 
-    for test_cycle in tqdm.tqdm(range(n_test_episodes)):
+    # for test_cycle in tqdm.tqdm(range(n_test_episodes)):
+    for env in test_env:
         state, _ = env.reset()
 
         # we keep all the histories on the device
@@ -183,17 +184,34 @@ def evaluate_episode_rtg(
                 test_stats.append(stats)
                 test_rewards.append(episode_return)
                 break
-
-    stats = {}
-    for key in test_stats[0].keys():
-        stats[key] = np.mean([test_stats[i][key]
-                              for i in range(len(test_stats))])
-    
+            
     keys_to_keep = [
+        'total_reward',
+        'total_profits',
+        'total_energy_charged',
+        'total_energy_discharged',
+        'average_user_satisfaction',
+        'min_user_satisfaction',
+        'power_tracker_violation',
+        'total_transformer_overload',
         
     ]
 
-    stats['mean_test_return'] = np.mean(test_rewards)
+    stats = {}
+    for key in test_stats[0].keys():  
+        if "opt" in key:
+            key_name = "opt/" + key.split("opt_")[1]
+            if key.split("opt_")[1] not in keys_to_keep:
+                continue
+        else:
+            if key not in keys_to_keep:
+                continue
+            key_name = "test/" + key
+        stats[key_name] = np.mean([test_stats[i][key]
+                            for i in range(len(test_stats))])
+            
+    
+    # stats['mean_test_return'] = np.mean(test_rewards)
 
     return stats  # , episode_length
 

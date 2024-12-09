@@ -3,7 +3,8 @@ import time
 import numpy as np
 import pickle
 import yaml
-from tqdm import tqdm 
+from tqdm import tqdm
+import shutil
 
 from ev2gym.models.ev2gym_env import EV2Gym
 from ev2gym.utilities.arg_parser import arg_parser
@@ -11,7 +12,7 @@ from ev2gym.rl_agent.reward import SquaredTrackingErrorReward, ProfitMax_TrPenal
 from ev2gym.rl_agent.state import V2G_profit_max, PublicPST, V2G_profit_max_loads
 from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible, RandomAgent
 from ev2gym.baselines.gurobi_models.PST_V2G_profit_max_mo import mo_PST_V2GProfitMaxOracleGB
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
 
 from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
 
@@ -19,6 +20,7 @@ from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
 if __name__ == "__main__":
 
     args = arg_parser()
+    SAVE_EVAL_REPLAYS = args.save_eval_replays
 
     # Define the directory where to save and load models
     checkpoint_dir = args.save_dir + args.env
@@ -27,34 +29,47 @@ if __name__ == "__main__":
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
     problem = args.config_file.split("/")[-1].split(".")[0]
+    
+    env = EV2Gym(config_file=args.config_file,
+                state_function=state_function,
+                reward_function=reward_function,
+                save_replay=SAVE_EVAL_REPLAYS,
+                )
 
-    env = EV2Gym(config_file=args.config_file,                            
-                            state_function=state_function,
-                            reward_function=reward_function,
-                            )
-    
     temp_env = EV2Gym(config_file=args.config_file,
-                 save_replay=True,
-                 reward_function=reward_function,
-                 state_function=state_function,
-                 )
-    
+                      save_replay=True,
+                      reward_function=reward_function,
+                      state_function=state_function,
+                      )
+
     n_trajectories = args.n_trajectories
-        
+
     config = yaml.load(open(args.config_file, 'r'), Loader=yaml.FullLoader)
     number_of_charging_stations = config["number_of_charging_stations"]
     n_transformers = config["number_of_transformers"]
     steps = config["simulation_length"]
     timescale = config["timescale"]
-    
+
     trajectories = []
 
-    trajecotries_type = "random" #args.dataset
+    trajecotries_type = "optimal"  # args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"
     if not os.path.exists(save_folder_path):
         os.makedirs(save_folder_path)
+
+    # make eval replay folder
+    if SAVE_EVAL_REPLAYS:
+        if not os.path.exists("eval_replays"):
+            os.makedirs("eval_replays")
+
+        file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}"
+        save_folder_path = f"./eval_replays/" + file_name
+        if not os.path.exists(save_folder_path):
+            os.makedirs(save_folder_path)
+
+        print(f"Saving evaluation replays to {save_folder_path}")
 
     epoch = 0
     # use tqdm with a fancy bar
@@ -69,7 +84,7 @@ if __name__ == "__main__":
 
         if trajecotries_type == "random":
             agent = RandomAgent(env)
-            
+
         elif trajecotries_type == "optimal":
             _, _ = temp_env.reset()
             agent = ChargeAsFastAsPossible()
@@ -80,42 +95,59 @@ if __name__ == "__main__":
                     actions)  # takes action
                 if done:
                     break
-                
+
             new_replay_path = f"./replay/replay_{temp_env.sim_name}.pkl"
-            
+
             agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
                                                 timelimit=60,
                                                 MIPGap=None,
                                                 )
+
             
-            # delete the new_replay_path file
-            os.remove(new_replay_path)
-        
+
         elif trajecotries_type == "mpc":
-            agent = eMPC_V2G_v2(env, 
-                        control_horizon=10,
-                        MIPGap = 0.1,
-                        time_limit=30,
-                        verbose=False)
+            agent = eMPC_V2G_v2(env,
+                                control_horizon=10,
+                                MIPGap=0.1,
+                                time_limit=30,
+                                verbose=False)
         else:
-            raise ValueError(f"Trajectories type {trajecotries_type} not supported")
-        
-                
+            raise ValueError(
+                f"Trajectories type {trajecotries_type} not supported")
+
+        if trajecotries_type == "optimal":
+            env = EV2Gym(config_file=args.config_file,
+                         load_from_replay_path=new_replay_path,
+                         state_function=state_function,
+                         reward_function=reward_function,
+                         save_replay=SAVE_EVAL_REPLAYS,
+                         )
+            os.remove(new_replay_path)
+            
         state, _ = env.reset()
         
+        if SAVE_EVAL_REPLAYS:
+            env.eval_mode = "optimal"
+
         while True:
 
             actions = agent.get_action(env)
 
-            new_state, reward, done, truncated, _ = env.step(actions)
+            new_state, reward, done, truncated, stats = env.step(actions)
 
             trajectory_i["observations"].append(state)
             trajectory_i["actions"].append(actions)
             trajectory_i["rewards"].append(reward)
-            trajectory_i["dones"].append(done)            
+            trajectory_i["dones"].append(done)
             state = new_state
 
             if done:
+                # move the replay file to the eval replay folder
+                if SAVE_EVAL_REPLAYS:
+                    replay_path = env.replay_path + 'replay_' + env.sim_name + '.pkl'
+                    new_replay_path = f"./eval_replays/{file_name}/replay_{env.sim_name}.pkl"
+                    shutil.move(replay_path, new_replay_path)
+                    print(f'Stats: {env.optimal_stats}')
                 break
 
         trajectory_i["observations"] = np.array(trajectory_i["observations"])
@@ -125,17 +157,21 @@ if __name__ == "__main__":
 
         trajectories.append(trajectory_i)
 
-        if i % 100 == 0:
+        if i % 100 == 0 and not SAVE_EVAL_REPLAYS:
             print(f'Saving trajectories to {save_folder_path+file_name}')
             f = open(save_folder_path+file_name, 'wb')
             # source, destination
             pickle.dump(trajectories, f)
 
     env.close()
-    print(trajectories[:1])
 
-    print(f'Saving trajectories to {save_folder_path+file_name}')
-    f = open(save_folder_path+file_name, 'wb')
-    # source, destination
-    pickle.dump(trajectories, f)
-    f.close()
+    if SAVE_EVAL_REPLAYS:
+        print(
+            f'Genereated {n_trajectories} trajectories and saved them in {save_folder_path}')
+    else:
+        print(trajectories[:1])
+        print(f'Saving trajectories to {save_folder_path+file_name}')
+        f = open(save_folder_path+file_name, 'wb')
+        # source, destination
+        pickle.dump(trajectories, f)
+        f.close()

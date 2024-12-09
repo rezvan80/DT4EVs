@@ -42,7 +42,7 @@ class Trainer:
         for eval_fn in self.eval_fns:
             outputs = eval_fn(self.model)
             for k, v in outputs.items():
-                logs[f'test/{k}'] = v
+                logs[k] = v
 
         logs['time/total'] = time.time() - self.start_time
         logs['time/evaluation'] = time.time() - eval_start

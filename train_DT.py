@@ -19,7 +19,7 @@ from DT.training.seq_trainer import SequenceTrainer
 from DT.models.gnn_decision_transformer import GNN_DecisionTransformer
 
 from ev2gym.models.ev2gym_env import EV2Gym
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
 
 
 def discount_cumsum(x, gamma):
@@ -32,9 +32,9 @@ def discount_cumsum(x, gamma):
 
 def experiment(vars):
 
-    # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")  
+    # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     device = torch.device(vars['device'])
-    print(f"Device: {device}") 
+    print(f"Device: {device}")
     log_to_wandb = vars.get('log_to_wandb', False)
 
     env_name, dataset = vars['env'], vars['dataset']
@@ -47,7 +47,7 @@ def experiment(vars):
 
     # seed everything
     seed = vars.get('seed', 0)
-    
+
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -65,14 +65,14 @@ def experiment(vars):
 
     number_of_charging_stations = config["number_of_charging_stations"]
     steps = config["simulation_length"]
-    
+
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
 
-    env = EV2Gym(config_file=config_path,                            
-                            state_function=state_function,
-                            reward_function=reward_function,
-                            )
+    env = EV2Gym(config_file=config_path,
+                 state_function=state_function,
+                 reward_function=reward_function,
+                 )
 
     state_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
@@ -113,7 +113,7 @@ def experiment(vars):
     elif dataset == 'optimal_5000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
     elif dataset == 'suboptimal_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'    
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     else:
@@ -145,6 +145,21 @@ def experiment(vars):
     traj_lens = np.array(traj_lens)
     # print(trajectories[0])
     # exit()
+
+    # Initialize eval_envs from replays
+    eval_replay_path = vars['eval_replay_path']
+    eval_replays = os.listdir(eval_replay_path)
+    eval_envs = []
+    print(f'Loading evaluation replays from {eval_replay_path}')
+    for replay in eval_replays:        
+        eval_env = EV2Gym(config_file=config_path,
+                          load_from_replay_path=eval_replay_path + replay,
+                          state_function=state_function,
+                          reward_function=reward_function,
+                          )
+        eval_envs.append(eval_env)
+    
+    print(f'Loaded {len(eval_envs)} evaluation replays')    
 
     # used for input normalization
     states = np.concatenate(states, axis=0)
@@ -256,7 +271,7 @@ def experiment(vars):
             with torch.no_grad():
                 if model_type == 'dt' or model_type == 'gnn_dt':
                     stats = evaluate_episode_rtg(
-                        env,
+                        eval_envs,
                         exp_prefix,
                         state_dim,
                         act_dim,
@@ -327,7 +342,7 @@ def experiment(vars):
             config=config,
             device=device,
         )
-        
+
     elif model_type == 'bc':
         model = MLPBCModel(
             state_dim=state_dim,
@@ -382,7 +397,7 @@ def experiment(vars):
             name=exp_prefix,
             group=group_name,
             entity='stavrosorf',
-            project='DT4EVs',            
+            project='DT4EVs',
             save_code=True,
             config=vars
         )
@@ -398,11 +413,12 @@ def experiment(vars):
         outputs = trainer.train_iteration(
             num_steps=num_steps_per_iter, iter_num=iter+1, print_logs=True)
 
-        if outputs['test/mean_test_return'] > best_reward:
-            best_reward = outputs['test/mean_test_return']
-            # save pytorch model
+        if outputs['test/total_reward'] > best_reward:
+            best_reward = outputs['test/total_reward']
+            # save pytorch model            
             torch.save(model.state_dict(),
                        f'saved_models/{exp_prefix}/model.best')
+            print(f' Saving best model with reward {best_reward} at path saved_models/{exp_prefix}/model.best')
 
         outputs['best'] = best_reward
 
@@ -430,7 +446,8 @@ if __name__ == '__main__':
     parser.add_argument('--pct_traj', type=float, default=1.)
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
-    parser.add_argument('--model_type', type=str, default='gnn_dt')  # dt, gnn_dt
+    parser.add_argument('--model_type', type=str,
+                        default='gnn_dt')  # dt, gnn_dt
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
@@ -439,14 +456,17 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', '-lr', type=float, default=1e-4)
     parser.add_argument('--weight_decay', '-wd', type=float, default=1e-4)
     parser.add_argument('--warmup_steps', type=int, default=10000)
-    parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--max_iters', type=int, default=500)
-    parser.add_argument('--num_steps_per_iter', type=int, default=1000)
+    parser.add_argument('--num_steps_per_iter', type=int, default=10) #1000
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
                         default="PST_V2G_ProfixMax_25.yaml")
-    
+
+    parser.add_argument('--num_eval_episodes', type=int, default=30)
+    parser.add_argument('--eval_replay_path', type=str,
+                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_2/")
+
     # GNN_DT parameters
     parser.add_argument('--feature_dim', type=int, default=8)
     parser.add_argument('--GNN_hidden_dim', type=int, default=32)

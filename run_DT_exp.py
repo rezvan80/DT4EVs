@@ -13,8 +13,8 @@ max_iters = 350
 num_eval_episodes = 30
 
 counter = 0
-for model_type in ["gnn_dt", "dt"]:
-    for K in [10]:
+for model_type in ["gnn_dt"]:
+    for K in [2, 5, 15]:
         for batch_size in [128]:
             # "RR_400_000", "optimal_100000", "RR_10_000"
             # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000

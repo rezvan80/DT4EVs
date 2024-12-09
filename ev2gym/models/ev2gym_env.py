@@ -106,6 +106,7 @@ class EV2Gym(gym.Env):
             self.number_of_ports_per_cs = self.replay.max_n_ports
             self.scenario = self.replay.scenario
             self.heterogeneous_specs = self.replay.heterogeneous_specs
+            self.optimal_stats = self.replay.optimal_stats
 
         else:
             assert cs is not None, "Please provide the number of charging stations"
@@ -118,7 +119,8 @@ class EV2Gym(gym.Env):
             self.scenario = self.config['scenario']
             self.simulation_length = int(self.config['simulation_length'])
             # Simulation time
-
+            self.optimal_stats = None
+                    
             if self.config['random_day']:
                 if "random_hour" in self.config:
                     if self.config["random_hour"]:
@@ -265,6 +267,8 @@ class EV2Gym(gym.Env):
 
         # Observation mask: is a vector of size ("Sum of all ports of all charging stations") showing in which ports an EV is connected
         self.observation_mask = np.zeros(self.number_of_ports)
+        
+
 
     def reset(self, seed=None, options=None, **kwargs):
         '''Resets the environment to its initial state'''
@@ -522,6 +526,9 @@ class EV2Gym(gym.Env):
                 Carefull: if generate_rnd_game is True,
                 the simulation might end up in infeasible problem
                 """
+                
+            self.stats = get_statistics(self)
+            
             if self.verbose:
                 print_statistics(self)
 
@@ -541,9 +548,8 @@ class EV2Gym(gym.Env):
                     self.renderer = None
                     pickle.dump(self, f)
                 ev_city_plot(self)
-
-            self.done = True
-            self.stats = get_statistics(self)
+            
+            
 
             if self.cost_function is not None:
                 return self._get_observation(), reward, True, truncated, self.stats
