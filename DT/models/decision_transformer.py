@@ -65,16 +65,12 @@ class DecisionTransformer(TrajectoryModel):
         # self.actionSigmoid = nn.Sigmoid()
         self.predict_return = torch.nn.Linear(hidden_size, 1)
 
-    def forward(self, states, actions, rewards, returns_to_go, timesteps, attention_mask=None):
+    def forward(self, states, actions, rewards, returns_to_go, timesteps,
+                attention_mask=None,
+                action_mask=None):
 
-        # print(f'states {states}')
-        # print(f'actions {actions}')
-        # print(f'rewards {rewards}')
-        # print(f'returns_to_go {returns_to_go}')
-        # print(f'timesteps {timesteps}')
-        # print(f'attention_mask {attention_mask}')
+        actions = actions * action_mask
 
-        # input() # pause
         batch_size, seq_length = states.shape[0], states.shape[1]
 
         if attention_mask is None:
@@ -117,7 +113,7 @@ class DecisionTransformer(TrajectoryModel):
         # returns (0), states (1), or actions (2); i.e. x[:,1,t] is the token for s_t
         x = x.reshape(batch_size, seq_length, 3,
                       self.hidden_size).permute(0, 2, 1, 3)
-        
+
         # get predictions
         # predict next return given state and action
         return_preds = self.predict_return(x[:, 2])
@@ -133,7 +129,7 @@ class DecisionTransformer(TrajectoryModel):
 
         return state_preds, action_preds, return_preds
 
-    def get_action(self, states, actions, rewards, returns_to_go, timesteps, **kwargs):
+    def get_action(self, states, actions, rewards, returns_to_go, timesteps, action_mask, **kwargs):
         # we don't care about the past rewards in this model
 
         states = states.reshape(1, -1, self.state_dim)

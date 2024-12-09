@@ -5,7 +5,7 @@ import os
 import tqdm
 
 from ev2gym.models.ev2gym_env import EV2Gym
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
 
 from ev2gym.rl_agent.reward import SquaredTrackingErrorReward, ProfitMax_TrPenalty_UserIncentives, profit_maximization, SimpleReward
 
@@ -92,22 +92,21 @@ def evaluate_episode_rtg(
     # config_file="config_files/config.yaml",
     **kwargs
 ):
-    print("Evaluating episodes!")
     model.eval()
     model.to(device=device)
 
-    if type(state_mean) is np.ndarray:        
+    if type(state_mean) is np.ndarray:
         state_mean = torch.from_numpy(state_mean).to(device=device)
-        state_std = torch.from_numpy(state_std).to(device=device)    
-        
+        state_std = torch.from_numpy(state_std).to(device=device)
+
     # set state_mean and state_std to 0 and 1 if not provided
-    
+
     state_mean = torch.zeros(state_dim, device=device)
     state_std = torch.ones(state_dim, device=device)
 
     test_rewards = []
     test_stats = []
-    
+
     # env = test_env
 
     global_target_return = 0
@@ -121,6 +120,7 @@ def evaluate_episode_rtg(
         states = torch.from_numpy(state).reshape(
             1, state_dim).to(device=device, dtype=torch.float32)
         actions = torch.zeros((0, act_dim), device=device, dtype=torch.float32)
+        actions_mask = torch.zeros((1, act_dim), device=device, dtype=torch.float32)
         rewards = torch.zeros(0, device=device, dtype=torch.float32)
 
         ep_return = global_target_return
@@ -129,8 +129,6 @@ def evaluate_episode_rtg(
         timesteps = torch.tensor(
             0, device=device, dtype=torch.long).reshape(1, 1)
 
-        sim_states = []
-
         episode_return, episode_length = 0, 0
         for t in range(max_ep_len):
 
@@ -138,7 +136,7 @@ def evaluate_episode_rtg(
             actions = torch.cat([actions, torch.zeros(
                 (1, act_dim), device=device)], dim=0)
             rewards = torch.cat([rewards, torch.zeros(1, device=device)])
-            
+
             if model_type == 'dt' or model_type == 'gnn_dt':
                 action = model.get_action(
                     (states.to(dtype=torch.float32) - state_mean) / state_std,
@@ -146,29 +144,34 @@ def evaluate_episode_rtg(
                     rewards.to(dtype=torch.float32),
                     target_return.to(dtype=torch.float32),
                     timesteps.to(dtype=torch.long),
+                    actions_mask.to(dtype=torch.float32),
                 )
             elif model_type == 'dmamba':
                 action = model.get_action(
                     (states.to(dtype=torch.float32) - state_mean) / state_std,
-                    actions.to(dtype=torch.float32),                    
+                    actions.to(dtype=torch.float32),
                     target_return.to(dtype=torch.float32),
                     timesteps.to(dtype=torch.long),
                 )
             else:
                 raise ValueError(f"model_type {model_type} not recognized")
-                
+
             actions[-1] = action
             action = action.detach().cpu().numpy()
 
             state, reward, done, truncated, stats = env.step(action)
 
+            action_mask = torch.from_numpy(stats['action_mask']).to(
+                device=device).reshape(1, act_dim)
+            actions_mask = torch.cat([actions_mask, action_mask], dim=0)
+            
             cur_state = torch.from_numpy(state).to(
                 device=device).reshape(1, state_dim)
             states = torch.cat([states, cur_state], dim=0)
             rewards[-1] = reward
 
             if mode != 'delayed':
-                pred_return = target_return[0, -1] - (reward/scale)                
+                pred_return = target_return[0, -1] - (reward/scale)
             else:
                 pred_return = target_return[0, -1]
             target_return = torch.cat(
@@ -184,7 +187,7 @@ def evaluate_episode_rtg(
                 test_stats.append(stats)
                 test_rewards.append(episode_return)
                 break
-            
+
     keys_to_keep = [
         'total_reward',
         'total_profits',
@@ -194,11 +197,11 @@ def evaluate_episode_rtg(
         'min_user_satisfaction',
         'power_tracker_violation',
         'total_transformer_overload',
-        
+
     ]
 
     stats = {}
-    for key in test_stats[0].keys():  
+    for key in test_stats[0].keys():
         if "opt" in key:
             key_name = "opt/" + key.split("opt_")[1]
             if key.split("opt_")[1] not in keys_to_keep:
@@ -208,9 +211,8 @@ def evaluate_episode_rtg(
                 continue
             key_name = "test/" + key
         stats[key_name] = np.mean([test_stats[i][key]
-                            for i in range(len(test_stats))])
-            
-    
+                                   for i in range(len(test_stats))])
+
     # stats['mean_test_return'] = np.mean(test_rewards)
 
     return stats  # , episode_length
@@ -258,6 +260,7 @@ def evaluate_episode_rtg_from_replays(
         0, device=device, dtype=torch.long).reshape(1, 1)
 
     sim_states = []
+    action_mask = torch.zeros(1, act_dim, device=device)
 
     episode_return, episode_length = 0, 0
     for t in range(max_ep_len):
@@ -273,12 +276,14 @@ def evaluate_episode_rtg_from_replays(
             rewards.to(dtype=torch.float32),
             target_return.to(dtype=torch.float32),
             timesteps.to(dtype=torch.long),
+            action_mask.to(dtype=torch.float32),
         )
         actions[-1] = action
         action = action.detach().cpu().numpy()
 
         state, reward, done, truncated, stats = env.step(action)
 
+        action_mask = stats['action_mask']
         cur_state = torch.from_numpy(state).to(
             device=device).reshape(1, state_dim)
         states = torch.cat([states, cur_state], dim=0)
@@ -288,7 +293,7 @@ def evaluate_episode_rtg_from_replays(
             pred_return = target_return[0, -1] - (reward/scale)
         else:
             pred_return = target_return[0, -1]
-            
+
         target_return = torch.cat(
             [target_return, pred_return.reshape(1, 1)], dim=1)
         timesteps = torch.cat(

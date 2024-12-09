@@ -14,7 +14,7 @@ num_eval_episodes = 30
 
 counter = 0
 for model_type in ["gnn_dt"]:
-    for action_mask in [False]:
+    for action_mask in [True]:
         for K in [10]:
             for batch_size in [128]:
                 # "RR_400_000", "optimal_100000", "RR_10_000"
@@ -44,7 +44,7 @@ for model_type in ["gnn_dt"]:
                                 ' --log_to_wandb True' + \
                                 ' --action_masking ' + str(action_mask) + \
                                 ' --group_name ' + '"2ndTests_"' + \
-                                ' --name RTG_K=' + str(K) + \
+                                ' --name InputMasktoo_RTG_K=' + str(K) + \
                                 ",action_mask=" + str(action_mask) + \
                                 "," + str(model_type) + "," + \
                                 'dataset=' + dataset + \

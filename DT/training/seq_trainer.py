@@ -18,6 +18,7 @@ class SequenceTrainer(Trainer):
             rtg[:, :-1],
             timesteps,
             attention_mask=attention_mask,
+            action_mask=action_mask
         )
 
         act_dim = action_preds.shape[2]

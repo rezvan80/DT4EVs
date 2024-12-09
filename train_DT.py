@@ -377,6 +377,7 @@ def experiment(vars):
         loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, a_masks: torch.mean(
             ((a_hat - a)**2) * a_masks
         )
+        
     else:
         loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, _: torch.mean(
                 (a_hat - a)**2),

@@ -31,7 +31,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
             max_ep_len=4096,
             action_tanh=True,
             remove_act_embs=False,
-            fx_node_sizes = {},
+            fx_node_sizes={},
             feature_dim=8,
             GNN_hidden_dim=32,
             num_gcn_layers=3,
@@ -48,8 +48,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
         self.feature_dim = feature_dim
         self.GNN_hidden_dim = GNN_hidden_dim
         self.num_gcn_layers = num_gcn_layers
-        
-        
+
         gpt_config = transformers.GPT2Config(
             vocab_size=1,  # doesn't matter -- we don't use the vocab
             n_embd=hidden_size,
@@ -65,7 +64,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
         # )
         # self.transformer = GPTNeoForCausalLM(gpt_config)
         # self.transformer = MambaForCausalLM(gpt_config)
-        
+
         # Node-specific embedding layers
         self.ev_embedding = nn.Linear(fx_node_sizes['ev'], feature_dim)
         self.cs_embedding = nn.Linear(fx_node_sizes['cs'], feature_dim)
@@ -74,30 +73,33 @@ class GNN_DecisionTransformer(TrajectoryModel):
 
         # GCN layers to extract features with a unified edge index
         self.gcn_conv = GCNConv(feature_dim, GNN_hidden_dim)
-        
+
         if num_gcn_layers == 3:
             self.gcn_layers = nn.ModuleList(
                 [GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
                     GCNConv(2*GNN_hidden_dim, 3*GNN_hidden_dim)])
             mlp_layer_features = 3*GNN_hidden_dim
-            
+
         elif num_gcn_layers == 4:
             self.gcn_layers = nn.ModuleList([GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
-                                             GCNConv(2*GNN_hidden_dim,3*GNN_hidden_dim),
-                                                GCNConv(3*GNN_hidden_dim, 2*GNN_hidden_dim)])            
+                                             GCNConv(2*GNN_hidden_dim,
+                                                     3*GNN_hidden_dim),
+                                             GCNConv(3*GNN_hidden_dim, 2*GNN_hidden_dim)])
             mlp_layer_features = 2*GNN_hidden_dim
-            
+
         elif num_gcn_layers == 5:
             self.gcn_layers = nn.ModuleList([GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
-                                                GCNConv(2*GNN_hidden_dim, 3*GNN_hidden_dim),
-                                                GCNConv(3*GNN_hidden_dim, 4*GNN_hidden_dim),
-                                                GCNConv(4*GNN_hidden_dim, 3*GNN_hidden_dim)
-                                                ])            
+                                             GCNConv(2*GNN_hidden_dim,
+                                                     3*GNN_hidden_dim),
+                                             GCNConv(3*GNN_hidden_dim,
+                                                     4*GNN_hidden_dim),
+                                             GCNConv(4*GNN_hidden_dim,
+                                                     3*GNN_hidden_dim)
+                                             ])
             mlp_layer_features = 3*GNN_hidden_dim
         else:
             raise ValueError(
                 f"Number of GCN layers not supported, use 3, 4, or 5!")
-
 
         # print("hiden size: ", hidden_size,max_ep_len)
         self.embed_timestep = nn.Embedding(max_ep_len, hidden_size)
@@ -118,10 +120,12 @@ class GNN_DecisionTransformer(TrajectoryModel):
         # self.actionSigmoid = nn.Sigmoid()
         self.predict_return = torch.nn.Linear(hidden_size, 1)
 
+    def forward(self, states, actions, rewards, returns_to_go, timesteps,
+                attention_mask=None,
+                action_mask=None):
 
-
-    def forward(self, states, actions, rewards, returns_to_go, timesteps, attention_mask=None):
-
+        action_mask = action_mask.to(dtype=torch.float32)
+        actions = torch.mul(actions, action_mask)
         # print(f'states {states}')
         # print(f'actions {actions}')
         # print(f'rewards {rewards}')
@@ -152,8 +156,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
             gnn_states.append(batch_states)
 
         gnn_states = to_GNN_Batch(gnn_states, device=self.device)
-        
-        
+
         # GNN forward pass
         ev_features = gnn_states.ev_features
         cs_features = gnn_states.cs_features
@@ -161,7 +164,6 @@ class GNN_DecisionTransformer(TrajectoryModel):
         env_features = gnn_states.env_features
         edge_index = gnn_states.edge_index
 
-    
         total_nodes = ev_features.shape[0] + cs_features.shape[0] + \
             tr_features.shape[0] + env_features.shape[0]
 
@@ -199,7 +201,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
 
         # Graph Embedding
         pooled_embedding = global_mean_pool(x, batch=batch)
-        
+
         # print(f"Pooled embedding shape: {pooled_embedding.shape}")
         # reshape to (batch_size, seq_length, hidden_size)
         pooled_embedding = pooled_embedding.reshape(
@@ -256,14 +258,17 @@ class GNN_DecisionTransformer(TrajectoryModel):
 
         return state_preds, action_preds, return_preds
 
-    def get_action(self, states, actions, rewards, returns_to_go, timesteps, **kwargs):
+    def get_action(self, states, actions, rewards, returns_to_go, timesteps,
+                   action_mask,
+                   **kwargs):
         # we don't care about the past rewards in this model
-
         states = states.reshape(1, -1, self.state_dim)
         actions = actions.reshape(1, -1, self.act_dim)
+        action_mask = action_mask.reshape(1, -1, self.act_dim)
         rewards = rewards.reshape(1, -1, 1)
         returns_to_go = returns_to_go.reshape(1, -1, 1)
         timesteps = timesteps.reshape(1, -1)
+        
 
         if self.max_length is not None:
             states = states[:, -self.max_length:]
@@ -271,6 +276,7 @@ class GNN_DecisionTransformer(TrajectoryModel):
             rewards = rewards[:, -self.max_length:]
             returns_to_go = returns_to_go[:, -self.max_length:]
             timesteps = timesteps[:, -self.max_length:]
+            action_mask = action_mask[:, -self.max_length:]
 
             # pad all tokens to sequence length
             attention_mask = torch.cat(
@@ -298,11 +304,16 @@ class GNN_DecisionTransformer(TrajectoryModel):
                              timesteps.shape[1]), device=timesteps.device), timesteps],
                 dim=1
             ).to(dtype=torch.long)
+            action_mask = torch.cat(
+                [torch.zeros((action_mask.shape[0], self.max_length -
+                             action_mask.shape[1], self.act_dim), device=action_mask.device), action_mask],
+                dim=1).to(dtype=torch.float32)
         else:
             attention_mask = None
 
         _, action_preds, return_preds = self.forward(
-            states, actions, rewards, returns_to_go, timesteps, attention_mask=attention_mask, **kwargs)
+            states, actions, rewards, returns_to_go, timesteps, attention_mask=attention_mask,
+            action_mask=action_mask, **kwargs)
 
         return action_preds[0, -1]
 
