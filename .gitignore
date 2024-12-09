@@ -166,5 +166,6 @@ replay/
 trajectories/
 wandb/
 saved_models/
+eval_replays/
 
 model.lp

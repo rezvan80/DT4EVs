@@ -51,6 +51,7 @@ class EvCityReplay():
         if env.eval_mode =="optimal":
             # self.optimal_EVs = env.EVs
             self.optimal_stats = self.stats
+            env.optimal_stats = self.stats
             
         #     if env.load_from_replay_path is not None:            
         #         self.unstirred_EVs = env.replay.unstirred_EVs
