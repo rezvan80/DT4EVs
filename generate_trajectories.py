@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     trajectories = []
 
-    trajecotries_type = "optimal"  # args.dataset
+    trajecotries_type = "random"  # args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"
@@ -78,7 +78,9 @@ if __name__ == "__main__":
         trajectory_i = {"observations": [],
                         "actions": [],
                         "rewards": [],
-                        "dones": []}
+                        "dones": [],
+                        "action_mask": [],
+                        }
 
         epoch_return = 0
 
@@ -134,11 +136,15 @@ if __name__ == "__main__":
             actions = agent.get_action(env)
 
             new_state, reward, done, truncated, stats = env.step(actions)
+            
 
             trajectory_i["observations"].append(state)
             trajectory_i["actions"].append(actions)
             trajectory_i["rewards"].append(reward)
             trajectory_i["dones"].append(done)
+            trajectory_i["action_mask"].append(stats['action_mask'])
+            
+            
             state = new_state
 
             if done:
@@ -154,6 +160,7 @@ if __name__ == "__main__":
         trajectory_i["actions"] = np.array(trajectory_i["actions"])
         trajectory_i["rewards"] = np.array(trajectory_i["rewards"])
         trajectory_i["dones"] = np.array(trajectory_i["dones"])
+        trajectory_i["action_mask"] = np.array(trajectory_i["action_mask"])
 
         trajectories.append(trajectory_i)
 
