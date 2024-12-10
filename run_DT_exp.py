@@ -13,14 +13,14 @@ max_iters = 350
 num_eval_episodes = 30
 
 counter = 0
-for model_type in ["gnn_in_out_dt"]: #dt, gnn_dt, gnn_in_out_dt
+for model_type in ["dt","gnn_dt","gnn_in_out_dt"]: #dt, gnn_dt, gnn_in_out_dt
     for action_mask in [True]:
         for K in [10]:
             for batch_size in [128]:
                 # "RR_400_000", "optimal_100000", "RR_10_000"
                 # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
                 for dataset in ["random_100"]:  # optimal_5000, suboptimal_10000
-                    for embed_dim in [32]:  # 128, 512
+                    for embed_dim in [128]:  # 128, 512
                         #   ' --device cuda:0' + str(counter % 2) + \
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
 
