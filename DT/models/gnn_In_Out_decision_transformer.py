@@ -185,8 +185,8 @@ class GNN_IN_OUT_DecisionTransformer(TrajectoryModel):
 
         for layer in self.gcn_layers:
             x_gnn = layer(x_gnn, edge_index)
-            # if layer != self.gcn_layers[-1]:
-            x_gnn = F.relu(x_gnn)
+            if layer != self.gcn_layers[-1]:
+                x_gnn = F.relu(x_gnn)
 
         # make batch sample mask
         sample_node_length = gnn_states.sample_node_length

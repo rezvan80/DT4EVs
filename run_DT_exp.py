@@ -13,7 +13,7 @@ max_iters = 350
 num_eval_episodes = 30
 
 counter = 0
-for model_type in ["dt","gnn_dt","gnn_in_out_dt"]: #dt, gnn_dt, gnn_in_out_dt
+for model_type in ["gnn_in_out_dt"]: #dt, gnn_dt, gnn_in_out_dt
     for action_mask in [True]:
         for K in [10]:
             for batch_size in [128]:
@@ -44,7 +44,7 @@ for model_type in ["dt","gnn_dt","gnn_in_out_dt"]: #dt, gnn_dt, gnn_in_out_dt
                                 ' --log_to_wandb True' + \
                                 ' --action_masking ' + str(action_mask) + \
                                 ' --group_name ' + '"2ndTests_"' + \
-                                ' --name ReLu_LastLayer_RTG_K=' + str(K) + \
+                                ' --name Normal_ReLu_LastLayer_RTG_K=' + str(K) + \
                                 ",action_mask=" + str(action_mask) + \
                                 "," + str(model_type) + "," + \
                                 'dataset=' + dataset + \
