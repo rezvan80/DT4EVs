@@ -17,6 +17,7 @@ from DT.training.act_trainer import ActTrainer
 from DT.training.seq_trainer import SequenceTrainer
 
 from DT.models.gnn_decision_transformer import GNN_DecisionTransformer
+from DT.models.gnn_In_Out_decision_transformer import GNN_IN_OUT_DecisionTransformer
 
 from ev2gym.models.ev2gym_env import EV2Gym
 from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
@@ -104,8 +105,8 @@ def experiment(vars):
     # elif dataset == "optimal_100000":
     #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
 
-    if dataset == 'random_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
+    if dataset == 'random_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
     elif dataset == 'optimal_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
     elif dataset == 'optimal_5000':
@@ -273,7 +274,7 @@ def experiment(vars):
     def eval_episodes(target_rew):
         def fn(model):
             with torch.no_grad():
-                if model_type == 'dt' or model_type == 'gnn_dt':
+                if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt':
                     stats = evaluate_episode_rtg(
                         eval_envs,
                         exp_prefix,
@@ -346,7 +347,28 @@ def experiment(vars):
             config=config,
             device=device,
         )
-
+    elif model_type == 'gnn_in_out_dt':
+        model = GNN_IN_OUT_DecisionTransformer(
+            state_dim=state_dim,
+            act_dim=act_dim,
+            max_length=K,
+            max_ep_len=max_ep_len,
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
+            n_positions=1024,
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
+            action_tanh=True,
+            fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
+            feature_dim=vars['feature_dim'],
+            GNN_hidden_dim=vars['GNN_hidden_dim'],
+            num_gcn_layers=vars['num_gcn_layers'],
+            config=config,
+            device=device,
+        )
     elif model_type == 'bc':
         model = MLPBCModel(
             state_dim=state_dim,
@@ -383,7 +405,7 @@ def experiment(vars):
                 (a_hat - a)**2),
             
 
-    if model_type == 'dt' or model_type == 'gnn_dt':
+    if model_type == 'dt' or model_type == 'gnn_dt' or model_type== 'gnn_in_out_dt':
         trainer = SequenceTrainer(
             model=model,
             optimizer=optimizer,
@@ -461,7 +483,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
     parser.add_argument('--model_type', type=str,
-                        default='gnn_dt')  # dt, gnn_dt
+                        default='gnn_in_out_dt')  # dt, gnn_dt, gnn_in_out_dt
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)

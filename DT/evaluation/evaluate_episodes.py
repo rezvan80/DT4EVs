@@ -39,7 +39,6 @@ def evaluate_episode(
     rewards = torch.zeros(0, device=device, dtype=torch.float32)
     target_return = torch.tensor(
         target_return, device=device, dtype=torch.float32)
-    sim_states = []
 
     episode_return, episode_length = 0, 0
     for t in range(max_ep_len):
@@ -89,7 +88,6 @@ def evaluate_episode_rtg(
     target_return=None,
     mode='normal',
     n_test_episodes=10,
-    # config_file="config_files/config.yaml",
     **kwargs
 ):
     model.eval()
@@ -137,7 +135,7 @@ def evaluate_episode_rtg(
                 (1, act_dim), device=device)], dim=0)
             rewards = torch.cat([rewards, torch.zeros(1, device=device)])
 
-            if model_type == 'dt' or model_type == 'gnn_dt':
+            if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt':
                 action = model.get_action(
                     (states.to(dtype=torch.float32) - state_mean) / state_std,
                     actions.to(dtype=torch.float32),
