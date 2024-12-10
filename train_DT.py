@@ -47,7 +47,7 @@ def experiment(vars):
     exp_prefix = f'{run_name}.{dataset}.{random.randint(int(1e5), int(1e6) - 1)}'
 
     # seed everything
-    seed = vars.get('seed', 0)
+    seed = vars['seed']
 
     random.seed(seed)
     np.random.seed(seed)

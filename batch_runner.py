@@ -110,6 +110,7 @@ previous=$(/usr/bin/nvidia-smi --query-accounted-apps='gpu_utilization,mem_utili
             ' --embed_dim ' + str(embed_dim) + \
             ' --n_layer ' + str(n_layer) + \
             ' --n_head ' + str(n_head) + \
+            ' --seed ' + str(seed) + \
             ' --max_iters=' + str(max_iters) + \
             ' --batch_size=' + str(batch_size) + \
             ' --num_steps_per_iter=' + str(num_steps_per_iter) + \
