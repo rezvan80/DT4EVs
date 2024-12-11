@@ -35,8 +35,8 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
             feature_dim=8,
             GNN_hidden_dim=32,
             act_GNN_hidden_dim=32,
-            num_gcn_layers=3,
             num_act_gcn_layers=3,
+            num_gcn_layers=3,            
             action_masking=False,
             config=None,
             device=None,
@@ -53,6 +53,7 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         self.GNN_hidden_dim = GNN_hidden_dim
         self.num_gcn_layers = num_gcn_layers
         self.num_act_gcn_layers = num_act_gcn_layers
+        self.act_GNN_hidden_dim = act_GNN_hidden_dim
 
         gpt_config = transformers.GPT2Config(
             vocab_size=1,  # doesn't matter -- we don't use the vocab

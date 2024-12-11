@@ -23,8 +23,8 @@ num_eval_episodes = 30
 if not os.path.exists('./slurm_logs'):
     os.makedirs('./slurm_logs')
 
-
-for model_type in ['gnn_dt', 'gnn_in_out_dt', 'dt']:  # 'dt', 'gnn_dt', 'gnn_in_out_dt'
+# 'gnn_dt', 'gnn_in_out_dt', 'dt'
+for model_type in ['gnn_act_emb']:  # 'dt', 'gnn_dt', 'gnn_in_out_dt', 'gnn_act_emb
     for action_mask in [True,False]:
         for K in [2,10]:
             for batch_size in [128]:

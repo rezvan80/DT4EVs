@@ -398,6 +398,8 @@ def experiment(vars):
             feature_dim=vars['feature_dim'],
             GNN_hidden_dim=vars['GNN_hidden_dim'],
             num_gcn_layers=vars['num_gcn_layers'],
+            act_GNN_hidden_dim=vars['act_GNN_hidden_dim'],
+            num_act_gcn_layers=vars['num_act_gcn_layers'],
             config=config,
             device=device,
         )
@@ -544,6 +546,8 @@ if __name__ == '__main__':
     parser.add_argument('--feature_dim', type=int, default=8)
     parser.add_argument('--GNN_hidden_dim', type=int, default=32)
     parser.add_argument('--num_gcn_layers', type=int, default=3)
+    parser.add_argument('--act_GNN_hidden_dim', type=int, default=32)
+    parser.add_argument('--num_act_gcn_layers', type=int, default=3)
 
     args = parser.parse_args()
 
