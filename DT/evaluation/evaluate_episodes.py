@@ -32,7 +32,6 @@ def evaluate_episode(
     test_rewards = []
     test_stats = []
 
-
     for test_cycle in tqdm.tqdm(range(len(test_env))):
         env = test_env[test_cycle]
         state, _ = env.reset()
@@ -153,7 +152,8 @@ def evaluate_episode_rtg(
         states = torch.from_numpy(state).reshape(
             1, state_dim).to(device=device, dtype=torch.float32)
         actions = torch.zeros((0, act_dim), device=device, dtype=torch.float32)
-        actions_mask = torch.zeros((1, act_dim), device=device, dtype=torch.float32)
+        actions_mask = torch.zeros(
+            (1, act_dim), device=device, dtype=torch.float32)
         rewards = torch.zeros(0, device=device, dtype=torch.float32)
 
         ep_return = global_target_return
@@ -197,7 +197,7 @@ def evaluate_episode_rtg(
             action_mask = torch.from_numpy(stats['action_mask']).to(
                 device=device).reshape(1, act_dim)
             actions_mask = torch.cat([actions_mask, action_mask], dim=0)
-            
+
             cur_state = torch.from_numpy(state).to(
                 device=device).reshape(1, state_dim)
             states = torch.cat([states, cur_state], dim=0)
@@ -269,8 +269,11 @@ def evaluate_episode_rtg_from_replays(
     model.eval()
     model.to(device=device)
 
-    state_mean = torch.from_numpy(state_mean).to(device=device)
-    state_std = torch.from_numpy(state_std).to(device=device)
+    # state_mean = torch.from_numpy(state_mean).to(device=device)
+    # state_std = torch.from_numpy(state_std).to(device=device)
+
+    state_mean = torch.zeros(state_dim, device=device)
+    state_std = torch.ones(state_dim, device=device)
 
     test_rewards = []
     test_stats = []
@@ -284,6 +287,8 @@ def evaluate_episode_rtg_from_replays(
     states = torch.from_numpy(state).reshape(
         1, state_dim).to(device=device, dtype=torch.float32)
     actions = torch.zeros((0, act_dim), device=device, dtype=torch.float32)
+    actions_mask = torch.zeros(
+        (1, act_dim), device=device, dtype=torch.float32)
     rewards = torch.zeros(0, device=device, dtype=torch.float32)
 
     ep_return = global_target_return
@@ -291,9 +296,6 @@ def evaluate_episode_rtg_from_replays(
         ep_return, device=device, dtype=torch.float32).reshape(1, 1)
     timesteps = torch.tensor(
         0, device=device, dtype=torch.long).reshape(1, 1)
-
-    sim_states = []
-    action_mask = torch.zeros(1, act_dim, device=device)
 
     episode_return, episode_length = 0, 0
     for t in range(max_ep_len):
@@ -309,14 +311,18 @@ def evaluate_episode_rtg_from_replays(
             rewards.to(dtype=torch.float32),
             target_return.to(dtype=torch.float32),
             timesteps.to(dtype=torch.long),
-            action_mask.to(dtype=torch.float32),
+            actions_mask.to(dtype=torch.float32),
         )
+
         actions[-1] = action
         action = action.detach().cpu().numpy()
 
         state, reward, done, truncated, stats = env.step(action)
 
-        action_mask = stats['action_mask']
+        action_mask = torch.from_numpy(stats['action_mask']).to(
+            device=device).reshape(1, act_dim)
+        actions_mask = torch.cat([actions_mask, action_mask], dim=0)
+
         cur_state = torch.from_numpy(state).to(
             device=device).reshape(1, state_dim)
         states = torch.cat([states, cur_state], dim=0)
@@ -326,7 +332,6 @@ def evaluate_episode_rtg_from_replays(
             pred_return = target_return[0, -1] - (reward/scale)
         else:
             pred_return = target_return[0, -1]
-
         target_return = torch.cat(
             [target_return, pred_return.reshape(1, 1)], dim=1)
         timesteps = torch.cat(
@@ -339,6 +344,5 @@ def evaluate_episode_rtg_from_replays(
         if done:
             test_stats.append(stats)
             test_rewards.append(episode_return)
-            break
 
     return stats, episode_return
