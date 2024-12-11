@@ -24,6 +24,7 @@ from ev2gym.baselines.mpc.eMPC import eMPC_V2G, eMPC_G2V
 from ev2gym.baselines.mpc.ocmf_mpc import OCMF_V2G, OCMF_G2V
 from ev2gym.baselines.heuristics import ChargeAsFastAsPossibleToDesiredCapacity
 from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible
+from ev2gym.baselines.gurobi_models.PST_V2G_profit_max_mo import mo_PST_V2GProfitMaxOracleGB
 
 from ev2gym.models.ev2gym_env import EV2Gym
 import yaml
@@ -75,12 +76,12 @@ def evaluator():
 
     elif "V2G_ProfixMaxWithLoads" in config_file:
         state_function_Normal = V2G_profit_max_loads
-        state_function_GNN = V2G_ProfitMax_with_Loads_GNN
+        # state_function_GNN = V2G_ProfitMax_with_Loads_GNN
         reward_function = profit_maximization
 
     elif "PST" in config_file:
         state_function_Normal = PublicPST
-        state_function_GNN = PublicPST_GNN
+        # state_function_GNN = PublicPST_GNN
         reward_function = SimpleReward
     else:
         raise ValueError(f'Unknown config file {config_file}')
@@ -88,14 +89,14 @@ def evaluator():
     # Algorithms to compare:
     # Use algorithm name or the saved RL model path as string
     algorithms = [
-        # ChargeAsFastAsPossible,
+        ChargeAsFastAsPossible,
         "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
-        # DecisionTransformer,
         # ChargeAsLateAsPossible,
         # RoundRobin_GF_off_allowed,
         # RoundRobin_GF,
         # RoundRobin,
 
+        mo_PST_V2GProfitMaxOracleGB
         # eMPC_V2G,
         # eMPC_V2G_v2,
         # # V2GProfitMaxLoadsOracle,
@@ -328,7 +329,7 @@ def evaluator():
                                               replay_path=replay_path,
                                               verbose=False)
                             algorithm_name = algorithm.__name__
-                            
+
                     except Exception as error:
                         # print(error)
                         # print(
@@ -338,111 +339,113 @@ def evaluator():
 
                     rewards = []
 
+                    DT_FLAG = False
                     if type(algorithm) == str:
-                        if "gnn_in_out_dt" in algorithm:
+                        if "dt" in algorithm:
+                            DT_FLAG = True
 
-                            result_tuple = evaluate_episode_rtg_from_replays(env=env,
-                                                                             model=model,
-                                                                             max_ep_len=simulation_length,
-                                                                             device='cuda',
-                                                                             target_return=0,
-                                                                             mode='normal',
-                                                                             )
-                            stats, rewards = result_tuple[0], [result_tuple[1]]
-                            done = True
+                    if DT_FLAG:
+                        result_tuple = evaluate_episode_rtg_from_replays(env=env,
+                                                                         model=model,
+                                                                         max_ep_len=simulation_length,
+                                                                         device='cuda',
+                                                                         target_return=0,
+                                                                         mode='normal',
+                                                                         )
+                        stats, rewards = result_tuple[0], [result_tuple[1]]
+                        done = True
 
-                        else:
-                            for i in range(simulation_length):
-                                print(
-                                    f' Step {i+1}/{simulation_length} -- {algorithm}')
-                                ################ Evaluation #############################
+                    else:
+                        for i in range(simulation_length):
+                            print(
+                                f' Step {i+1}/{simulation_length} -- {algorithm}')
+                            ################ Evaluation #############################
 
-                                if type(algorithm) == str:
-                                    if any(algo in algorithm for algo in ['ppo', 'a2c', 'ddpg', 'tqc', 'trpo', 'ars', 'rppo']):
-                                        action, _ = model.predict(
-                                            state, deterministic=True)
-                                        obs, reward, done, stats = env.step(
-                                            action)
-
-                                        if i == simulation_length - 2:
-                                            saved_env = deepcopy(
-                                                env.get_attr('env')[0])
-
-                                        stats = stats[0]
-
-                                else:
-                                    simple_state = state_function_Normal(
-                                        env=env)
-                                    # gnn_state = state_function_GNN(env=env)
-                                    # ev_indexes = gnn_state['action_mapper']
-
-                                    action = model.get_action(env=env)
-                                    new_state, reward, done, _, stats = env.step(
+                            if type(algorithm) == str:
+                                if any(algo in algorithm for algo in ['ppo', 'a2c', 'ddpg', 'tqc', 'trpo', 'ars', 'rppo']):
+                                    action, _ = model.predict(
+                                        state, deterministic=True)
+                                    obs, reward, done, stats = env.step(
                                         action)
 
-                                    if SAVE_REPLAY_BUFFER:
-                                        next_simple_state = state_function_Normal(
-                                            env=env)
-                                        next_gnn_state = state_function_GNN(
-                                            env=env)
-                                        replay_buffers[algorithm].add(state=simple_state,
-                                                                      action=action,
-                                                                      ev_action=action[ev_indexes],
-                                                                      next_state=next_simple_state,
-                                                                      reward=reward,
-                                                                      done=done,
-                                                                      gnn_state=gnn_state,
-                                                                      gnn_next_state=next_gnn_state)
-                                ############################################################
+                                    if i == simulation_length - 2:
+                                        saved_env = deepcopy(
+                                            env.get_attr('env')[0])
 
-                                rewards.append(reward)
+                                    stats = stats[0]
 
-                        if done:
-
-                            results_i = pd.DataFrame({'run': k,
-                                                        'Algorithm': algorithm_name,
-                                                        'algorithm_version': algorithm,
-                                                        'control_horizon': h,
-                                                        'p_fail': p_fail,
-                                                        'p_delay': p_delay,
-                                                        'discharge_price_factor': config['discharge_price_factor'],
-                                                        'total_ev_served': stats['total_ev_served'],
-                                                        'total_profits': stats['total_profits'],
-                                                        'total_energy_charged': stats['total_energy_charged'],
-                                                        'total_energy_discharged': stats['total_energy_discharged'],
-                                                        'average_user_satisfaction': stats['average_user_satisfaction'],
-                                                        'power_tracker_violation': stats['power_tracker_violation'],
-                                                        'tracking_error': stats['tracking_error'],
-                                                        'energy_tracking_error': stats['energy_tracking_error'],
-                                                        'energy_user_satisfaction': stats['energy_user_satisfaction'],
-                                                        'min_energy_user_satisfaction': stats['min_energy_user_satisfaction'],
-                                                        'std_energy_user_satisfaction': stats['std_energy_user_satisfaction'],
-                                                        'total_transformer_overload': stats['total_transformer_overload'],
-                                                        'battery_degradation': stats['battery_degradation'],
-                                                        'battery_degradation_calendar': stats['battery_degradation_calendar'],
-                                                        'battery_degradation_cycling': stats['battery_degradation_cycling'],
-                                                        'total_reward': sum(rewards),
-                                                        'time': time.time() - timer,
-                                                        }, index=[counter])
-
-                            # change name of key to algorithm_name
-                            if SAVE_REPLAY_BUFFER:
-                                if k == n_test_cycles - 1:
-                                    replay_buffers[algorithm_name] = replay_buffers.pop(
-                                        algorithm)
-
-                            if counter == 1:
-                                results = results_i
                             else:
-                                results = pd.concat(
-                                    [results, results_i])
+                                simple_state = state_function_Normal(
+                                    env=env)
+                                # gnn_state = state_function_GNN(env=env)
+                                # ev_indexes = gnn_state['action_mapper']
 
-                            if algorithm in [PPO, A2C, DDPG, SAC, TD3, TQC, TRPO, ARS, RecurrentPPO]:
-                                env = saved_env
+                                action = model.get_action(env=env)
+                                new_state, reward, done, _, stats = env.step(
+                                    action)
 
-                            plot_results_dict[str(
-                                algorithm)] = deepcopy(env)
-                            
+                                if SAVE_REPLAY_BUFFER:
+                                    next_simple_state = state_function_Normal(
+                                        env=env)
+                                    next_gnn_state = state_function_GNN(
+                                        env=env)
+                                    replay_buffers[algorithm].add(state=simple_state,
+                                                                  action=action,
+                                                                  ev_action=action[ev_indexes],
+                                                                  next_state=next_simple_state,
+                                                                  reward=reward,
+                                                                  done=done,
+                                                                  gnn_state=gnn_state,
+                                                                  gnn_next_state=next_gnn_state)
+                            ############################################################
+
+                            rewards.append(reward)
+
+                    if done:
+
+                        results_i = pd.DataFrame({'run': k,
+                                                  'Algorithm': algorithm_name,
+                                                  'algorithm_version': algorithm,
+                                                  'control_horizon': h,
+                                                  'p_fail': p_fail,
+                                                  'p_delay': p_delay,
+                                                  'discharge_price_factor': config['discharge_price_factor'],
+                                                  'total_ev_served': stats['total_ev_served'],
+                                                  'total_profits': stats['total_profits'],
+                                                  'total_energy_charged': stats['total_energy_charged'],
+                                                  'total_energy_discharged': stats['total_energy_discharged'],
+                                                  'average_user_satisfaction': stats['average_user_satisfaction'],
+                                                  'power_tracker_violation': stats['power_tracker_violation'],
+                                                  'tracking_error': stats['tracking_error'],
+                                                  'energy_tracking_error': stats['energy_tracking_error'],
+                                                  'energy_user_satisfaction': stats['energy_user_satisfaction'],
+                                                  'min_energy_user_satisfaction': stats['min_energy_user_satisfaction'],
+                                                  'std_energy_user_satisfaction': stats['std_energy_user_satisfaction'],
+                                                  'total_transformer_overload': stats['total_transformer_overload'],
+                                                  'battery_degradation': stats['battery_degradation'],
+                                                  'battery_degradation_calendar': stats['battery_degradation_calendar'],
+                                                  'battery_degradation_cycling': stats['battery_degradation_cycling'],
+                                                  'total_reward': sum(rewards),
+                                                  'time': time.time() - timer,
+                                                  }, index=[counter])
+
+                        # change name of key to algorithm_name
+                        if SAVE_REPLAY_BUFFER:
+                            if k == n_test_cycles - 1:
+                                replay_buffers[algorithm_name] = replay_buffers.pop(
+                                    algorithm)
+
+                        if counter == 1:
+                            results = results_i
+                        else:
+                            results = pd.concat(
+                                [results, results_i])
+
+                        if algorithm in [PPO, A2C, DDPG, SAC, TD3, TQC, TRPO, ARS, RecurrentPPO]:
+                            env = saved_env
+
+                        plot_results_dict[str(
+                            algorithm)] = deepcopy(env)
 
     # save the replay buffers to a pickle file
     if SAVE_REPLAY_BUFFER:
@@ -500,11 +503,10 @@ def evaluator():
         by=('total_reward', 'mean'), ascending=True)
 
     print(results_grouped[['total_reward',
-                           'average_user_satisfaction', 
-                            'total_profits',
-                            'power_tracker_violation']])
-                            
-                           
+                           'average_user_satisfaction',
+                           'total_profits',
+                           'power_tracker_violation']])
+
     #    ]])
     #    'average_user_satisfaction']])
     # input('Press Enter to continue')

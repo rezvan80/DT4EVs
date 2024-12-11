@@ -170,7 +170,8 @@ def evaluate_episode_rtg(
                 (1, act_dim), device=device)], dim=0)
             rewards = torch.cat([rewards, torch.zeros(1, device=device)])
 
-            if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt':
+            if model_type == 'dt' or model_type == 'gnn_dt' or \
+                model_type == 'gnn_in_out_dt' or model_type == 'gnn_act_emb':
                 action = model.get_action(
                     (states.to(dtype=torch.float32) - state_mean) / state_std,
                     actions.to(dtype=torch.float32),

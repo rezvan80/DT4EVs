@@ -15,9 +15,9 @@ num_eval_episodes = 30
 seed = 42
 
 counter = 0
-for model_type in ["bc"]: #dt, gnn_dt, gnn_in_out_dt, bc
+for model_type in ["gnn_act_emb"]: #dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
     for action_mask in [True]:
-        for K in [2,10]:
+        for K in [2, 10, 15]:
             for batch_size in [128]:
                 for dataset in ["optimal_2000"]:  # optimal_2000, random_100
                     for embed_dim in [128]:  # 128, 512

@@ -18,6 +18,7 @@ from DT.training.seq_trainer import SequenceTrainer
 
 from DT.models.gnn_decision_transformer import GNN_DecisionTransformer
 from DT.models.gnn_In_Out_decision_transformer import GNN_IN_OUT_DecisionTransformer
+from DT.models.gnn_emb_decision_transformer import GNN_act_emb_DecisionTransformer
 
 from ev2gym.models.ev2gym_env import EV2Gym
 from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
@@ -127,11 +128,11 @@ def experiment(vars):
     # create folder
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-        
+
     # save the vars to the save path as yaml
     with open(f'{save_path}/vars.yaml', 'w') as f:
         yaml.dump(vars, f)
-        
+
     with open(dataset_path, 'rb') as f:
         trajectories = pickle.load(f)
 
@@ -154,15 +155,15 @@ def experiment(vars):
     eval_replays = os.listdir(eval_replay_path)
     eval_envs = []
     print(f'Loading evaluation replays from {eval_replay_path}')
-    for replay in eval_replays:        
+    for replay in eval_replays:
         eval_env = EV2Gym(config_file=config_path,
                           load_from_replay_path=eval_replay_path + replay,
                           state_function=state_function,
                           reward_function=reward_function,
                           )
         eval_envs.append(eval_env)
-    
-    print(f'Loaded {len(eval_envs)} evaluation replays')    
+
+    print(f'Loaded {len(eval_envs)} evaluation replays')
 
     # used for input normalization
     states = np.concatenate(states, axis=0)
@@ -269,16 +270,17 @@ def experiment(vars):
             dtype=torch.float32, device=device)
         timesteps = torch.from_numpy(np.concatenate(timesteps, axis=0)).to(
             dtype=torch.long, device=device)
-        mask = torch.from_numpy(np.concatenate(mask, axis=0)).to(device=device)     
+        mask = torch.from_numpy(np.concatenate(mask, axis=0)).to(device=device)
         action_mask = torch.from_numpy(np.concatenate(action_mask, axis=0)).to(
-            dtype=torch.float32, device=device)   
+            dtype=torch.float32, device=device)
 
         return s, a, r, d, rtg, timesteps, mask, action_mask
 
     def eval_episodes(target_rew):
         def fn(model):
             with torch.no_grad():
-                if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt':
+                if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt' \
+                        or model_type == 'gnn_act_emb':
                     stats = evaluate_episode_rtg(
                         eval_envs,
                         exp_prefix,
@@ -325,7 +327,7 @@ def experiment(vars):
             n_head=vars['n_head'],
             n_inner=4*vars['embed_dim'],
             activation_function=vars['activation_function'],
-            action_masking = vars['action_masking'],
+            action_masking=vars['action_masking'],
             n_positions=1024,
             resid_pdrop=vars['dropout'],
             attn_pdrop=vars['dropout'],
@@ -343,7 +345,7 @@ def experiment(vars):
             activation_function=vars['activation_function'],
             n_positions=1024,
             resid_pdrop=vars['dropout'],
-            action_masking = vars['action_masking'],
+            action_masking=vars['action_masking'],
             attn_pdrop=vars['dropout'],
             action_tanh=True,
             fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
@@ -368,7 +370,30 @@ def experiment(vars):
             resid_pdrop=vars['dropout'],
             attn_pdrop=vars['dropout'],
             action_tanh=True,
-            action_masking = vars['action_masking'],
+            action_masking=vars['action_masking'],
+            fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
+            feature_dim=vars['feature_dim'],
+            GNN_hidden_dim=vars['GNN_hidden_dim'],
+            num_gcn_layers=vars['num_gcn_layers'],
+            config=config,
+            device=device,
+        )
+    elif model_type == 'gnn_act_emb':
+        model = GNN_act_emb_DecisionTransformer(
+            state_dim=state_dim,
+            act_dim=act_dim,
+            max_length=K,
+            max_ep_len=max_ep_len,
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
+            n_positions=1024,
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
+            action_tanh=True,
+            action_masking=vars['action_masking'],
             fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
             feature_dim=vars['feature_dim'],
             GNN_hidden_dim=vars['GNN_hidden_dim'],
@@ -401,18 +426,17 @@ def experiment(vars):
         optimizer,
         lambda max_iters: min((max_iters+1)/warmup_steps, 1)
     )
-    
+
     if vars['action_masking']:
-        loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, a_masks: torch.mean(
+        def loss_fn(s_hat, a_hat, r_hat, s, a, r, a_masks): return torch.mean(
             ((a_hat - a)**2) * a_masks
         )
-        
-    else:
-        loss_fn = lambda s_hat, a_hat, r_hat, s, a, r, _: torch.mean(
-                (a_hat - a)**2),
-            
 
-    if model_type == 'dt' or model_type == 'gnn_dt' or model_type== 'gnn_in_out_dt':
+    else:
+        def loss_fn(s_hat, a_hat, r_hat, s, a, r, _): return torch.mean(
+            (a_hat - a)**2),
+
+    if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt' or model_type == 'gnn_act_emb':
         trainer = SequenceTrainer(
             model=model,
             optimizer=optimizer,
@@ -458,10 +482,11 @@ def experiment(vars):
 
         if outputs['test/total_reward'] > best_reward:
             best_reward = outputs['test/total_reward']
-            # save pytorch model            
+            # save pytorch model
             torch.save(model.state_dict(),
                        f'saved_models/{exp_prefix}/model.best')
-            print(f' Saving best model with reward {best_reward} at path saved_models/{exp_prefix}/model.best')
+            print(
+                f' Saving best model with reward {best_reward} at path saved_models/{exp_prefix}/model.best')
 
         outputs['best'] = best_reward
 
@@ -490,7 +515,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
     parser.add_argument('--model_type', type=str,
-                        default='bc')  # dt, gnn_dt, gnn_in_out_dt, bc
+                        default='gnn_act_emb')  # dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
@@ -500,7 +525,7 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay', '-wd', type=float, default=1e-4)
     parser.add_argument('--warmup_steps', type=int, default=10000)
     parser.add_argument('--max_iters', type=int, default=500)
-    parser.add_argument('--num_steps_per_iter', type=int, default=10) #1000
+    parser.add_argument('--num_steps_per_iter', type=int, default=10)  # 1000
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
@@ -514,7 +539,7 @@ if __name__ == '__main__':
     parser.add_argument('--action_masking',
                         type=bool,
                         default=True)
-    
+
     # GNN_DT parameters
     parser.add_argument('--feature_dim', type=int, default=8)
     parser.add_argument('--GNN_hidden_dim', type=int, default=32)
