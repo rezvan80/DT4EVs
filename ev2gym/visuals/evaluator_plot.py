@@ -389,6 +389,7 @@ def plot_comparable_EV_SoC_single(results_path, save_path=None, algorithm_names=
 
     plt.close('all')
     fig, ax = plt.subplots()
+    plt.figure(figsize=(10, 7))
     plt.rc('font', family='serif')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -451,12 +452,12 @@ def plot_comparable_EV_SoC_single(results_path, save_path=None, algorithm_names=
             # plt.title(f'Charging Station {cs.id + 1}', fontsize=24)
             
             if counter == 1:
-                plt.ylabel('SoC', fontsize=28)
+                plt.ylabel('SoC', fontsize=14)
                 plt.yticks(np.arange(0, 1.1, 0.2),
                            fontsize=28)
                     
             else:
-                plt.yticks(fontsize=28)
+                plt.yticks(fontsize=14)
                 plt.yticks(np.arange(0, 1.1, 0.1),
                             labels=[' ' for d in np.arange(0, 1.1, 0.1)])            
             
@@ -464,8 +465,8 @@ def plot_comparable_EV_SoC_single(results_path, save_path=None, algorithm_names=
             plt.xlim([env.sim_starting_date, env.sim_date])
             plt.xticks(ticks=date_range_print,
                        labels=[f'{d.hour:2d}:{d.minute:02d}' for d in date_range_print],
-                    #    rotation=45,
-                       fontsize=28)
+                       rotation=45,
+                       fontsize=14)
             counter += 1
 
     # plt.legend(loc='upper center', bbox_to_anchor=(0, -0.15),
