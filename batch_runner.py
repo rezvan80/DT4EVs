@@ -15,7 +15,7 @@ fx_GNN_hidden_dim = 64
 fx_num_heads = 2
 
 num_steps_per_iter = 1000
-max_iters = 350
+max_iters = 200
 num_eval_episodes = 30
 
 
@@ -24,13 +24,13 @@ if not os.path.exists('./slurm_logs'):
     os.makedirs('./slurm_logs')
 
 
-for model_type in ["gnn_in_out_dt"]:  # dt, gnn_dt, gnn_in_out_dt
-    for action_mask in [True]:
-        for K in [10]:
+for model_type in ['gnn_dt', 'gnn_in_out_dt', 'dt']:  # 'dt', 'gnn_dt', 'gnn_in_out_dt'
+    for action_mask in [True,False]:
+        for K in [2,10]:
             for batch_size in [128]:
                 # "RR_400_000", "optimal_100000", "RR_10_000"
                 # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
-                for dataset in ["random_100"]:  # optimal_5000, suboptimal_10000
+                for dataset in ["optimal_2000"]:  # optimal_2000, random_100
                     for embed_dim in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
@@ -61,14 +61,14 @@ for model_type in ["gnn_in_out_dt"]:  # dt, gnn_dt, gnn_in_out_dt
 
                                 else:
                                     memory = 16
-                                    time = 24
+                                    time = 10
 
                                     fx_dim = 32
                                     fx_GNN_hidden_dim = 64
                                     mlp_hidden_dim = 512
 
                                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
-                                run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}_config={config}'
+                                run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
                                 run_name += str(random.randint(0, 100000))  
 
                                 command = '''#!/bin/sh

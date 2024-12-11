@@ -107,8 +107,8 @@ def experiment(vars):
 
     if dataset == 'random_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
-    elif dataset == 'optimal_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
+    elif dataset == 'optimal_2000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_2000.pkl'
     elif dataset == 'optimal_5000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
     elif dataset == 'suboptimal_10000':
@@ -127,7 +127,11 @@ def experiment(vars):
     # create folder
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-
+        
+    # save the vars to the save path as yaml
+    with open(f'{save_path}/vars.yaml', 'w') as f:
+        yaml.dump(vars, f)
+        
     with open(dataset_path, 'rb') as f:
         trajectories = pickle.load(f)
 
