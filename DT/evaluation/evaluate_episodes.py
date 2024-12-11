@@ -11,7 +11,7 @@ from ev2gym.rl_agent.reward import SquaredTrackingErrorReward, ProfitMax_TrPenal
 
 
 def evaluate_episode(
-        env,
+        test_env,
         state_dim,
         act_dim,
         model,
@@ -29,48 +29,83 @@ def evaluate_episode(
     state_mean = torch.from_numpy(state_mean).to(device=device)
     state_std = torch.from_numpy(state_std).to(device=device)
 
-    state = env.reset()
+    test_rewards = []
+    test_stats = []
 
-    # we keep all the histories on the device
-    # note that the latest action and reward will be "padding"
-    states = torch.from_numpy(state).reshape(
-        1, state_dim).to(device=device, dtype=torch.float32)
-    actions = torch.zeros((0, act_dim), device=device, dtype=torch.float32)
-    rewards = torch.zeros(0, device=device, dtype=torch.float32)
-    target_return = torch.tensor(
-        target_return, device=device, dtype=torch.float32)
 
-    episode_return, episode_length = 0, 0
-    for t in range(max_ep_len):
+    for test_cycle in tqdm.tqdm(range(len(test_env))):
+        env = test_env[test_cycle]
+        state, _ = env.reset()
 
-        # add padding
-        actions = torch.cat([actions, torch.zeros(
-            (1, act_dim), device=device)], dim=0)
-        rewards = torch.cat([rewards, torch.zeros(1, device=device)])
+        # we keep all the histories on the device
+        # note that the latest action and reward will be "padding"
+        states = torch.from_numpy(state).reshape(
+            1, state_dim).to(device=device, dtype=torch.float32)
+        actions = torch.zeros((0, act_dim), device=device, dtype=torch.float32)
+        rewards = torch.zeros(0, device=device, dtype=torch.float32)
+        target_return = torch.tensor(
+            target_return, device=device, dtype=torch.float32)
 
-        action = model.get_action(
-            (states.to(dtype=torch.float32) - state_mean) / state_std,
-            actions.to(dtype=torch.float32),
-            rewards.to(dtype=torch.float32),
-            target_return=target_return,
-        )
-        actions[-1] = action
-        action = action.detach().cpu().numpy()
+        episode_return, episode_length = 0, 0
+        for t in range(max_ep_len):
 
-        state, reward, done, _ = env.step(action)
+            # add padding
+            actions = torch.cat([actions, torch.zeros(
+                (1, act_dim), device=device)], dim=0)
+            rewards = torch.cat([rewards, torch.zeros(1, device=device)])
 
-        cur_state = torch.from_numpy(state).to(
-            device=device).reshape(1, state_dim)
-        states = torch.cat([states, cur_state], dim=0)
-        rewards[-1] = reward
+            action = model.get_action(
+                (states.to(dtype=torch.float32) - state_mean) / state_std,
+                actions.to(dtype=torch.float32),
+                rewards.to(dtype=torch.float32),
+                target_return=target_return,
+            )
+            actions[-1] = action
+            action = action.detach().cpu().numpy()
 
-        episode_return += reward
-        episode_length += 1
+            state, reward, done, truncated, stats = env.step(action)
 
-        if done:
-            break
+            cur_state = torch.from_numpy(state).to(
+                device=device).reshape(1, state_dim)
+            states = torch.cat([states, cur_state], dim=0)
+            rewards[-1] = reward
 
-    return episode_return, episode_length
+            episode_return += reward
+            episode_length += 1
+
+            if done:
+                test_stats.append(stats)
+                test_rewards.append(episode_return)
+                break
+
+    keys_to_keep = [
+        'total_reward',
+        'total_profits',
+        'total_energy_charged',
+        'total_energy_discharged',
+        'average_user_satisfaction',
+        'min_user_satisfaction',
+        'power_tracker_violation',
+        'total_transformer_overload',
+
+    ]
+
+    stats = {}
+    for key in test_stats[0].keys():
+        if "opt" in key:
+            key_name = "opt/" + key.split("opt_")[1]
+            if key.split("opt_")[1] not in keys_to_keep:
+                continue
+        else:
+            if key not in keys_to_keep:
+                continue
+            key_name = "test/" + key
+        stats[key_name] = np.mean([test_stats[i][key]
+                                   for i in range(len(test_stats))])
+
+    # stats['mean_test_return'] = np.mean(test_rewards)
+
+    return stats  # , episode_length
 
 
 def evaluate_episode_rtg(

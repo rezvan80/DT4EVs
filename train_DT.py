@@ -293,8 +293,8 @@ def experiment(vars):
                         config_file=config_path,
                     )
                 else:
-                    ret, length = evaluate_episode(
-                        env,
+                    stats = evaluate_episode(
+                        eval_envs,
                         state_dim,
                         act_dim,
                         model,
@@ -419,7 +419,7 @@ def experiment(vars):
             eval_fns=[eval_episodes(tar) for tar in env_targets],
         )
     elif model_type == 'bc':
-        raise ValueError
+        # raise ValueError
         trainer = ActTrainer(
             model=model,
             optimizer=optimizer,
@@ -486,7 +486,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
     parser.add_argument('--model_type', type=str,
-                        default='dt')  # dt, gnn_dt, gnn_in_out_dt
+                        default='bc')  # dt, gnn_dt, gnn_in_out_dt, bc
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
