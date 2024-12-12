@@ -97,8 +97,8 @@ def evaluate_episode_rtg(
     test_rewards = []
     test_stats = []
 
-    # for test_cycle in tqdm.tqdm(range(len(test_env))):
-    for test_cycle in tqdm.tqdm(range(2)):
+    for test_cycle in tqdm.tqdm(range(len(test_env))):
+    # for test_cycle in tqdm.tqdm(range(2)):
         env = test_env[test_cycle]
         state, _ = env.reset()
 
