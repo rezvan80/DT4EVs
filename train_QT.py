@@ -405,13 +405,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_1000')
     parser.add_argument('--name', type=str, default='QT')
-    parser.add_argument('--group_name', type=str, default='tests_')
+    parser.add_argument('--group_name', type=str, default='2ndTests_')
     parser.add_argument('--seed', type=int, default=42)
     # medium, medium-replay, medium-expert, expert
     parser.add_argument('--dataset', type=str, default='random_100')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
-    parser.add_argument('--K', type=int, default=3)
+    parser.add_argument('--K', type=int, default=2)
     parser.add_argument('--pct_traj', type=float, default=1.)
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--embed_dim', type=int, default=256)
@@ -424,23 +424,23 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay', '-wd', type=float, default=1e-4)
     parser.add_argument('--warmup_steps', type=int, default=10000)
     parser.add_argument('--num_eval_episodes', type=int, default=10)
-    parser.add_argument('--max_iters', type=int, default=500)
-    parser.add_argument('--num_steps_per_iter', type=int, default=5)  # 1000
+    parser.add_argument('--max_iters', type=int, default=250)
+    parser.add_argument('--num_steps_per_iter', type=int, default=1000)  # 1000
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--save_path', type=str, default='./save/')
 
     parser.add_argument("--discount", default=0.99, type=float)
     parser.add_argument("--tau", default=0.005, type=float)
-    parser.add_argument("--eta", default=1.0, type=float)
+    parser.add_argument("--eta", default=0.01, type=float)
     parser.add_argument("--eta2", default=1.0, type=float)
     parser.add_argument("--lambda", default=1.0, type=float)
     parser.add_argument("--max_q_backup", action='store_true', default=False)
-    parser.add_argument("--lr_decay", action='store_true', default=False)
+    parser.add_argument("--lr_decay", action='store_true', default=True)
     parser.add_argument("--grad_norm", default=2.0, type=float)
     parser.add_argument("--early_stop", action='store_true', default=False)
     parser.add_argument("--early_epoch", type=int, default=100)
-    parser.add_argument("--k_rewards", action='store_true', default=False)
-    parser.add_argument("--use_discount", action='store_true', default=False)
+    parser.add_argument("--k_rewards", action='store_true', default=True)
+    parser.add_argument("--use_discount", action='store_true', default=True)
     parser.add_argument("--sar", action='store_true', default=False)
     parser.add_argument("--reward_tune", default='no', type=str)
     parser.add_argument("--scale", type=float, default=1)
@@ -448,7 +448,7 @@ if __name__ == '__main__':
     parser.add_argument("--rtg_no_q", action='store_true', default=False)
     parser.add_argument("--infer_no_q", action='store_true', default=False)
 
-    parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
+    parser.add_argument('--log_to_wandb', '-w', type=bool, default=True)
     parser.add_argument('--eval_replay_path', type=str,
                         default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
     parser.add_argument('--config_file', type=str,
