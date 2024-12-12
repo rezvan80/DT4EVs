@@ -255,7 +255,7 @@ def experiment(
             tlen = s[-1].shape[1]
             s[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, state_dim)), s[-1]], axis=1)
-            s[-1] = (s[-1] - state_mean) / state_std
+            # s[-1] = (s[-1] - state_mean) / state_std
             a[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, act_dim)), a[-1]], axis=1)
             r[-1] = np.concatenate([np.zeros((1, max_len -
@@ -413,9 +413,9 @@ if __name__ == '__main__':
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=2)
     parser.add_argument('--pct_traj', type=float, default=1.)
-    parser.add_argument('--batch_size', type=int, default=256)
-    parser.add_argument('--embed_dim', type=int, default=256)
-    parser.add_argument('--n_layer', type=int, default=4)
+    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--embed_dim', type=int, default=128)
+    parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=4)
     parser.add_argument('--activation_function', type=str, default='relu')
     parser.add_argument('--dropout', type=float, default=0.1)
@@ -448,7 +448,7 @@ if __name__ == '__main__':
     parser.add_argument("--rtg_no_q", action='store_true', default=False)
     parser.add_argument("--infer_no_q", action='store_true', default=False)
 
-    parser.add_argument('--log_to_wandb', '-w', type=bool, default=True)
+    parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--eval_replay_path', type=str,
                         default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
     parser.add_argument('--config_file', type=str,

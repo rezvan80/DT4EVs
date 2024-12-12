@@ -38,7 +38,7 @@ def evaluate_episode(
         episode_return, episode_length = 0, 0
         for t in range(max_ep_len):
             action = model.get_action(
-                (states.to(dtype=torch.float32) - state_mean) / state_std,
+                states.to(dtype=torch.float32),
                 torch.cat(actions, dim=0).to(dtype=torch.float32),
                 torch.cat(rewards, dim=0).to(dtype=torch.float32),
                 None,
@@ -122,14 +122,12 @@ def evaluate_episode_rtg(
             0, device=device, dtype=torch.long).reshape(1, 1)
         rewards = [torch.zeros((1, 1), device=device, dtype=torch.float32)]
 
-        sim_states = []
-
         episode_return, episode_length = 0, 0
         with torch.no_grad():
             for t in range(max_ep_len):
                 action = model.get_action(
                     critic,
-                    (states.to(dtype=torch.float32) - state_mean) / state_std,
+                    states.to(dtype=torch.float32),
                     torch.cat(actions, dim=0).to(dtype=torch.float32),
                     torch.cat(rewards, dim=1).to(dtype=torch.float32),
                     target_return.to(dtype=torch.float32),
