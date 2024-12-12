@@ -516,7 +516,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='1000EVs_random_10')
+    parser.add_argument('--dataset', type=str, default='random_100')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=3)
@@ -538,12 +538,11 @@ if __name__ == '__main__':
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
-                        default="PST_V2G_ProfixMax_1000.yaml")
+                        default="PST_V2G_ProfixMax_25.yaml")
 
     parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--eval_replay_path', type=str,
-                        # default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
-                        default="./eval_replays/PST_V2G_ProfixMax_1000_random_1000_50/")
+                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
 
     # New parameters
     parser.add_argument('--action_masking',
