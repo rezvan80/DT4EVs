@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # Define the directory where to save and load models
     checkpoint_dir = args.save_dir + args.env
     # args.config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
-    args.config_file = "./config_files/PST_V2G_ProfixMax_1000.yaml"
+    args.config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
     # reward_function = SquaredTrackingErrorReward
     
     reward_function = PST_V2G_ProfitMax_reward
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     trajectories = []
 
-    trajecotries_type = "random"  # args.dataset
+    trajecotries_type = "optimal"  # args.dataset
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
     save_folder_path = f"./trajectories/"
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             new_replay_path = f"./replay/replay_{temp_env.sim_name}.pkl"
 
             agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
-                                                timelimit=60,
+                                                timelimit=120,
                                                 MIPGap=None,
                                                 )
 

@@ -542,7 +542,8 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--eval_replay_path', type=str,
-                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
+                        # default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
+                        default="./eval_replays/PST_V2G_ProfixMax_1000_random_1000_50/")
 
     # New parameters
     parser.add_argument('--action_masking',

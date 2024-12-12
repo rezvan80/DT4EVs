@@ -40,7 +40,7 @@ def eval():
     replay_path = None
 
     config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_1000.yaml"
+    config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
     # env = EV2Gym(config_file=config_file,
     #              load_from_replay_path=replay_path,
