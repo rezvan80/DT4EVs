@@ -118,10 +118,10 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         self.embed_ln = nn.LayerNorm(hidden_size)
 
         # note: we don't predict states or returns for the paper
-        self.predict_state = torch.nn.Linear(hidden_size, self.state_dim)
-        self.predict_action = nn.Sequential(
-            *([nn.Linear(hidden_size, self.act_dim)] + ([nn.Tanh()] if action_tanh else [nn.Sigmoid()]))
-        )
+        # self.predict_state = torch.nn.Linear(hidden_size, self.state_dim)
+        # self.predict_action = nn.Sequential(
+        #     *([nn.Linear(hidden_size, self.act_dim)] + ([nn.Tanh()] if action_tanh else [nn.Sigmoid()]))
+        # )
         # self.predict_action = nn.Sequential(
         #     *([nn.Linear(hidden_size, self.act_dim)] + ([nn.Tanh()] if action_tanh else []))
         # )
@@ -323,7 +323,7 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         # predict next return given state and action
         return_preds = self.predict_return(x[:, 2])
         # predict next state given state and action
-        state_preds = self.predict_state(x[:, 2])
+        # state_preds = self.predict_state(x[:, 2])
         # predict next action given state
         ev_node_features = x_gnn[gnn_states.ev_indexes].permute(1, 0)
         action_preds_t = torch.zeros((batch_size, seq_length, self.act_dim),
@@ -351,7 +351,7 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         # print(f"Action preds shape: {action_preds_t.shape}")
 
         # exit()
-        return state_preds, action_preds_t, return_preds
+        return None, action_preds_t, return_preds
 
     def get_action(self, states, actions, rewards, returns_to_go, timesteps,
                    action_mask,

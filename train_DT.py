@@ -116,6 +116,8 @@ def experiment(vars):
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
+    elif dataset == '1000EVs_random_10':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_1000_random_1000_10.pkl.gz'
     else:
         raise NotImplementedError("Dataset not found")
 
@@ -133,8 +135,13 @@ def experiment(vars):
     with open(f'{save_path}/vars.yaml', 'w') as f:
         yaml.dump(vars, f)
 
-    with open(dataset_path, 'rb') as f:
-        trajectories = pickle.load(f)
+    if "gz" in dataset_path:
+        import gzip
+        with gzip.open(dataset_path, 'rb') as f:
+            trajectories = pickle.load(f)
+    else:
+        with open(dataset_path, 'rb') as f:
+            trajectories = pickle.load(f)
 
     # save all path information into separate lists
     mode = vars.get('mode', 'normal')
@@ -503,13 +510,13 @@ def experiment(vars):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_25')
+    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_1000')
     parser.add_argument('--name', type=str, default='')
     parser.add_argument('--group_name', type=str, default='tests_')
     parser.add_argument('--seed', type=int, default=42)
 
     # medium, medium-replay, medium-expert, expert
-    parser.add_argument('--dataset', type=str, default='random_100')
+    parser.add_argument('--dataset', type=str, default='1000EVs_random_10')
     # normal for standard setting, delayed for sparse
     parser.add_argument('--mode', type=str, default='normal')
     parser.add_argument('--K', type=int, default=3)
@@ -531,7 +538,7 @@ if __name__ == '__main__':
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
-                        default="PST_V2G_ProfixMax_25.yaml")
+                        default="PST_V2G_ProfixMax_1000.yaml")
 
     parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--eval_replay_path', type=str,

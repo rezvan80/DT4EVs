@@ -20,6 +20,8 @@ marker_list = ['.', 'x', 'o', 'v', 's', 'p',
 color_list = ['#00429d', '#5681b9', '#93c4d2', '#ffa59e',
               '#dd4c65', '#93003a', 'b', 'g', 'r', 'c', 'm', 'y', 'k']
 
+color_list = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+
 algorithm_names = [
     'Charge As Fast As Possible',
     # 'Charge As Late As Possible',
@@ -310,7 +312,7 @@ def plot_comparable_EV_SoC(results_path, save_path=None, algorithm_names=None):
         replay = pickle.load(f)
 
     plt.close('all')
-    plt.figure(figsize=(10, 7))
+    plt.figure(figsize=(15,10))
     plt.rc('font', family='serif')
 
     for index, key in enumerate(replay.keys()):        
@@ -359,17 +361,17 @@ def plot_comparable_EV_SoC(results_path, save_path=None, algorithm_names=None):
                              marker=marker_list[index],
                              label=algorithm_names[index])
 
-            plt.title(f'Charging Station {cs.id + 1}', fontsize=24)
-            plt.ylabel('SoC', fontsize=24)
+            plt.title(f'CS {cs.id + 1}', fontsize=14)
+            plt.ylabel('SoC', fontsize=14)
             plt.ylim([0.1, 1])
             plt.xlim([env.sim_starting_date, env.sim_date])
             plt.xticks(ticks=date_range_print,
                        labels=[f'{d.hour:2d}:{d.minute:02d}' for d in date_range_print], rotation=45,
-                       fontsize=22)
+                       fontsize=8)
             counter += 1
 
     plt.legend(loc='upper center', bbox_to_anchor=(1.1, -0.15),
-               fancybox=True, shadow=True, ncol=5, fontsize=24)
+               fancybox=True, shadow=True, ncol=5, fontsize=14)
 
     plt.grid(True, which='minor', axis='both')
     plt.tight_layout()

@@ -5,6 +5,7 @@ import pickle
 import yaml
 from tqdm import tqdm
 import shutil
+import gzip
 
 from ev2gym.models.ev2gym_env import EV2Gym
 from ev2gym.utilities.arg_parser import arg_parser
@@ -24,8 +25,10 @@ if __name__ == "__main__":
 
     # Define the directory where to save and load models
     checkpoint_dir = args.save_dir + args.env
-    args.config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    # args.config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    args.config_file = "./config_files/PST_V2G_ProfixMax_1000.yaml"
     # reward_function = SquaredTrackingErrorReward
+    
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
     problem = args.config_file.split("/")[-1].split(".")[0]
@@ -164,7 +167,7 @@ if __name__ == "__main__":
 
         trajectories.append(trajectory_i)
 
-        if i % 100 == 0 and not SAVE_EVAL_REPLAYS:
+        if i % 100 == 0 and not SAVE_EVAL_REPLAYS and i > 0:
             print(f'Saving trajectories to {save_folder_path+file_name}')
             f = open(save_folder_path+file_name, 'wb')
             # source, destination
@@ -176,9 +179,18 @@ if __name__ == "__main__":
         print(
             f'Genereated {n_trajectories} trajectories and saved them in {save_folder_path}')
     else:
-        print(trajectories[:1])
+        # print(trajectories[:1])
         print(f'Saving trajectories to {save_folder_path+file_name}')
-        f = open(save_folder_path+file_name, 'wb')
+        # f = open(save_folder_path+file_name, 'wb')
         # source, destination
-        pickle.dump(trajectories, f)
-        f.close()
+        # pickle.dump(trajectories, f)
+        # f.close()
+        
+        with gzip.open(save_folder_path+file_name+".gz", 'wb') as f:
+            pickle.dump(trajectories, f)
+            
+        # To read the compressed pickle file
+        with gzip.open(save_folder_path+file_name+".gz", 'rb') as f:
+            loaded_data = pickle.load(f)
+
+        print(loaded_data)

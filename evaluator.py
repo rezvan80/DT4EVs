@@ -1,6 +1,6 @@
 # This script reads the replay files and evaluates the performance.
 
-from DT.load_model import load_DT_model, load_GNN_IN_OUT_DecisionTransformer_model
+from DT.load_model import load_DT_model, load_GNN_IN_OUT_DecisionTransformer_model, load_GNN_act_emb_DecisionTransformer_model
 from DT.evaluation.evaluate_episodes import evaluate_episode_rtg_from_replays
 
 import gymnasium as gym
@@ -68,6 +68,7 @@ def evaluator():
     p_delay_list = [0]
 
     config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
     if "PST_V2G_ProfixMax" in config_file:
         state_function_Normal = PST_V2G_ProfitMax_state
@@ -90,7 +91,8 @@ def evaluator():
     # Use algorithm name or the saved RL model path as string
     algorithms = [
         ChargeAsFastAsPossible,
-        "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
+        # "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
+        "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
         # ChargeAsLateAsPossible,
         # RoundRobin_GF_off_allowed,
         # RoundRobin_GF,
@@ -319,6 +321,18 @@ def evaluator():
 
                                 algorithm_name = "GNN_Dec_DT"
                                 model.eval()
+                                
+                            elif "gnn_act_emb" in algorithm:
+                                model_path = algorithm
+
+                                model = load_GNN_act_emb_DecisionTransformer_model(model_path=model_path,
+                                                                                  max_ep_len=simulation_length,
+                                                                                  env=env,
+                                                                                  config=config,
+                                                                                  device=device)
+
+                                algorithm_name = "GNN_act_emb_DT"
+                                model.eval()
 
                             else:
                                 raise ValueError(
@@ -327,7 +341,8 @@ def evaluator():
                         else:
                             model = algorithm(env=env,
                                               replay_path=replay_path,
-                                              verbose=False)
+                                              verbose=False,
+                                              )
                             algorithm_name = algorithm.__name__
 
                     except Exception as error:
@@ -341,7 +356,7 @@ def evaluator():
 
                     DT_FLAG = False
                     if type(algorithm) == str:
-                        if "dt" in algorithm:
+                        if "dt" in algorithm or "gnn_act_emb" in algorithm:
                             DT_FLAG = True
 
                     if DT_FLAG:
@@ -357,8 +372,8 @@ def evaluator():
 
                     else:
                         for i in range(simulation_length):
-                            print(
-                                f' Step {i+1}/{simulation_length} -- {algorithm}')
+                            # print(
+                            #     f' Step {i+1}/{simulation_length} -- {algorithm}')
                             ################ Evaluation #############################
 
                             if type(algorithm) == str:
@@ -517,15 +532,19 @@ def evaluator():
         if hasattr(algorithm, 'algo_name'):
             algorithm_names.append(algorithm.algo_name)
         elif type(algorithm) == str:
-            if "GNN" in algorithm:
-                # algorithm_names.append('RL')
-                algorithm_names.append(algorithm.split(
-                    '_')[0] + '_' + algorithm.split('_')[1])
+            if "gnn_in_out_dt" in algorithm:
+                algorithm_names.append('GNN_Dec_DT')
+            elif "gnn_act_emb" in algorithm:
+                algorithm_names.append('GNN_act_emb_DT')
+                # algorithm_names.append(algorithm.split(
+                #     '_')[0] + '_' + algorithm.split('_')[1])
 
             else:
                 algorithm_names.append(algorithm.split('_')[0])
         else:
             algorithm_names.append(algorithm.__name__)
+    
+    print(f'Algorithm names: {algorithm_names}')
 
     print(f'Plottting results at {save_path}')
 
