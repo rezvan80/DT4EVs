@@ -27,7 +27,6 @@ if __name__ == "__main__":
     checkpoint_dir = args.save_dir + args.env
     # args.config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
     args.config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
-    # reward_function = SquaredTrackingErrorReward
     
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
@@ -104,7 +103,7 @@ if __name__ == "__main__":
             new_replay_path = f"./replay/replay_{temp_env.sim_name}.pkl"
 
             agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
-                                                timelimit=120,
+                                                timelimit=180,
                                                 MIPGap=None,
                                                 )
 
