@@ -114,10 +114,20 @@ def experiment(vars):
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
     elif dataset == 'suboptimal_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
+        
     elif dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
-    elif dataset == '1000EVs_random_10':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_1000_random_1000_10.pkl.gz'
+    elif dataset == 'random_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
+    elif dataset == 'random_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
+        
+    elif dataset == 'bau_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_100.pkl.gz'
+    elif dataset == 'bau_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_1000.pkl.gz'
+    elif dataset == 'bau_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_10000.pkl.gz'
     else:
         raise NotImplementedError("Dataset not found")
 
@@ -510,7 +520,7 @@ def experiment(vars):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_1000')
+    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax')
     parser.add_argument('--name', type=str, default='')
     parser.add_argument('--group_name', type=str, default='tests_')
     parser.add_argument('--seed', type=int, default=42)

@@ -11,7 +11,7 @@ from ev2gym.utilities.utils import print_statistics
 from ev2gym.baselines.mpc.eMPC import eMPC_V2G, eMPC_G2V
 # from ev2gym.baselines.mpc.V2GProfitMax import V2GProfitMaxOracle
 
-from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible
+from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible, RoundRobin_GF
 # from ev2gym.baselines.heuristics import RoundRobin_GF_off_allowed, RoundRobin_GF
 # from ev2gym.baselines.heuristics import ChargeAsFastAsPossibleToDesiredCapacity
 # from GNN.state import PublicPST_GNN
@@ -34,13 +34,13 @@ def eval():
     Runs an evaluation of the ev2gym environment.
     """
 
-    save_plots = False
+    save_plots = True
 
     replay_path = "./replay/replay_sim_2024_02_21_056441.pkl"
     replay_path = None
 
     config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
     # env = EV2Gym(config_file=config_file,
     #              load_from_replay_path=replay_path,
@@ -64,8 +64,8 @@ def eval():
     config = yaml.load(open(config_file, 'r'), Loader=yaml.FullLoader)
 
     _, _ = env.reset()
-    # agent = RoundRobin_GF(env, verbose=False)
-    agent = ChargeAsFastAsPossible()
+    agent = RoundRobin_GF(env, verbose=False)
+    # agent = ChargeAsFastAsPossible()
     # agent = eMPC_V2G_v2(env, 
     #                     control_horizon=10,
     #                     MIPGap = 0.1,
@@ -133,7 +133,7 @@ def eval():
             # print(stats)
             print_statistics(env)
             break
-    # return
+    return
 
     new_replay_path = f"replay/replay_{env.sim_name}.pkl"
 

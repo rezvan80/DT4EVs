@@ -17,9 +17,9 @@ seed = 42
 counter = 0
 for model_type in ["gnn_act_emb"]: #dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
     for action_mask in [True]:
-        for K in [2, 10, 15]:
+        for K in [2]:
             for batch_size in [128]:
-                for dataset in ["optimal_2000"]:  # optimal_2000, random_100
+                for dataset in ["bau_1000", "bau_100"]:
                     for embed_dim in [128]:  # 128, 512
                         #   ' --device cuda:0' + str(counter % 2) + \
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
@@ -28,7 +28,7 @@ for model_type in ["gnn_act_emb"]: #dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
                             # command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
                             # iepg machine config
                             # command = 'tmux new-session -d \; send-keys "  /home/sorfanoudakis/.conda/envs/dt3/bin/python train_DT.py' + \
-                            run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
+                            run_name = f'BAU_{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
                             run_name += str(random.randint(0, 100000))
                             
                             command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \

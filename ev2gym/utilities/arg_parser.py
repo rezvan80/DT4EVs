@@ -2,7 +2,7 @@ import argparse
 
 def arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env", default="PST_V2G_ProfixMax_25",
+    parser.add_argument("--env", default="25",
                         help="the environment on which the agent should be trained ")
     parser.add_argument("--name",type=str, help="name of the experiment")
     parser.add_argument("--render_train", default=False, type=bool,
