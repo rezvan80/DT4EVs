@@ -55,7 +55,9 @@ if __name__ == "__main__":
     timescale = config["timescale"]
 
     trajectories = []
-    if args.dataset not in ["random", "optimal", "bau"]:
+    if args.dataset not in ["random", "optimal", "bau",
+                            "mixed_bau_50", "mixed_bau_25", "mixed_bau_75"
+                            ]:
         raise ValueError(
             f"Trajectories type {args.dataset} not supported")
         
@@ -95,6 +97,24 @@ if __name__ == "__main__":
             agent = RandomAgent(env)
         elif trajecotries_type == "bau":
             agent = RoundRobin_GF(env)
+        
+        elif trajecotries_type == "mixed_bau_50":
+            if i % 2 == 0:
+                agent = RoundRobin_GF(env)
+            else:
+                agent = RandomAgent(env)
+                
+        elif trajecotries_type == "mixed_bau_25":
+            if i % 4 == 0:
+                agent = RoundRobin_GF(env)
+            else:
+                agent = RandomAgent(env)
+                
+        elif trajecotries_type == "mixed_bau_75":
+            if i % 4 == 0:
+                agent = RandomAgent(env)
+            else:
+                agent = RoundRobin_GF(env)
 
         elif trajecotries_type == "optimal":
             _, _ = temp_env.reset()

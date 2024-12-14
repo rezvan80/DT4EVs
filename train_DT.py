@@ -128,6 +128,14 @@ def experiment(vars):
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_1000.pkl.gz'
     elif dataset == 'bau_10000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_10000.pkl.gz'
+        
+    elif dataset == 'bau_25_1000':    
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_25_25_1000.pkl.gz'
+    elif dataset == 'bau_50_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_50_25_1000.pkl.gz'
+    elif dataset == 'bau_75_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_75_25_1000.pkl.gz'
+    
     else:
         raise NotImplementedError("Dataset not found")
 

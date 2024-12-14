@@ -18,9 +18,9 @@ batch_size = 128
 if not os.path.exists('./slurm_logs'):
     os.makedirs('./slurm_logs')
 
-for grad_norm in [5, 9, 15]:
-    for K in [2, 10]:
-        for eta in [0.005, 0.01, 0.05, 0.1, 3, 4]:
+for grad_norm in [25]:
+    for K in [2]:
+        for eta in [0.001]:
             for dataset in ["optimal_2000"]:  # optimal_2000, random_100
                 for embed_dim in [128]:  # 128, 512
                     for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)

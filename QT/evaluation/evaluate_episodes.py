@@ -127,6 +127,7 @@ def evaluate_episode_rtg(
             for t in range(max_ep_len):
                 action = model.get_action(
                     critic,
+                    # (states.to(dtype=torch.float32) - state_mean) / state_std,
                     states.to(dtype=torch.float32),
                     torch.cat(actions, dim=0).to(dtype=torch.float32),
                     torch.cat(rewards, dim=1).to(dtype=torch.float32),

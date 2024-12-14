@@ -255,6 +255,7 @@ def experiment(
             tlen = s[-1].shape[1]
             s[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, state_dim)), s[-1]], axis=1)
+            
             # s[-1] = (s[-1] - state_mean) / state_std
             a[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, act_dim)), a[-1]], axis=1)
