@@ -19,7 +19,8 @@ for model_type in ["gnn_act_emb"]: #dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
     for action_mask in [True]:
         for K in [2]:
             for batch_size in [128]:
-                for dataset in ["bau_25_1000", "bau_50_1000", "bau_75_1000"]:
+                # "bau_25_1000", "bau_50_1000", "bau_75_1000"
+                for dataset in ["random_1000"]:
                     for embed_dim in [128]:  # 128, 512
                         #   ' --device cuda:0' + str(counter % 2) + \
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)

@@ -106,21 +106,28 @@ def experiment(vars):
     # elif dataset == "optimal_100000":
     #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
 
-    if dataset == 'random_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
-    elif dataset == 'optimal_2000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_2000.pkl'
-    elif dataset == 'optimal_5000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
-    elif dataset == 'suboptimal_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
+    # if dataset == 'random_1000':
+    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
+    # elif dataset == 'optimal_2000':
+    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_2000.pkl'
+    # elif dataset == 'optimal_5000':
+    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
+    # elif dataset == 'suboptimal_10000':
+    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
         
-    elif dataset == 'random_100':
+    if dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     elif dataset == 'random_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl.gz'
     elif dataset == 'random_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl.gz'
+        
+    elif dataset == 'optimal_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_100.pkl.gz'
+    elif dataset == 'optimal_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl.gz'
+    elif dataset == 'optimal_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl.gz'
         
     elif dataset == 'bau_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_100.pkl.gz'
