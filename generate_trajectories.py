@@ -129,8 +129,14 @@ if __name__ == "__main__":
 
             new_replay_path = f"./replay/replay_{temp_env.sim_name}.pkl"
 
+            if args.env == "25":
+                timelimit = 60
+
+            elif args.env == "250":
+                timelimit = 180
+                
             agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
-                                                timelimit=180,
+                                                timelimit=timelimit,
                                                 MIPGap=None,
                                                 )
 
@@ -182,9 +188,9 @@ if __name__ == "__main__":
                     replay_path = env.replay_path + 'replay_' + env.sim_name + '.pkl'
                     new_replay_path = f"./eval_replays/{file_name}/replay_{env.sim_name}_{i}.pkl"
                     shutil.move(replay_path, new_replay_path)
-                    print(f'Stats: {env.optimal_stats["total_reward"]}')
+                    
                 break
-
+        print(f'Stats: {env.stats["total_reward"]}')
         trajectory_i["observations"] = np.array(trajectory_i["observations"])
         trajectory_i["actions"] = np.array(trajectory_i["actions"])
         trajectory_i["rewards"] = np.array(trajectory_i["rewards"])
