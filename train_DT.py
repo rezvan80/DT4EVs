@@ -82,39 +82,6 @@ def experiment(vars):
         f'Observation space: {env.observation_space.shape[0]}, action space: {env.action_space.shape[0]}')
 
     # load dataset
-
-    # random trajectories
-    # if dataset == 'random':
-    #     pass
-    #     dataset_path = f'./trajectories/random_10_cs_1_tr_288_steps_5_timescale_15000_trajectories.pkl'
-    # elif dataset == 'OPT_1000':
-    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_1000_trajectories.pkl'
-    # elif dataset == 'OPT_100000':
-    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
-    # elif dataset == 'RR_1000':
-    #     dataset_path = f'trajectories/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_100_trajectories2.pkl'
-    # elif dataset == 'RR_10_000':
-    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_10000_trajectories2.pkl'
-    # elif dataset == 'RR_SimpleR_10_000':
-    #     dataset_path = f'./trajectories/PublicPST_RR_SimpleReward_20_cs_1_tr_112_steps_15_timescale_10000.pkl'
-    # elif dataset == 'RR_400_000':
-    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_400000_trajectories2.pkl'
-    # elif dataset == 'mixed':
-    #     dataset_path = f'./trajectories/PublicPST_mixed-RR-Asap_20_cs_1_tr_112_steps_15_timescale_200000_trajectories2.pkl'
-    # elif dataset == "optimal":
-    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_50000_trajectories.pkl'
-    # elif dataset == "optimal_100000":
-    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
-
-    # if dataset == 'random_1000':
-    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
-    # elif dataset == 'optimal_2000':
-    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_2000.pkl'
-    # elif dataset == 'optimal_5000':
-    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
-    # elif dataset == 'suboptimal_10000':
-    #     dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
-        
     if dataset == 'random_100':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
     elif dataset == 'random_1000':
@@ -143,6 +110,13 @@ def experiment(vars):
     elif dataset == 'bau_75_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_75_25_1000.pkl.gz'
     
+    elif dataset == 'optimal_250_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_optimal_250_10000.pkl.gz'
+    elif dataset == 'random_250_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_random_250_10000.pkl.gz'
+    elif dataset == 'bau_250_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_bau_250_10000.pkl.gz'
+        
     else:
         raise NotImplementedError("Dataset not found")
 

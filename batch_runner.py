@@ -5,67 +5,63 @@ srun --mpi=pmix --job-name=interactive-gpu --partition=gpu --gres=gpu:1 --qos=no
 import os
 import random
 
-seeds = [10, 20]
-config = "PST_V2G_ProfixMax_25.yaml"
+seeds = [10]
+# config = "PST_V2G_ProfixMax_25.yaml"
+# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
+
+config = "PST_V2G_ProfixMax_250.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 # Extra arguments for the python script
-fx_dim = 32  # 8
-fx_GNN_hidden_dim = 64
-fx_num_heads = 2
-
 num_steps_per_iter = 1000
-max_iters = 200
-num_eval_episodes = 30
-
 
 # if directory does not exist, create it
 if not os.path.exists('./slurm_logs'):
     os.makedirs('./slurm_logs')
 
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
-for model_type in ['gnn_act_emb']:  # 'dt', 'gnn_dt', 'gnn_in_out_dt', 'gnn_act_emb
-    for action_mask in [True,False]:
-        for K in [2,10]:
-            for batch_size in [128]:
-                # "RR_400_000", "optimal_100000", "RR_10_000"
-                # "RR_10_000", "RR_10_000", 'RR_400_000' RR_SimpleR_10_000
-                for dataset in ["optimal_2000"]:  # optimal_2000, random_100
-                    for embed_dim in [128]:  # 128, 512
+for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
+    for action_mask in [True]:
+        for K in [10]:
+            for _ in [128]:                
+                for dataset in ["random_250_10000"]:
+                    for embed_dim in [256]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
 
-                                if "1000" in config or "500" in config:
+
+                                if "250" in dataset:
+                                    memory = 5                                    
+                                    if model_type == 'gnn_act_emb':
+                                        time = 46
+                                    else:
+                                        time = 20
+                                        
+                                    cpu_cores = 2
+                                    
+                                    feature_dim = 16
+                                    GNN_hidden_dim = 64
+                                    num_gcn_layers = 3
+                                    act_GNN_hidden_dim = 64
+                                    max_iters = 400                                    
                                     batch_size = 64
+                                    
+                                elif "25" in dataset:
                                     memory = 16
-                                    time = 47*4
-
-                                    fx_dim = 64
-                                    fx_GNN_hidden_dim = 128
-                                    mlp_hidden_dim = 512
-                                    actor_num_gcn_layers = 4
-                                    critic_num_gcn_layers = 4
-
-                                    if "1000" in config:
-                                        actor_num_gcn_layers = 5
-                                        critic_num_gcn_layers = 5
-
-                                elif "100" in config:
+                                    if model_type == 'gnn_act_emb':
+                                        time = 20
+                                    else:
+                                        time = 10
+                                        
+                                    cpu_cores = 1
+                                    
+                                    feature_dim = 8
+                                    GNN_hidden_dim = 32
+                                    num_gcn_layers = 3
+                                    act_GNN_hidden_dim = 32
+                                    max_iters = 200
                                     batch_size = 128
-                                    memory = 30
-                                    time = 2*47
-
-                                    fx_dim = 32
-                                    fx_GNN_hidden_dim = 64
-                                    mlp_hidden_dim = 512
-
-                                else:
-                                    memory = 16
-                                    time = 10
-
-                                    fx_dim = 32
-                                    fx_GNN_hidden_dim = 64
-                                    mlp_hidden_dim = 512
 
                                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
                                 run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
@@ -80,7 +76,9 @@ for model_type in ['gnn_act_emb']:  # 'dt', 'gnn_dt', 'gnn_in_out_dt', 'gnn_act_
             '''
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
-#SBATCH --cpus-per-task=1
+''' + \
+            f'#SBATCH --cpus-per-task={cpu_cores}' + \
+            '''
 ''' + \
             f'#SBATCH --mem-per-cpu={memory}G' + \
             '''
@@ -114,10 +112,14 @@ previous=$(/usr/bin/nvidia-smi --query-accounted-apps='gpu_utilization,mem_utili
             ' --max_iters=' + str(max_iters) + \
             ' --batch_size=' + str(batch_size) + \
             ' --num_steps_per_iter=' + str(num_steps_per_iter) + \
-            ' --num_eval_episodes=' + str(num_eval_episodes) + \
             ' --log_to_wandb True' + \
+            ' --feature_dim ' + str(feature_dim) + \
+            ' --GNN_hidden_dim ' + str(GNN_hidden_dim) + \
+            ' --act_GNN_hidden_dim ' + str(act_GNN_hidden_dim) + \
             ' --action_masking ' + str(action_mask) + \
             ' --group_name ' + '"2ndTests_"' + \
+            ' --config_file ' + config + \
+            ' --eval_replay_path ' + eval_replay_path + \
             ' --name ' + str(run_name) + \
             '' + \
             '''
