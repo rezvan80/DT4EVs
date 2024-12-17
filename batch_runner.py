@@ -31,7 +31,6 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
 
-
                                 if "250" in config:
                                     memory = 24                                    
                                     if model_type == 'gnn_act_emb':
@@ -50,26 +49,36 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     num_steps_per_iter = 3000
                                     
                                 elif "25" in config:
-                                    memory = 24
-                                    if model_type == 'gnn_act_emb':
+                                    memory = 16
+                                    if model_type == 'gnn_act_emb':                                        
                                         time = 20
                                     else:
                                         time = 10
                                         
-                                    cpu_cores = 2
+                                    if K > 10 and K <= 20:
+                                        time = int(time*1.5)
+                                    elif K > 20:
+                                        time = int(time*2)
+                                    elif K > 30:
+                                        time = int(time*3)
+                                    
+                                    if time > 46:
+                                        time = 46
+                                        
+                                    cpu_cores = 1
                                     
                                     feature_dim = 8
                                     GNN_hidden_dim = 32
                                     num_gcn_layers = 3
                                     act_GNN_hidden_dim = 32
-                                    max_iters = 200
+                                    max_iters = 250
                                     batch_size = 128
                                     num_steps_per_iter = 1000
                                 else:
                                     raise ValueError("Invalid config file")
 
                                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
-                                run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
+                                run_name = f'{model_type}_run_{seed}_K={K}_'
                                 run_name += str(random.randint(0, 100000))  
                                 # gpu-a100, gpu
                                 command = '''#!/bin/sh
