@@ -14,6 +14,27 @@ eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 # eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
+datasets_list =[
+        'random_100',
+        'random_1000',
+        'random_10000',
+        'optimal_100',
+        'optimal_1000',
+        'optimal_10000',
+        'bau_100',
+        'bau_1000',
+        'bau_10000',
+        ]
+    
+mixed_datasets_list = [
+        'bau_25_1000',
+        'bau_50_1000',
+        'bau_75_1000',
+        'optimal_25_1000',
+        'optimal_50_1000',
+        'optimal_75_1000',
+        ]
+
 # Extra arguments for the python script
 num_steps_per_iter = 1000
 
@@ -24,9 +45,9 @@ if not os.path.exists('./slurm_logs'):
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
 for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
-        for K in [2, 10]:
+        for K in [2]:
             for _ in [128]:                
-                for dataset in ["bau_10000"]: #random_250_10000
+                for dataset in datasets_list:
                     for embed_dim in [256]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
@@ -48,8 +69,13 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     batch_size = 64
                                     num_steps_per_iter = 3000
                                     
-                                elif "25" in config:
-                                    memory = 16
+                                elif "25" in config:                                    
+                                    
+                                    if "10000" in dataset:
+                                        memory = 16
+                                    else:
+                                        memory = 8
+                                    
                                     if model_type == 'gnn_act_emb':                                        
                                         time = 20
                                     else:
