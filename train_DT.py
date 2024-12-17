@@ -83,7 +83,7 @@ def experiment(vars):
 
     # load dataset
     if dataset == 'random_100':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl.gz'
     elif dataset == 'random_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl.gz'
     elif dataset == 'random_10000':

@@ -111,20 +111,52 @@ def experiment(
     print(
         f'Observation space: {env.observation_space.shape[0]}, action space: {env.action_space.shape[0]}')
 
-    if dataset == 'random_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl'
-    elif dataset == 'optimal_2000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_2000.pkl'
-    elif dataset == 'optimal_5000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_5000.pkl'
-    elif dataset == 'suboptimal_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_suboptimal_25_10000.pkl'
-    elif dataset == 'random_100':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
-    elif dataset == '1000EVs_random_10':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_1000_random_1000_10.pkl.gz'
+    # load dataset
+    if dataset == 'random_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl.gz'
+    elif dataset == 'random_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl.gz'
+    elif dataset == 'random_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl.gz'
+        
+    elif dataset == 'optimal_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_100.pkl.gz'
+    elif dataset == 'optimal_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl.gz'
+    elif dataset == 'optimal_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl.gz'
+        
+    elif dataset == 'bau_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_100.pkl.gz'
+    elif dataset == 'bau_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_1000.pkl.gz'
+    elif dataset == 'bau_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_10000.pkl.gz'
+        
+    elif dataset == 'bau_25_1000':    
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_25_25_1000.pkl.gz'
+    elif dataset == 'bau_50_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_50_25_1000.pkl.gz'
+    elif dataset == 'bau_75_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_75_25_1000.pkl.gz'
+        
+    elif dataset == 'optimal_25_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_25_25_1000.pkl.gz'
+    elif dataset == 'optimal_50_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_50_25_1000.pkl.gz'
+    elif dataset == 'optimal_75_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_75_25_1000.pkl.gz'
+    
+    elif dataset == 'optimal_250_5000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_optimal_250_10000.pkl.gz'
+    elif dataset == 'random_250_5000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_random_250_10000.pkl.gz'
+    elif dataset == 'bau_250_5000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_bau_250_10000.pkl.gz'
+    
     else:
         raise NotImplementedError("Dataset not found")
+
 
     max_ep_len = steps
     g_name = vars['group_name']
