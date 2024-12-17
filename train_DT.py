@@ -33,7 +33,7 @@ def discount_cumsum(x, gamma):
 
 
 def experiment(vars):
-
+    
     # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     device = torch.device(vars['device'])
     print(f"Device: {device}")
@@ -141,7 +141,7 @@ def experiment(vars):
     else:
         with open(dataset_path, 'rb') as f:
             trajectories = pickle.load(f)
-
+    
     # save all path information into separate lists
     mode = vars.get('mode', 'normal')
     states, traj_lens, returns = [], [], []

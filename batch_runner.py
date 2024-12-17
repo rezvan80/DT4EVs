@@ -6,11 +6,11 @@ import os
 import random
 
 seeds = [10]
-# config = "PST_V2G_ProfixMax_25.yaml"
-# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
+config = "PST_V2G_ProfixMax_25.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
-config = "PST_V2G_ProfixMax_250.yaml"
-eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
+# config = "PST_V2G_ProfixMax_250.yaml"
+# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 # Extra arguments for the python script
@@ -23,16 +23,16 @@ if not os.path.exists('./slurm_logs'):
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
 for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
-        for K in [10]:
+        for K in [2, 10]:
             for _ in [128]:                
-                for dataset in ["random_250_10000"]:
+                for dataset in ["bau_10000"]: #random_250_10000
                     for embed_dim in [256]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
 
 
-                                if "250" in dataset:
-                                    memory = 5                                    
+                                if "250" in config:
+                                    memory = 24                                    
                                     if model_type == 'gnn_act_emb':
                                         time = 46
                                     else:
@@ -46,15 +46,16 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     act_GNN_hidden_dim = 64
                                     max_iters = 400                                    
                                     batch_size = 64
+                                    num_steps_per_iter = 3000
                                     
-                                elif "25" in dataset:
-                                    memory = 16
+                                elif "25" in config:
+                                    memory = 24
                                     if model_type == 'gnn_act_emb':
                                         time = 20
                                     else:
                                         time = 10
                                         
-                                    cpu_cores = 1
+                                    cpu_cores = 2
                                     
                                     feature_dim = 8
                                     GNN_hidden_dim = 32
@@ -62,11 +63,14 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     act_GNN_hidden_dim = 32
                                     max_iters = 200
                                     batch_size = 128
+                                    num_steps_per_iter = 1000
+                                else:
+                                    raise ValueError("Invalid config file")
 
                                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
                                 run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
                                 run_name += str(random.randint(0, 100000))  
-
+                                # gpu-a100, gpu
                                 command = '''#!/bin/sh
 #!/bin/bash
 #SBATCH --job-name="EV_Exps"
