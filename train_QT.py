@@ -79,7 +79,7 @@ def experiment(
 
     run_name = vars['name']
 
-    exp_prefix = f'{run_name}.{dataset}.{random.randint(int(1e5), int(1e6) - 1)}'
+    exp_prefix = f'{run_name}_{random.randint(int(1e5), int(1e6) - 1)}'
 
     # seed everything
     seed = vars['seed']

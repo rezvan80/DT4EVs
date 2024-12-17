@@ -6,7 +6,7 @@ srun --mpi=pmix --job-name=interactive-gpu --partition=gpu --gpus-per-task=1 --q
 import os
 import random
 
-seeds = [10]
+seeds = [10,20,30]
 config = "PST_V2G_ProfixMax_25.yaml"
 eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
@@ -24,6 +24,12 @@ datasets_list = [
     'bau_100',
     'bau_1000',
     'bau_10000',
+]
+
+mid_datasets_list = [
+    'random_1000',
+    'optimal_1000',
+    'bau_1000',
 ]
 
 mixed_datasets_list = [
@@ -45,10 +51,10 @@ if not os.path.exists('./slurm_logs'):
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
 for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
-        for K in [2]:
+        for K in [25, 50, 100]:
             for _ in [128]:
-                for dataset in mixed_datasets_list:
-                    for embed_dim in [256]:  # 128, 512
+                for dataset in mid_datasets_list:
+                    for _ in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
 
@@ -68,6 +74,7 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     max_iters = 400
                                     batch_size = 64
                                     num_steps_per_iter = 3000
+                                    embed_dim = 256
 
                                 elif "25" in config:
 
@@ -100,16 +107,17 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     max_iters = 250
                                     batch_size = 128
                                     num_steps_per_iter = 1000
+                                    embed_dim = 128
                                 else:
                                     raise ValueError("Invalid config file")
 
                                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
-                                run_name = f'{model_type}_run_{seed}_K={K}_'
+                                run_name = f'{model_type}_run_{seed}_K={K}_dataset={dataset}_'
                                 run_name += str(random.randint(0, 100000))
                                 # gpu-a100, gpu
                                 command = '''#!/bin/sh
 #!/bin/bash
-#SBATCH --job-name="EV_Exps"
+#SBATCH --job-name="l_dt"
 #SBATCH --partition=gpu
 ''' + \
                                     f'#SBATCH --time={time}:00:00' + \
@@ -157,7 +165,7 @@ previous=$(/usr/bin/nvidia-smi --query-accounted-apps='gpu_utilization,mem_utili
                                     ' --GNN_hidden_dim ' + str(GNN_hidden_dim) + \
                                     ' --act_GNN_hidden_dim ' + str(act_GNN_hidden_dim) + \
                                     ' --action_masking ' + str(action_mask) + \
-                                    ' --group_name ' + '"2ndTests_"' + \
+                                    ' --group_name ' + '"PaperExps"' + \
                                     ' --config_file ' + config + \
                                     ' --eval_replay_path ' + eval_replay_path + \
                                     ' --name ' + str(run_name) + \

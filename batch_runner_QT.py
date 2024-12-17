@@ -5,7 +5,7 @@ srun --mpi=pmix --job-name=interactive-gpu --partition=gpu --gres=gpu:1 --qos=no
 import os
 import random
 
-seeds = [10]
+seeds = [10,20,30]
 config = "PST_V2G_ProfixMax_25.yaml"
 eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
@@ -47,7 +47,7 @@ grad_norm = 15
 eta = 0.05
 embed_dim = 128
 
-for K in [10]:
+for K in [2, 10]:
     for dataset in datasets_list:
         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
             for counter, seed in enumerate(seeds):
@@ -60,6 +60,7 @@ for K in [10]:
                     max_iters = 400
                     batch_size = 64
                     num_steps_per_iter = 3000
+                    embed_dim = 256
 
                 elif "25" in config:
 
@@ -84,16 +85,17 @@ for K in [10]:
                     max_iters = 250
                     batch_size = 128
                     num_steps_per_iter = 1000
+                    embed_dim = 128
                 else:
                     raise ValueError("Invalid config file")
 
                 # run_name = f'{algorithm}_run_{counter}_{random.randint(0, 100000)}'
-                run_name = f'QT_run_{seed}_K={K}'
+                run_name = f'QT_run_{seed}_K={K}_dataset={dataset}'
                 run_name += "_" + str(random.randint(0, 100000))
 
                 command = '''#!/bin/sh
 #!/bin/bash
-#SBATCH --job-name="EV_Exps"
+#SBATCH --job-name="dt_qt"
 #SBATCH --partition=gpu
 ''' + \
                     f'#SBATCH --time={time}:00:00' + \
@@ -137,7 +139,7 @@ previous=$(/usr/bin/nvidia-smi --query-accounted-apps='gpu_utilization,mem_utili
                     ' --log_to_wandb True' + \
                     ' --eta ' + str(eta) + \
                     ' --grad_norm ' + str(grad_norm) + \
-                    ' --group_name ' + '"QT_tests_"' + \
+                    ' --group_name ' + '"PaperExps"' + \
                     ' --config_file ' + config + \
                     ' --eval_replay_path ' + eval_replay_path + \
                     ' --name ' + str(run_name) + \
