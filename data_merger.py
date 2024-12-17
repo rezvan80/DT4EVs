@@ -6,20 +6,20 @@ import numpy as np
 
 def check_datasets():
     datasets = os.listdir("./trajectories/")
-    datasets = [dataset for dataset in datasets if dataset.endswith(".pkl.gz")]
+    # datasets = [dataset for dataset in datasets if dataset.endswith(".pkl.*")]
     for dataset_path in datasets:
-        print('=' * 50)
+        
         # print(f"Loading dataset from {dataset_path}")
         dataset_path = f"./trajectories/{dataset_path}"
         env_size = dataset_path.split('/')[-1].split('_')[3]
-        dataset_type = dataset_path.split('/')[-1].split('_')[4]
-        
+        dataset_type = dataset_path.split('/')[-1].split('_')[4]        
         if dataset_type == "mixed":
             dataset_type = dataset_type + "_" + dataset_path.split('/')[-1].split('_')[5]
             dataset_type = dataset_type + "_" + dataset_path.split('/')[-1].split('_')[6]
-        # if "mixed" not in dataset_type:
-        #     continue
-        
+            
+        if "250" not in dataset_path:            
+            continue
+        print('=' * 50)
         print(f"Environment {env_size} CS | Dataset type: {dataset_type}")
 
         if "gz" in dataset_path:
