@@ -45,9 +45,11 @@ def check_datasets():
 
 def merge_datasets():
     datasets = [
-        'PST_V2G_ProfixMax_25_optimal_25_1400.pkl.gz',
-        'PST_V2G_ProfixMax_25_optimal_25_2000.pkl',
-        'PST_V2G_ProfixMax_25_optimal_25_6400.pkl.gz',
+        'PST_V2G_ProfixMax_250_optimal_250_1000.pkl.gz',
+        'PST_V2G_ProfixMax_250_optimal_250_1500.pkl.gz',
+        'PST_V2G_ProfixMax_250_optimal_250_3500.pkl.gz',
+        'PST_V2G_ProfixMax_250_optimal_250_5000.pkl.gz',
+        'PST_V2G_ProfixMax_250_optimal_250_5500.pkl.gz',       
     ]
     final_dataset = []
         
@@ -88,7 +90,7 @@ def merge_datasets():
         
         
     #select 10_000 trajectories from the final dataset and save as pkl.gz
-    final_dataset = final_dataset[:10000]    
+    # final_dataset = final_dataset[:10000]    
         
     print('=' * 50)
     print(f"Final dataset")
@@ -104,9 +106,13 @@ def merge_datasets():
         f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
     print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
     print('=' * 50)
-    print(f"Final dataset 1000")
+    
+    final_dataset = final_dataset[:3000]    
+        
+    print('=' * 50)
+    print(f"Final dataset")
     traj_lens, returns = [], []
-    for path in best_trajectories_1000:
+    for path in final_dataset:
         traj_lens.append(len(path['observations']))
         returns.append(path['rewards'].sum())
     traj_lens = np.array(traj_lens)
@@ -118,31 +124,45 @@ def merge_datasets():
     print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
     print('=' * 50)
     
-    print(f"Final dataset 100")
-    traj_lens, returns = [], []
-    for path in best_trajectories_100:
-        traj_lens.append(len(path['observations']))
-        returns.append(path['rewards'].sum())
-    traj_lens = np.array(traj_lens)
-    num_timesteps = sum(traj_lens)
+    # print(f"Final dataset 1000")
+    # traj_lens, returns = [], []
+    # for path in best_trajectories_1000:
+    #     traj_lens.append(len(path['observations']))
+    #     returns.append(path['rewards'].sum())
+    # traj_lens = np.array(traj_lens)
+    # num_timesteps = sum(traj_lens)
     
-    print(f'{len(traj_lens)} trajectories, {num_timesteps} timesteps found')
-    print(  
-        f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
-    print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
-    print('=' * 50)
+    # print(f'{len(traj_lens)} trajectories, {num_timesteps} timesteps found')
+    # print(  
+    #     f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
+    # print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
+    # print('=' * 50)
+    
+    # print(f"Final dataset 100")
+    # traj_lens, returns = [], []
+    # for path in best_trajectories_100:
+    #     traj_lens.append(len(path['observations']))
+    #     returns.append(path['rewards'].sum())
+    # traj_lens = np.array(traj_lens)
+    # num_timesteps = sum(traj_lens)
+    
+    # print(f'{len(traj_lens)} trajectories, {num_timesteps} timesteps found')
+    # print(  
+    #     f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
+    # print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
+    # print('=' * 50)
     
     
     
 
-    with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl.gz", 'wb') as f:
+    with gzip.open(f"./trajectories/PST_V2G_ProfixMax_250_optimal_250_3000.pkl.gz", 'wb') as f:
         pickle.dump(final_dataset, f)
     
-    with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl.gz", 'wb') as f:
-        pickle.dump(best_trajectories_1000, f)
+    # with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl.gz", 'wb') as f:
+    #     pickle.dump(best_trajectories_1000, f)
         
-    with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_optimal_25_100.pkl.gz", 'wb') as f:
-        pickle.dump(best_trajectories_100, f)
+    # with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_optimal_25_100.pkl.gz", 'wb') as f:
+    #     pickle.dump(best_trajectories_100, f)
 
 def create_mixed_dataset():
     
@@ -168,8 +188,32 @@ def create_mixed_dataset():
         
     with gzip.open(f"./trajectories/PST_V2G_ProfixMax_25_mixed_opt_25_25_1000.pkl.gz", 'wb') as f:
         pickle.dump(mixed_dataset_25, f)
-        
+
+def chop_dataset(b=3000):
+    
+    dataset_path = f"./trajectories/PST_V2G_ProfixMax_250_random_250_10000.pkl.gz"
+    with gzip.open(dataset_path, 'rb') as f:
+        trajectories = pickle.load(f)
+
+    trajectories = trajectories[:b]
+    traj_lens, returns = [], []
+    for path in trajectories:
+        traj_lens.append(len(path['observations']))
+        returns.append(path['rewards'].sum())
+    traj_lens = np.array(traj_lens)
+    num_timesteps = sum(traj_lens)
+    
+    print(f'{len(traj_lens)} trajectories, {num_timesteps} timesteps found')
+    print(  
+        f'Average return: {np.mean(returns):.2f}, std: {np.std(returns):.2f}')
+    print(f'Max return: {np.max(returns):.2f}, min: {np.min(returns):.2f}')
+    print('=' * 50)
+    
+    with gzip.open(f"./trajectories/PST_V2G_ProfixMax_250_random_250_{b}.pkl.gz", 'wb') as f:
+        pickle.dump(trajectories, f)
+    
 if __name__ == "__main__":
-    check_datasets()
+    # check_datasets()
+    # chop_dataset()
     # create_mixed_dataset()
-    # merge_datasets()
+    merge_datasets()

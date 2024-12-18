@@ -117,12 +117,12 @@ def experiment(vars):
     elif dataset == 'optimal_75_1000':
         dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_75_25_1000.pkl.gz'
     
-    elif dataset == 'optimal_250_5000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_optimal_250_10000.pkl.gz'
-    elif dataset == 'random_250_5000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_random_250_10000.pkl.gz'
-    elif dataset == 'bau_250_5000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_bau_250_10000.pkl.gz'
+    elif dataset == 'optimal_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_optimal_250_3000.pkl.gz'
+    elif dataset == 'random_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_random_250_3000.pkl.gz'
+    elif dataset == 'bau_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_bau_250_3000.pkl.gz'
     
     else:
         raise NotImplementedError("Dataset not found")

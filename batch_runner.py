@@ -2,16 +2,17 @@
 This script is used to run the batch of training sciprts for every algorithms evaluated
 #old command# srun --mpi=pmix --job-name=interactive-gpu --partition=gpu --gres=gpu:1 --qos=normal --time=01:00:00 --mem-per-cpu=4096 --pty /bin/bash -il
 srun --mpi=pmix --job-name=interactive-gpu --partition=gpu --gpus-per-task=1 --qos=normal --time=01:00:00 --mem-per-cpu=4G --cpus-per-task=1 --ntasks=1 --pty /bin/bash -il
+srun --mpi=pmix --job-name=interactive --partition=compute --cpus-per-task=1 --qos=normal --time=01:00:00 --mem-per-cpu=4G--ntasks=1 --pty /bin/bash -il
 '''
 import os
 import random
 
 seeds = [10,20,30]
-config = "PST_V2G_ProfixMax_25.yaml"
-eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
+# config = "PST_V2G_ProfixMax_25.yaml"
+# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
-# config = "PST_V2G_ProfixMax_250.yaml"
-# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
+config = "PST_V2G_ProfixMax_250.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 datasets_list = [
@@ -41,6 +42,12 @@ mixed_datasets_list = [
     'optimal_75_1000',
 ]
 
+big_datasets_list = [
+    'random_250_3000',
+    'optimal_250_3000',
+    'bau_250_3000',
+]
+
 # Extra arguments for the python script
 num_steps_per_iter = 1000
 
@@ -51,15 +58,15 @@ if not os.path.exists('./slurm_logs'):
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
 for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
-        for K in [25, 50, 100]:
+        for K in [2]:
             for _ in [128]:
-                for dataset in mid_datasets_list:
+                for dataset in big_datasets_list:
                     for _ in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
 
                                 if "250" in config:
-                                    memory = 24
+                                    memory = 40
                                     if model_type == 'gnn_act_emb':
                                         time = 46
                                     else:
