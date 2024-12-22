@@ -57,17 +57,21 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
         "seed": seed,
         "best": np.array(history["best"])[-1],
         "best_reward": np.array(history["best"]),
+        "eval_reward": np.array(history["test/total_reward"]),
+        "eval_profits": np.array(history["test/total_profits"]),
+        "eval_power_tracker_violation": np.array(history["test/power_tracker_violation"]),
+        "eval_user_satisfaction": np.array(history["test/average_user_satisfaction"]),
         "opt_reward": np.array(history["opt/total_reward"])[-1],
         "opt_profits": np.array(history["opt/total_profits"])[-1],
         "opt_power_tracker_violation": np.array(history["opt/power_tracker_violation"])[-1],
         "opt_user_satisfaction": np.array(history["opt/average_user_satisfaction"])[-1],
-    }
+    }   
     
     run_results.append(results)
     # exit()
     
-    # if i > 102:
-    #     break
+    if i > 102:
+        break
     
 # Convert the results to a pandas DataFrame
 df = pd.DataFrame(run_results)
@@ -75,4 +79,12 @@ print(df.head())
 print(df.shape)
 
 print(df.describe())
-    
+
+print(df["algorithm"].value_counts())
+print(df["K"].value_counts())
+print(df["dataset"].value_counts())
+print(df["seed"].value_counts())
+
+# Save the results to a CSV file
+df.to_csv("results.csv", index=False)
+print("Results saved to results.csv")
