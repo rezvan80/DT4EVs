@@ -16,7 +16,7 @@ from torch_geometric.nn import global_mean_pool
 import torch.nn.functional as F
 
 
-class GNN_DecisionTransformer(TrajectoryModel):
+class GNN_IN_OUT_DecisionTransformer(TrajectoryModel):
 
     """
     This model uses GPT to model (Return_1, state_1, action_1, Return_2, state_2, ...)
@@ -79,15 +79,16 @@ class GNN_DecisionTransformer(TrajectoryModel):
         if num_gcn_layers == 3:
             self.gcn_layers = nn.ModuleList(
                 [GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
-                    GCNConv(2*GNN_hidden_dim, 3*GNN_hidden_dim)])
-            mlp_layer_features = 3*GNN_hidden_dim
+                    # GCNConv(2*GNN_hidden_dim, 3*GNN_hidden_dim)])
+                    GCNConv(2*GNN_hidden_dim, hidden_size)])
+            mlp_layer_features = hidden_size
 
         elif num_gcn_layers == 4:
             self.gcn_layers = nn.ModuleList([GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
                                              GCNConv(2*GNN_hidden_dim,
                                                      3*GNN_hidden_dim),
-                                             GCNConv(3*GNN_hidden_dim, 2*GNN_hidden_dim)])
-            mlp_layer_features = 2*GNN_hidden_dim
+                                             GCNConv(3*GNN_hidden_dim, hidden_size)])
+            mlp_layer_features = hidden_size
 
         elif num_gcn_layers == 5:
             self.gcn_layers = nn.ModuleList([GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
@@ -96,9 +97,9 @@ class GNN_DecisionTransformer(TrajectoryModel):
                                              GCNConv(3*GNN_hidden_dim,
                                                      4*GNN_hidden_dim),
                                              GCNConv(4*GNN_hidden_dim,
-                                                     3*GNN_hidden_dim)
+                                                     hidden_size)
                                              ])
-            mlp_layer_features = 3*GNN_hidden_dim
+            mlp_layer_features = hidden_size
         else:
             raise ValueError(
                 f"Number of GCN layers not supported, use 3, 4, or 5!")
@@ -120,12 +121,13 @@ class GNN_DecisionTransformer(TrajectoryModel):
         #     *([nn.Linear(hidden_size, self.act_dim)] + ([nn.Tanh()] if action_tanh else []))
         # )
         # self.actionSigmoid = nn.Sigmoid()
+        self.action_tanh = nn.Tanh()
         self.predict_return = torch.nn.Linear(hidden_size, 1)
 
     def forward(self, states, actions, rewards, returns_to_go, timesteps,
                 attention_mask=None,
                 action_mask=None):
-        
+
         if self.action_masking:
             action_mask = action_mask.to(dtype=torch.float32)
             actions = torch.mul(actions, action_mask)
@@ -137,18 +139,19 @@ class GNN_DecisionTransformer(TrajectoryModel):
             # attention mask for GPT: 1 if can be attended to, 0 if not
             attention_mask = torch.ones(
                 (batch_size, seq_length), dtype=torch.long)
-           
+
         # Convert states to NumPy all at once outside the loops
         states_numpy = states.detach().cpu().numpy()
 
         gnn_states = [
             [
-                PST_V2G_ProfitMax_state_to_GNN(states_numpy[batch, t], self.config)
+                PST_V2G_ProfitMax_state_to_GNN(
+                    states_numpy[batch, t], self.config)
                 for t in range(states.shape[1])
             ]
             for batch in range(states.shape[0])
         ]
-            
+
         gnn_states = to_GNN_Batch(gnn_states, device=self.device)
 
         # GNN forward pass
@@ -177,28 +180,22 @@ class GNN_DecisionTransformer(TrajectoryModel):
         embedded_x = F.relu(embedded_x)
 
         # Apply GCN layers with the unified edge index
-        x = self.gcn_conv(embedded_x, edge_index)
-        x = F.relu(x)
+        x_gnn = self.gcn_conv(embedded_x, edge_index)
+        x_gnn = F.relu(x_gnn)
 
         for layer in self.gcn_layers:
-            x = layer(x, edge_index)
-            x = F.relu(x)
+            x_gnn = layer(x_gnn, edge_index)
+            if layer != self.gcn_layers[-1]:
+                x_gnn = F.relu(x_gnn)
 
         # make batch sample mask
         sample_node_length = gnn_states.sample_node_length
-        # batch = torch.zeros(x.shape[0], dtype=torch.long, device=self.device)
-
-        # counter = 0
-        # for i in range(len(sample_node_length)):
-        #     batch[counter: counter + sample_node_length[i]] = i
-        #     counter += sample_node_length[i]
-            
-        batch = np.repeat(np.arange(len(sample_node_length)), sample_node_length)
+        batch = np.repeat(np.arange(len(sample_node_length)),
+                          sample_node_length)
         batch = torch.from_numpy(batch).to(device=self.device)
-        
 
         # Graph Embedding
-        pooled_embedding = global_mean_pool(x, batch=batch)
+        pooled_embedding = global_mean_pool(x_gnn, batch=batch)
 
         # print(f"Pooled embedding shape: {pooled_embedding.shape}")
         # reshape to (batch_size, seq_length, hidden_size)
@@ -247,10 +244,33 @@ class GNN_DecisionTransformer(TrajectoryModel):
         # predict next state given state and action
         state_preds = self.predict_state(x[:, 2])
         # predict next action given state
-        action_preds = self.predict_action(x[:, 1])
+        ev_node_features = x_gnn[gnn_states.ev_indexes].permute(1, 0)
+        action_preds_t = torch.zeros((batch_size, seq_length, self.act_dim),
+                                     device=self.device)
 
-        return state_preds, action_preds, return_preds
+        counter = 0
+        node_counter = 0
+        for i in range(batch_size):
+            for k in range(seq_length):
+                action_mapper = gnn_states.action_mapper[
+                    node_counter: node_counter + gnn_states.ev_indexes_node_length[counter]]
 
+                action_decoder = x[:, 1][i, k,:].unsqueeze(0)
+                action_preds_t[i, k, action_mapper] = torch.matmul(action_decoder,ev_node_features[:,
+                        node_counter: node_counter + gnn_states.ev_indexes_node_length[counter]])
+
+                node_counter += gnn_states.ev_indexes_node_length[counter]
+                counter += 1
+                
+        # pass through tanh to get action values between -1 and 1
+        # action_preds_t = self.predict_action(action_preds_t)
+        # action_preds = self.predict_action(x[:, 1])
+        action_preds_t = self.action_tanh(action_preds_t)
+
+        # print(f"Action preds shape: {action_preds_t.shape}")
+
+        # exit()
+        return state_preds, action_preds_t, return_preds
 
     def get_action(self, states, actions, rewards, returns_to_go, timesteps,
                    action_mask,
@@ -262,7 +282,6 @@ class GNN_DecisionTransformer(TrajectoryModel):
         rewards = rewards.reshape(1, -1, 1)
         returns_to_go = returns_to_go.reshape(1, -1, 1)
         timesteps = timesteps.reshape(1, -1)
-        
 
         if self.max_length is not None:
             states = states[:, -self.max_length:]
@@ -324,6 +343,7 @@ def to_GNN_Batch(state_batch, device=None):
     cs_indexes = np.array([])
     tr_indexes = np.array([])
     env_indexes = np.array([])
+    action_mapper = np.array([])
 
     edge_counter = 0
     node_counter = 0
@@ -338,8 +358,11 @@ def to_GNN_Batch(state_batch, device=None):
         [states[i].env_features for i in range(l)], axis=0)
     node_types = np.concatenate(
         [states[i].node_types for i in range(l)], axis=0)
+    action_mapper = np.concatenate(
+        [states[i].action_mapper for i in range(l)], axis=0)
 
     sample_node_length = [len(states[i].node_types) for i in range(l)]
+    ev_indexes_node_length = [len(states[i].ev_indexes) for i in range(l)]
 
     for i in range(l):
         edge_index.append(states[i].edge_index + edge_counter)
@@ -372,6 +395,8 @@ def to_GNN_Batch(state_batch, device=None):
         node_types=torch.from_numpy(
         node_types).to(device).float(),
         sample_node_length=sample_node_length,
+        ev_indexes_node_length=ev_indexes_node_length,
+        action_mapper=action_mapper,
         ev_indexes=ev_indexes,
         cs_indexes=cs_indexes,
         tr_indexes=tr_indexes,

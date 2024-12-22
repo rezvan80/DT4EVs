@@ -11,7 +11,7 @@ from ev2gym.utilities.utils import print_statistics
 from ev2gym.baselines.mpc.eMPC import eMPC_V2G, eMPC_G2V
 # from ev2gym.baselines.mpc.V2GProfitMax import V2GProfitMaxOracle
 
-from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible
+from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible, RoundRobin_GF
 # from ev2gym.baselines.heuristics import RoundRobin_GF_off_allowed, RoundRobin_GF
 # from ev2gym.baselines.heuristics import ChargeAsFastAsPossibleToDesiredCapacity
 # from GNN.state import PublicPST_GNN
@@ -34,12 +34,13 @@ def eval():
     Runs an evaluation of the ev2gym environment.
     """
 
-    save_plots = False
+    save_plots = True
 
     replay_path = "./replay/replay_sim_2024_02_21_056441.pkl"
     replay_path = None
 
     config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
     # env = EV2Gym(config_file=config_file,
     #              load_from_replay_path=replay_path,
@@ -63,8 +64,8 @@ def eval():
     config = yaml.load(open(config_file, 'r'), Loader=yaml.FullLoader)
 
     _, _ = env.reset()
-    # agent = RoundRobin_GF(env, verbose=False)
-    agent = ChargeAsFastAsPossible()
+    agent = RoundRobin_GF(env, verbose=False)
+    # agent = ChargeAsFastAsPossible()
     # agent = eMPC_V2G_v2(env, 
     #                     control_horizon=10,
     #                     MIPGap = 0.1,
@@ -81,48 +82,48 @@ def eval():
         new_state, reward, done, truncated, stats = env.step(
             actions)  # takes action
         
-        gnn_state = PST_V2G_ProfitMax_state_to_GNN(new_state,config)
-        print(f"\n\nConverted GNN state:\n{gnn_state}")
-        print(f' env features: {gnn_state.env_features}')
-        print(f' EVs features: {gnn_state.ev_features}')
-        print(f' CSs features: {gnn_state.cs_features}')        
-        print(f' CSs features: {gnn_state.tr_features}')  
-        print(f' edges: {gnn_state.edge_index}')      
-        print(f' action_mapper: {gnn_state.action_mapper}')   
-        print(f' ev_indexes: {gnn_state.ev_indexes}')  
-        print(f' cs_indexes: {gnn_state.cs_indexes}')
-        print(f' tr_indexes: {gnn_state.tr_indexes}')
-        print(f' env_indexes: {gnn_state.env_indexes}')
-        print(f' sample node length: {gnn_state.sample_node_length}')
-        print(f' node types: {gnn_state.node_types}')
+        # gnn_state = PST_V2G_ProfitMax_state_to_GNN(new_state,config)
+        # print(f"\n\nConverted GNN state:\n{gnn_state}")
+        # print(f' env features: {gnn_state.env_features}')
+        # print(f' EVs features: {gnn_state.ev_features}')
+        # print(f' CSs features: {gnn_state.cs_features}')        
+        # print(f' CSs features: {gnn_state.tr_features}')  
+        # print(f' edges: {gnn_state.edge_index}')      
+        # print(f' action_mapper: {gnn_state.action_mapper}')   
+        # print(f' ev_indexes: {gnn_state.ev_indexes}')  
+        # print(f' cs_indexes: {gnn_state.cs_indexes}')
+        # print(f' tr_indexes: {gnn_state.tr_indexes}')
+        # print(f' env_indexes: {gnn_state.env_indexes}')
+        # print(f' sample node length: {gnn_state.sample_node_length}')
+        # print(f' node types: {gnn_state.node_types}')
         
-        og_gnn_state = PST_V2G_ProfitMaxGNN_state(env)
-        print('---\nOG GNN state:\n', PST_V2G_ProfitMaxGNN_state(env))
-        print(f' env features: {og_gnn_state.env_features}')
-        print(f' EVs features: {og_gnn_state.ev_features}')
-        print(f' CSs features: {og_gnn_state.cs_features}')
-        print(f' CSs features: {og_gnn_state.tr_features}')
-        print(f' edges: {og_gnn_state.edge_index}')
-        print(f' action_mapper: {og_gnn_state.action_mapper}')
-        print(f' ev_indexes: {og_gnn_state.ev_indexes}')
-        print(f' cs_indexes: {og_gnn_state.cs_indexes}')
-        print(f' tr_indexes: {og_gnn_state.tr_indexes}')
-        print(f' env_indexes: {og_gnn_state.env_indexes}')
-        print(f' sample node length: {og_gnn_state.sample_node_length}')      
-        print(f' node types: {og_gnn_state.node_types}')                  
+        # og_gnn_state = PST_V2G_ProfitMaxGNN_state(env)
+        # print('---\nOG GNN state:\n', PST_V2G_ProfitMaxGNN_state(env))
+        # print(f' env features: {og_gnn_state.env_features}')
+        # print(f' EVs features: {og_gnn_state.ev_features}')
+        # print(f' CSs features: {og_gnn_state.cs_features}')
+        # print(f' CSs features: {og_gnn_state.tr_features}')
+        # print(f' edges: {og_gnn_state.edge_index}')
+        # print(f' action_mapper: {og_gnn_state.action_mapper}')
+        # print(f' ev_indexes: {og_gnn_state.ev_indexes}')
+        # print(f' cs_indexes: {og_gnn_state.cs_indexes}')
+        # print(f' tr_indexes: {og_gnn_state.tr_indexes}')
+        # print(f' env_indexes: {og_gnn_state.env_indexes}')
+        # print(f' sample node length: {og_gnn_state.sample_node_length}')      
+        # print(f' node types: {og_gnn_state.node_types}')                  
         
-        assert (gnn_state.env_features == og_gnn_state.env_features).all()
-        assert (gnn_state.ev_features == og_gnn_state.ev_features).all()
-        assert (gnn_state.cs_features == og_gnn_state.cs_features).all()
-        assert (gnn_state.tr_features == og_gnn_state.tr_features).all()
-        assert (gnn_state.edge_index == og_gnn_state.edge_index).all()
-        assert (gnn_state.action_mapper == og_gnn_state.action_mapper).all()
-        assert (gnn_state.ev_indexes == og_gnn_state.ev_indexes).all()
-        assert (gnn_state.cs_indexes == og_gnn_state.cs_indexes).all()
-        assert (gnn_state.tr_indexes == og_gnn_state.tr_indexes).all()
-        assert (gnn_state.env_indexes == og_gnn_state.env_indexes).all()
-        assert (gnn_state.sample_node_length == og_gnn_state.sample_node_length)
-        assert (gnn_state.node_types == og_gnn_state.node_types).all()
+        # assert (gnn_state.env_features == og_gnn_state.env_features).all()
+        # assert (gnn_state.ev_features == og_gnn_state.ev_features).all()
+        # assert (gnn_state.cs_features == og_gnn_state.cs_features).all()
+        # assert (gnn_state.tr_features == og_gnn_state.tr_features).all()
+        # assert (gnn_state.edge_index == og_gnn_state.edge_index).all()
+        # assert (gnn_state.action_mapper == og_gnn_state.action_mapper).all()
+        # assert (gnn_state.ev_indexes == og_gnn_state.ev_indexes).all()
+        # assert (gnn_state.cs_indexes == og_gnn_state.cs_indexes).all()
+        # assert (gnn_state.tr_indexes == og_gnn_state.tr_indexes).all()
+        # assert (gnn_state.env_indexes == og_gnn_state.env_indexes).all()
+        # assert (gnn_state.sample_node_length == og_gnn_state.sample_node_length)
+        # assert (gnn_state.node_types == og_gnn_state.node_types).all()
         
         
         
@@ -164,9 +165,10 @@ def eval():
     # agent = PowerTrackingErrorrMin(new_replay_path)
     # agent = PST_V2GProfitMaxOracleGB(new_replay_path)
     agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
-                                        timelimit=30,
+                                        timelimit=120,
                                         MIPGap=None,
-                                        )
+                                        verbose=True)
+                                        
     # agent = eMPC_G2V(env, control_horizon=15, verbose=False)
     # agent = RoundRobin(env, verbose=False)
     # agent = ChargeAsLateAsPossible(verbose=False)

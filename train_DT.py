@@ -17,9 +17,11 @@ from DT.training.act_trainer import ActTrainer
 from DT.training.seq_trainer import SequenceTrainer
 
 from DT.models.gnn_decision_transformer import GNN_DecisionTransformer
+from DT.models.gnn_In_Out_decision_transformer import GNN_IN_OUT_DecisionTransformer
+from DT.models.gnn_emb_decision_transformer import GNN_act_emb_DecisionTransformer
 
 from ev2gym.models.ev2gym_env import EV2Gym
-from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state,PST_V2G_ProfitMax_state
+from utils import PST_V2G_ProfitMax_reward, PST_V2G_ProfitMaxGNN_state, PST_V2G_ProfitMax_state
 
 
 def discount_cumsum(x, gamma):
@@ -31,10 +33,10 @@ def discount_cumsum(x, gamma):
 
 
 def experiment(vars):
-
-    # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")  
+    
+    # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     device = torch.device(vars['device'])
-    print(f"Device: {device}") 
+    print(f"Device: {device}")
     log_to_wandb = vars.get('log_to_wandb', False)
 
     env_name, dataset = vars['env'], vars['dataset']
@@ -43,11 +45,11 @@ def experiment(vars):
 
     run_name = vars['name']
 
-    exp_prefix = f'{run_name}.{dataset}.{random.randint(int(1e5), int(1e6) - 1)}'
+    exp_prefix = f'{run_name}_{random.randint(int(1e5), int(1e6) - 1)}'
 
     # seed everything
-    seed = vars.get('seed', 0)
-    
+    seed = vars['seed']
+
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -65,14 +67,14 @@ def experiment(vars):
 
     number_of_charging_stations = config["number_of_charging_stations"]
     steps = config["simulation_length"]
-    
+
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
 
-    env = EV2Gym(config_file=config_path,                            
-                            state_function=state_function,
-                            reward_function=reward_function,
-                            )
+    env = EV2Gym(config_file=config_path,
+                 state_function=state_function,
+                 reward_function=reward_function,
+                 )
 
     state_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
@@ -80,41 +82,52 @@ def experiment(vars):
         f'Observation space: {env.observation_space.shape[0]}, action space: {env.action_space.shape[0]}')
 
     # load dataset
-
-    # random trajectories
-    # if dataset == 'random':
-    #     pass
-    #     dataset_path = f'./trajectories/random_10_cs_1_tr_288_steps_5_timescale_15000_trajectories.pkl'
-    # elif dataset == 'OPT_1000':
-    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_1000_trajectories.pkl'
-    # elif dataset == 'OPT_100000':
-    #     dataset_path = f'trajectories/optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
-    # elif dataset == 'RR_1000':
-    #     dataset_path = f'trajectories/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_100_trajectories2.pkl'
-    # elif dataset == 'RR_10_000':
-    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_10000_trajectories2.pkl'
-    # elif dataset == 'RR_SimpleR_10_000':
-    #     dataset_path = f'./trajectories/PublicPST_RR_SimpleReward_20_cs_1_tr_112_steps_15_timescale_10000.pkl'
-    # elif dataset == 'RR_400_000':
-    #     dataset_path = f'{os.path.abspath(os.sep)}/data/storage500/PublicPST_RR_20_cs_1_tr_112_steps_15_timescale_400000_trajectories2.pkl'
-    # elif dataset == 'mixed':
-    #     dataset_path = f'./trajectories/PublicPST_mixed-RR-Asap_20_cs_1_tr_112_steps_15_timescale_200000_trajectories2.pkl'
-    # elif dataset == "optimal":
-    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_50000_trajectories.pkl'
-    # elif dataset == "optimal_100000":
-    #     dataset_path = f'./trajectories/PublicPST_optimal_20_cs_1_tr_112_steps_15_timescale_100000_trajectories.pkl'
-
-    if dataset == 'random_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl'
-    elif dataset == 'optimal_10000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl'
+    if dataset == 'random_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl.gz'
+    elif dataset == 'random_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_1000.pkl.gz'
+    elif dataset == 'random_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_10000.pkl.gz'
+        
+    elif dataset == 'optimal_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_100.pkl.gz'
     elif dataset == 'optimal_1000':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl'
-    elif dataset == 'random_100':
-        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_random_25_100.pkl'
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_1000.pkl.gz'
+    elif dataset == 'optimal_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_optimal_25_10000.pkl.gz'
+        
+    elif dataset == 'bau_100':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_100.pkl.gz'
+    elif dataset == 'bau_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_1000.pkl.gz'
+    elif dataset == 'bau_10000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_bau_25_10000.pkl.gz'
+        
+    elif dataset == 'bau_25_1000':    
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_25_25_1000.pkl.gz'
+    elif dataset == 'bau_50_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_50_25_1000.pkl.gz'
+    elif dataset == 'bau_75_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_bau_75_25_1000.pkl.gz'
+        
+    elif dataset == 'optimal_25_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_25_25_1000.pkl.gz'
+    elif dataset == 'optimal_50_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_50_25_1000.pkl.gz'
+    elif dataset == 'optimal_75_1000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_25_mixed_opt_75_25_1000.pkl.gz'
+    
+    elif dataset == 'optimal_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_optimal_250_3000.pkl.gz'
+    elif dataset == 'random_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_random_250_3000.pkl.gz'
+    elif dataset == 'bau_250_3000':
+        dataset_path = 'trajectories/PST_V2G_ProfixMax_250_bau_250_3000.pkl.gz'
+    
     else:
         raise NotImplementedError("Dataset not found")
 
+    
     max_ep_len = steps
     g_name = vars['group_name']
 
@@ -125,9 +138,18 @@ def experiment(vars):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    with open(dataset_path, 'rb') as f:
-        trajectories = pickle.load(f)
+    # save the vars to the save path as yaml
+    with open(f'{save_path}/vars.yaml', 'w') as f:
+        yaml.dump(vars, f)
 
+    if "gz" in dataset_path:
+        import gzip
+        with gzip.open(dataset_path, 'rb') as f:
+            trajectories = pickle.load(f)
+    else:
+        with open(dataset_path, 'rb') as f:
+            trajectories = pickle.load(f)
+    
     # save all path information into separate lists
     mode = vars.get('mode', 'normal')
     states, traj_lens, returns = [], [], []
@@ -141,6 +163,21 @@ def experiment(vars):
     traj_lens = np.array(traj_lens)
     # print(trajectories[0])
     # exit()
+
+    # Initialize eval_envs from replays
+    eval_replay_path = vars['eval_replay_path']
+    eval_replays = os.listdir(eval_replay_path)
+    eval_envs = []
+    print(f'Loading evaluation replays from {eval_replay_path}')
+    for replay in eval_replays:
+        eval_env = EV2Gym(config_file=config_path,
+                          load_from_replay_path=eval_replay_path + replay,
+                          state_function=state_function,
+                          reward_function=reward_function,
+                          )
+        eval_envs.append(eval_env)
+
+    print(f'Loaded {len(eval_envs)} evaluation replays')
 
     # used for input normalization
     states = np.concatenate(states, axis=0)
@@ -190,7 +227,7 @@ def experiment(vars):
             p=p_sample,  # reweights so we sample according to timesteps
         )
 
-        s, a, r, d, rtg, timesteps, mask = [], [], [], [], [], [], []
+        s, a, r, d, rtg, timesteps, mask, action_mask = [], [], [], [], [], [], [], []
         for i in range(batch_size):
             traj = trajectories[int(sorted_inds[batch_inds[i]])]
             si = random.randint(0, traj['rewards'].shape[0] - 1)
@@ -200,6 +237,8 @@ def experiment(vars):
                      [si:si + max_len].reshape(1, -1, state_dim))
             a.append(traj['actions'][si:si + max_len].reshape(1, -1, act_dim))
             r.append(traj['rewards'][si:si + max_len].reshape(1, -1, 1))
+            action_mask.append(traj['action_mask']
+                               [si:si + max_len].reshape(1, -1, act_dim))
             if 'terminals' in traj:
                 d.append(traj['terminals'][si:si + max_len].reshape(1, -1))
             else:
@@ -222,6 +261,8 @@ def experiment(vars):
                                    tlen, act_dim)) * -10., a[-1]], axis=1)
             r[-1] = np.concatenate([np.zeros((1, max_len -
                                    tlen, 1)), r[-1]], axis=1)
+            action_mask[-1] = np.concatenate(
+                [np.zeros((1, max_len - tlen, act_dim)), action_mask[-1]], axis=1)
             d[-1] = np.concatenate([np.ones((1, max_len - tlen))
                                    * 2, d[-1]], axis=1)
             rtg[-1] = np.concatenate([np.zeros((1, max_len - tlen, 1)),
@@ -244,15 +285,18 @@ def experiment(vars):
         timesteps = torch.from_numpy(np.concatenate(timesteps, axis=0)).to(
             dtype=torch.long, device=device)
         mask = torch.from_numpy(np.concatenate(mask, axis=0)).to(device=device)
+        action_mask = torch.from_numpy(np.concatenate(action_mask, axis=0)).to(
+            dtype=torch.float32, device=device)
 
-        return s, a, r, d, rtg, timesteps, mask
+        return s, a, r, d, rtg, timesteps, mask, action_mask
 
     def eval_episodes(target_rew):
         def fn(model):
             with torch.no_grad():
-                if model_type == 'dt' or model_type == 'gnn_dt':
+                if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt' \
+                        or model_type == 'gnn_act_emb':
                     stats = evaluate_episode_rtg(
-                        env,
+                        eval_envs,
                         exp_prefix,
                         state_dim,
                         act_dim,
@@ -269,8 +313,8 @@ def experiment(vars):
                         config_file=config_path,
                     )
                 else:
-                    ret, length = evaluate_episode(
-                        env,
+                    stats = evaluate_episode(
+                        eval_envs,
                         state_dim,
                         act_dim,
                         model,
@@ -297,6 +341,7 @@ def experiment(vars):
             n_head=vars['n_head'],
             n_inner=4*vars['embed_dim'],
             activation_function=vars['activation_function'],
+            action_masking=vars['action_masking'],
             n_positions=1024,
             resid_pdrop=vars['dropout'],
             attn_pdrop=vars['dropout'],
@@ -314,6 +359,7 @@ def experiment(vars):
             activation_function=vars['activation_function'],
             n_positions=1024,
             resid_pdrop=vars['dropout'],
+            action_masking=vars['action_masking'],
             attn_pdrop=vars['dropout'],
             action_tanh=True,
             fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
@@ -323,7 +369,54 @@ def experiment(vars):
             config=config,
             device=device,
         )
-        
+    elif model_type == 'gnn_in_out_dt':
+        model = GNN_IN_OUT_DecisionTransformer(
+            state_dim=state_dim,
+            act_dim=act_dim,
+            max_length=K,
+            max_ep_len=max_ep_len,
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
+            n_positions=1024,
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
+            action_tanh=True,
+            action_masking=vars['action_masking'],
+            fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
+            feature_dim=vars['feature_dim'],
+            GNN_hidden_dim=vars['GNN_hidden_dim'],
+            num_gcn_layers=vars['num_gcn_layers'],
+            config=config,
+            device=device,
+        )
+    elif model_type == 'gnn_act_emb':
+        model = GNN_act_emb_DecisionTransformer(
+            state_dim=state_dim,
+            act_dim=act_dim,
+            max_length=K,
+            max_ep_len=max_ep_len,
+            hidden_size=vars['embed_dim'],
+            n_layer=vars['n_layer'],
+            n_head=vars['n_head'],
+            n_inner=4*vars['embed_dim'],
+            activation_function=vars['activation_function'],
+            n_positions=1024,
+            resid_pdrop=vars['dropout'],
+            attn_pdrop=vars['dropout'],
+            action_tanh=True,
+            action_masking=vars['action_masking'],
+            fx_node_sizes={'ev': 5, 'cs': 4, 'tr': 2, 'env': 6},
+            feature_dim=vars['feature_dim'],
+            GNN_hidden_dim=vars['GNN_hidden_dim'],
+            num_gcn_layers=vars['num_gcn_layers'],
+            act_GNN_hidden_dim=vars['act_GNN_hidden_dim'],
+            num_act_gcn_layers=vars['num_act_gcn_layers'],
+            config=config,
+            device=device,
+        )
     elif model_type == 'bc':
         model = MLPBCModel(
             state_dim=state_dim,
@@ -350,18 +443,27 @@ def experiment(vars):
         lambda max_iters: min((max_iters+1)/warmup_steps, 1)
     )
 
-    if model_type == 'dt' or model_type == 'gnn_dt':
+    if vars['action_masking']:
+        def loss_fn(s_hat, a_hat, r_hat, s, a, r, a_masks): return torch.mean(
+            ((a_hat - a)**2) * a_masks
+        )
+
+    else:
+        def loss_fn(s_hat, a_hat, r_hat, s, a, r, _): return torch.mean(
+            (a_hat - a)**2),
+
+    if model_type == 'dt' or model_type == 'gnn_dt' or model_type == 'gnn_in_out_dt' or model_type == 'gnn_act_emb':
         trainer = SequenceTrainer(
             model=model,
             optimizer=optimizer,
             batch_size=batch_size,
             get_batch=get_batch,
             scheduler=scheduler,
-            loss_fn=lambda s_hat, a_hat, r_hat, s, a, r: torch.mean(
-                (a_hat - a)**2),
+            loss_fn=loss_fn,
             eval_fns=[eval_episodes(tar) for tar in env_targets],
         )
     elif model_type == 'bc':
+        # raise ValueError
         trainer = ActTrainer(
             model=model,
             optimizer=optimizer,
@@ -378,7 +480,7 @@ def experiment(vars):
             name=exp_prefix,
             group=group_name,
             entity='stavrosorf',
-            project='DT4EVs',            
+            project='DT4EVs',
             save_code=True,
             config=vars
         )
@@ -394,11 +496,13 @@ def experiment(vars):
         outputs = trainer.train_iteration(
             num_steps=num_steps_per_iter, iter_num=iter+1, print_logs=True)
 
-        if outputs['test/mean_test_return'] > best_reward:
-            best_reward = outputs['test/mean_test_return']
+        if outputs['test/total_reward'] > best_reward:
+            best_reward = outputs['test/total_reward']
             # save pytorch model
             torch.save(model.state_dict(),
                        f'saved_models/{exp_prefix}/model.best')
+            print(
+                f' Saving best model with reward {best_reward} at path saved_models/{exp_prefix}/model.best')
 
         outputs['best'] = best_reward
 
@@ -413,7 +517,7 @@ def experiment(vars):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax_25')
+    parser.add_argument('--env', type=str, default='PST_V2G_ProfixMax')
     parser.add_argument('--name', type=str, default='')
     parser.add_argument('--group_name', type=str, default='tests_')
     parser.add_argument('--seed', type=int, default=42)
@@ -426,7 +530,8 @@ if __name__ == '__main__':
     parser.add_argument('--pct_traj', type=float, default=1.)
     parser.add_argument('--batch_size', type=int, default=2)
     # dt for decision transformer, bc for behavior cloning
-    parser.add_argument('--model_type', type=str, default='gnn_dt')  # dt, gnn_dt
+    parser.add_argument('--model_type', type=str,
+                        default='gnn_act_emb')  # dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
     parser.add_argument('--embed_dim', type=int, default=128)
     parser.add_argument('--n_layer', type=int, default=3)
     parser.add_argument('--n_head', type=int, default=1)
@@ -435,18 +540,28 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', '-lr', type=float, default=1e-4)
     parser.add_argument('--weight_decay', '-wd', type=float, default=1e-4)
     parser.add_argument('--warmup_steps', type=int, default=10000)
-    parser.add_argument('--num_eval_episodes', type=int, default=30)
     parser.add_argument('--max_iters', type=int, default=500)
-    parser.add_argument('--num_steps_per_iter', type=int, default=1000)
+    parser.add_argument('--num_steps_per_iter', type=int, default=10)  # 1000
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
     parser.add_argument('--config_file', type=str,
                         default="PST_V2G_ProfixMax_25.yaml")
-    
+
+    parser.add_argument('--num_eval_episodes', type=int, default=30)
+    parser.add_argument('--eval_replay_path', type=str,
+                        default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
+
+    # New parameters
+    parser.add_argument('--action_masking',
+                        type=bool,
+                        default=True)
+
     # GNN_DT parameters
     parser.add_argument('--feature_dim', type=int, default=8)
     parser.add_argument('--GNN_hidden_dim', type=int, default=32)
     parser.add_argument('--num_gcn_layers', type=int, default=3)
+    parser.add_argument('--act_GNN_hidden_dim', type=int, default=32)
+    parser.add_argument('--num_act_gcn_layers', type=int, default=3)
 
     args = parser.parse_args()
 

@@ -88,14 +88,18 @@ def get_statistics(env) -> Dict:
              'total_reward': env.total_reward,
              }
 
-    if env.eval_mode != "optimal" and env.replay is not None:
-        if env.replay.optimal_stats is not None:
-            stats['opt_profits'] = env.replay.optimal_stats["total_profits"]
-            stats['opt_tracking_error'] = env.replay.optimal_stats["tracking_error"]
-            stats['opt_actual_tracking_error'] = env.replay.optimal_stats["energy_tracking_error"]
-            stats['opt_power_tracker_violation'] = env.replay.optimal_stats["power_tracker_violation"]
-            stats['opt_energy_user_satisfaction'] = env.replay.optimal_stats["energy_user_satisfaction"]
-            stats['opt_total_energy_charged'] = env.replay.optimal_stats["total_energy_charged"]
+    if env.optimal_stats is not None:
+            stats['opt_total_reward'] = env.optimal_stats["total_reward"]
+            stats['opt_total_profits'] = env.optimal_stats["total_profits"]
+            stats['opt_tracking_error'] = env.optimal_stats["tracking_error"]
+            stats['opt_actual_tracking_error'] = env.optimal_stats["energy_tracking_error"]
+            stats['opt_power_tracker_violation'] = env.optimal_stats["power_tracker_violation"]
+            stats['opt_energy_user_satisfaction'] = env.optimal_stats["energy_user_satisfaction"]
+            stats['opt_average_user_satisfaction'] = env.optimal_stats["average_user_satisfaction"]
+            stats['opt_min_user_satisfaction'] = env.optimal_stats["min_user_satisfaction"]
+            stats['opt_total_energy_charged'] = env.optimal_stats["total_energy_charged"]
+            stats['opt_total_energy_discharged'] = env.optimal_stats["total_energy_discharged"]
+            stats['opt_total_transformer_overload'] = env.optimal_stats["total_transformer_overload"]
 
     return stats
 

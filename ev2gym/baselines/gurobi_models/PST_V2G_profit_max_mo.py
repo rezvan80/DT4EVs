@@ -20,7 +20,8 @@ class mo_PST_V2GProfitMaxOracleGB():
     def __init__(self,
                  replay_path=None,
                  timelimit=None,
-                 MIPGap=0,
+                 MIPGap=None,
+                 verbose=False,
                  **kwargs):
 
         replay = pickle.load(open(replay_path, 'rb'))
@@ -67,7 +68,10 @@ class mo_PST_V2GProfitMaxOracleGB():
         # create model
         print('Creating Gurobi model...')
         self.m = gp.Model("ev_city")
-        self.m.setParam('OutputFlag', 0)
+        if verbose:
+            self.m.setParam('OutputFlag', 1)
+        else:
+            self.m.setParam('OutputFlag', 0)
         if MIPGap is not None:
             self.m.setParam('MIPGap', MIPGap)            
         if timelimit is not None:

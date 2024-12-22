@@ -25,6 +25,7 @@ class DecisionTransformer(TrajectoryModel):
             max_ep_len=4096,
             action_tanh=True,
             remove_act_embs=False,
+            action_masking = False,
             **kwargs
     ):
         super().__init__(state_dim, act_dim, max_length=max_length)
@@ -35,7 +36,7 @@ class DecisionTransformer(TrajectoryModel):
             n_embd=hidden_size,
             **kwargs
         )
-
+        self.action_masking = action_masking
         # note: the only difference between this GPT2Model and the default Huggingface version
         # is that the positional embeddings are removed (since we'll add those ourselves)
         self.transformer = GPT2Model(config)
@@ -65,16 +66,14 @@ class DecisionTransformer(TrajectoryModel):
         # self.actionSigmoid = nn.Sigmoid()
         self.predict_return = torch.nn.Linear(hidden_size, 1)
 
-    def forward(self, states, actions, rewards, returns_to_go, timesteps, attention_mask=None):
+    def forward(self, states, actions, rewards, returns_to_go, timesteps,
+                attention_mask=None,
+                action_mask=None):
 
-        # print(f'states {states}')
-        # print(f'actions {actions}')
-        # print(f'rewards {rewards}')
-        # print(f'returns_to_go {returns_to_go}')
-        # print(f'timesteps {timesteps}')
-        # print(f'attention_mask {attention_mask}')
+        if self.action_masking:
+            action_mask = action_mask.to(dtype=torch.float32)           
+            actions = torch.mul(actions, action_mask)
 
-        # input() # pause
         batch_size, seq_length = states.shape[0], states.shape[1]
 
         if attention_mask is None:
@@ -117,7 +116,7 @@ class DecisionTransformer(TrajectoryModel):
         # returns (0), states (1), or actions (2); i.e. x[:,1,t] is the token for s_t
         x = x.reshape(batch_size, seq_length, 3,
                       self.hidden_size).permute(0, 2, 1, 3)
-        
+
         # get predictions
         # predict next return given state and action
         return_preds = self.predict_return(x[:, 2])
@@ -133,13 +132,14 @@ class DecisionTransformer(TrajectoryModel):
 
         return state_preds, action_preds, return_preds
 
-    def get_action(self, states, actions, rewards, returns_to_go, timesteps, **kwargs):
+    def get_action(self, states, actions, rewards, returns_to_go, timesteps, action_mask, **kwargs):
         # we don't care about the past rewards in this model
 
         states = states.reshape(1, -1, self.state_dim)
         actions = actions.reshape(1, -1, self.act_dim)
         rewards = rewards.reshape(1, -1, 1)
         returns_to_go = returns_to_go.reshape(1, -1, 1)
+        action_mask = action_mask.reshape(1, -1, self.act_dim)
         timesteps = timesteps.reshape(1, -1)
 
         if self.max_length is not None:
@@ -148,6 +148,7 @@ class DecisionTransformer(TrajectoryModel):
             rewards = rewards[:, -self.max_length:]
             returns_to_go = returns_to_go[:, -self.max_length:]
             timesteps = timesteps[:, -self.max_length:]
+            action_mask = action_mask[:, -self.max_length:]
 
             # pad all tokens to sequence length
             attention_mask = torch.cat(
@@ -175,10 +176,16 @@ class DecisionTransformer(TrajectoryModel):
                              timesteps.shape[1]), device=timesteps.device), timesteps],
                 dim=1
             ).to(dtype=torch.long)
+            action_mask = torch.cat(
+                [torch.zeros((action_mask.shape[0], self.max_length -
+                             action_mask.shape[1], self.act_dim), device=action_mask.device), action_mask],
+                dim=1).to(dtype=torch.float32)
         else:
             attention_mask = None
 
         _, action_preds, return_preds = self.forward(
-            states, actions, rewards, returns_to_go, timesteps, attention_mask=attention_mask, **kwargs)
+            states, actions, rewards, returns_to_go, timesteps, attention_mask=attention_mask,
+            action_mask=action_mask,
+            **kwargs)
 
         return action_preds[0, -1]

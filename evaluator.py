@@ -1,7 +1,10 @@
 # This script reads the replay files and evaluates the performance.
 
+from DT.load_model import load_DT_model, load_GNN_IN_OUT_DecisionTransformer_model, load_GNN_act_emb_DecisionTransformer_model
+from DT.evaluation.evaluate_episodes import evaluate_episode_rtg_from_replays
+
 import gymnasium as gym
-from state_action_eda import AnalysisReplayBuffer
+# from state_action_eda import AnalysisReplayBuffer
 from ev2gym.visuals.evaluator_plot import plot_comparable_EV_SoC_single, plot_prices
 from ev2gym.visuals.evaluator_plot import plot_total_power_V2G, plot_actual_power_vs_setpoint
 from ev2gym.visuals.evaluator_plot import plot_total_power, plot_comparable_EV_SoC
@@ -10,26 +13,18 @@ from ev2gym.rl_agent.reward import profit_maximization, ProfitMax_TrPenalty_User
 from ev2gym.rl_agent.reward import SquaredTrackingErrorReward, SimpleReward
 from ev2gym.baselines.gurobi_models.profit_max import V2GProfitMaxOracleGB
 from ev2gym.baselines.gurobi_models.tracking_error import PowerTrackingErrorrMin
-from GF.noise_wrappers import FailedActionCommunication, DelayedObservation
-from GF.action_wrapper import BinaryAction, Rescale_RepairLayer
-from GNN.state import PublicPST_GNN, V2G_ProfitMax_with_Loads_GNN
-from SAC.old_actionSAC import SAC_ActionGNN as SAC_ActionGNN_old
-from SAC.actionSAC import SAC_ActionGNN
-from SAC.sac import SAC
-from TD3.TD3 import TD3
-from Model_RL.model_based_RL import ModelBasedRL, ModelBasedRL_LSTM
-from TD3.old_TD3_ActionGNN import TD3_ActionGNN as TD3_ActionGNN_old
-from TD3.TD3_ActionGNN import TD3_ActionGNN
-from TD3.TD3_GNN import TD3_GNN
+
+from utils import PST_V2G_ProfitMax_state, PST_V2G_ProfitMax_reward
+
 from sb3_contrib import TQC, TRPO, ARS, RecurrentPPO
-from stable_baselines3 import PPO, A2C, DDPG, SAC
+from stable_baselines3 import PPO, A2C, DDPG, SAC, TD3
 from ev2gym.baselines.mpc.V2GProfitMax import V2GProfitMaxOracle, V2GProfitMaxLoadsOracle
 from ev2gym.baselines.mpc.eMPC_v2 import eMPC_V2G_v2
 from ev2gym.baselines.mpc.eMPC import eMPC_V2G, eMPC_G2V
 from ev2gym.baselines.mpc.ocmf_mpc import OCMF_V2G, OCMF_G2V
-from ev2gym.baselines.heuristics import RoundRobin_GF_off_allowed, RoundRobin_GF
 from ev2gym.baselines.heuristics import ChargeAsFastAsPossibleToDesiredCapacity
 from ev2gym.baselines.heuristics import RoundRobin, ChargeAsLateAsPossible, ChargeAsFastAsPossible
+from ev2gym.baselines.gurobi_models.PST_V2G_profit_max_mo import mo_PST_V2GProfitMaxOracleGB
 
 from ev2gym.models.ev2gym_env import EV2Gym
 import yaml
@@ -49,19 +44,12 @@ import warnings
 # Suppress all UserWarnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
-
-# GNN-based models evaluations
-
-
-# from DT.evaluation.evaluate_episodes import evaluate_episode_rtg_from_replays
-# from DT.models.decision_transformer import DecisionTransformer
-# from DT.load_model import load_DT_model
-
-#set seeds
+# set seeds
 seed = 6
 np.random.seed(seed)
 torch.manual_seed(seed)
 random.seed(seed)
+
 
 def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -72,44 +60,29 @@ def evaluator():
     SAVE_EV_PROFILES = False
 
     # values in [0-1] probability of communication failure
-    p_fail_list = [0, 0.1,0.25, 0.5]    
+    p_fail_list = [0, 0.1, 0.25, 0.5]
     p_fail_list = [0]  # values in [0-1] probability of communication failure
 
     # p_delay_list = [0, 0.1, 0.2, 0.3]
     # values in [0-1] probability of obs-delayed communication
     p_delay_list = [0]
 
-    # config_file = "./config_files/PublicPST_5.yaml"  # 25
-    # config_file = "./config_files/PublicPST.yaml"  # 25
-    # config_file = "./config_files/PublicPST_100.yaml"
-    # config_file = "./config_files/PublicPST_500.yaml"
-    # config_file = "./config_files/PublicPST_1000.yaml"
+    config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
-    # config_file = "./config_files/PublicPST_100_g1.yaml"
-    # config_file = "./config_files/PublicPST_100_g2.yaml"
-    # config_file = "./config_files/PublicPST_100_g3.yaml"
+    if "PST_V2G_ProfixMax" in config_file:
+        state_function_Normal = PST_V2G_ProfitMax_state
+        state_function_GNN = None
+        reward_function = PST_V2G_ProfitMax_reward
 
-    # config_file = "./config_files/PublicPST_500_g1.yaml"
-    # config_file = "./config_files/PublicPST_500_g2.yaml"
-    # config_file = "./config_files/PublicPST_500_g3.yaml"
-
-    # config_file = "./config_files/GF_PST_25.yaml"
-    config_file = "./config_files/GF_PST_100.yaml"
-    # config_file = "./config_files/GF_PST_500.yaml"
-    # config_file = "./config_files/GF_PST_1000.yaml"
-
-    # config_file = "./config_files/V2G_ProfixMaxWithLoads_25.yaml"
-    # config_file = "./config_files/V2G_ProfixMaxWithLoads_100.yaml"
-    # config_file = "./config_files/V2G_ProfixMaxWithLoads_500.yaml"
-
-    if "V2G_ProfixMaxWithLoads" in config_file:
+    elif "V2G_ProfixMaxWithLoads" in config_file:
         state_function_Normal = V2G_profit_max_loads
-        state_function_GNN = V2G_ProfitMax_with_Loads_GNN
+        # state_function_GNN = V2G_ProfitMax_with_Loads_GNN
         reward_function = profit_maximization
 
     elif "PST" in config_file:
         state_function_Normal = PublicPST
-        state_function_GNN = PublicPST_GNN
+        # state_function_GNN = PublicPST_GNN
         reward_function = SimpleReward
     else:
         raise ValueError(f'Unknown config file {config_file}')
@@ -118,104 +91,14 @@ def evaluator():
     # Use algorithm name or the saved RL model path as string
     algorithms = [
         ChargeAsFastAsPossible,
-        # DecisionTransformer,
+        # "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
+        "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
         # ChargeAsLateAsPossible,
-        # PPO, A2C, DDPG, SAC, TD3, TQC, TRPO, ARS, RecurrentPPO,
-        # SAC,
-        # TQC,
-        # # TD3,
-        # # ARS,
-        # # RecurrentPPO,
-
-        # ----------------------------------------------------------------
-
-        # V2G_ProfixMaxWithLoads 25CS
-        # "TD3_run_3_29306-404683",
-        # "TD3_GNN_run_3_24008-870281",
-        # "TD3_ActionGNN_run_3_36407-816505",
-        # "SAC_GNN_run_1_65284-849912",
-        # "SAC_ActionGNN_run_2_31150-671107",
-        # "SAC_run_1_11569-249914",
-
-        # V2G_ProfixMaxWithLoads 500CS
-        # "SAC_GNN_run_2_96519-630780",
-        # "SAC_run_0_33667-400451",
-        # "SAC_ActionGNN_run_0_82569-619094",
-        # "TD3_run_3_71992-180065",
-        # "TD3_GNN_run_1_4841-176458",
-        # "TD3_ActionGNN_run_3_9592-170267",
-
-        # ----------------------------------------------------------------
-        # 5cs PST
-        # "ModelBasedRL-256220",
-        # "LSTM-ModelBasedRL_20-154322",
-        # "SAC_ActionGNN-464106",
-        # "ModelBasedRL-289105",
-
-        # ----------------------------------------------------------------
-
-        # PST 25CS
-        # "SAC_run_0_25377-546286",
-        # "SAC_GNN_run_0_6651-167314",
-        # "SAC_ActionGNN_run_0_39335-597033",
-        # "TD3_ActionGNN_run_3_99695-870291",
-        # "TD3_GNN_run_2_25852-556176",
-        # "TD3_run_0_47448-558478",
-
-        # PST 100cs
-        # "SAC_ActionGNN_run_2_57591-144641",
-        # "SAC_GNN_run_0_16099-876950",
-        # "SAC_run_2_25877-194576",
-        # "TD3_run_4_94486-719210",
-        # "TD3_GNN_run_4_14896-733342",
-        # "TD3_ActionGNN_run_2_31792-403621",
-
-        # 500cs PST
-        # "TD3_ActionGNN_run_1_83995-459455",
-        # "TD3_GNN_run_0_61640-574718",
-        # "TD3_run_1_571-641701",
-        # "SAC_run_3_43478-600660",
-        # "SAC_ActionGNN_run_0_91588-915095",
-        # "SAC_GNN_run_0_36109-236450",
-
-        # # 1000cs PST
-        # "TD3_GNN_run_2_21249-577916",
-        # "TD3_run_3_88194-314562",
-        # "SAC_GNN_run_0_78576-537380",
-        # "SAC_run_3_21562-252852",
-        # "SAC_ActionGNN_run_0_48341-402851",
-        # "TD3_ActionGNN_run_0_37311-723077",
-        # # --------------------------------
-        # "tqc_run_1_54112-161532",
-        # "ppo_run_0_41272-573476",
-        # "ddpg_run_1_94166-370538",
-        # "trpo_run_0_97057-944000",
-        # "a2c_run_0_35840-104916",
-        # # --------------------------------
-
-        # GF_PST_100
-        # ## old models
-        # "TD3_ActionGNN-782251",
-        # "SAC_ActionGNN-358337",
-        # "TD3_ActionGNN-485530",
-        # "UserSatReward_SAC_ActionGNN_run_0_65500-239537",
-        # ### newes models 27/09/2024
-        # "TD3_ActionGNN_run_0_27911-789299",
-        # "TD3_GNN_run_1_5663-250915",
-
-        # models trained on noisy environment + new setting
-        "p_fail=0_SAC_ActionGNN_run_1_82892-256424",
-        "p_fail=0.1_SAC_ActionGNN_run_1_1942-991755",
-        "p_fail=0.2_SAC_ActionGNN_run_1_65250-438837",
-
-        # GF_PST_1000 #old setting
-        # "TD3_ActionGNN-114002",
-        # ----------------------------------------------------------------
-
         # RoundRobin_GF_off_allowed,
-        RoundRobin_GF,
+        # RoundRobin_GF,
         # RoundRobin,
 
+        mo_PST_V2GProfitMaxOracleGB
         # eMPC_V2G,
         # eMPC_V2G_v2,
         # # V2GProfitMaxLoadsOracle,
@@ -350,36 +233,6 @@ def evaluator():
                                  reward_function=reward_function,
                                  )
 
-                    list_of_alg = [
-                        "SAC_ActionGNN_run_2_57591-144641",
-                        "SAC_GNN_run_0_16099-876950",
-                        "SAC_run_2_25877-194576",
-                        "TD3_run_4_94486-719210",
-                        "TD3_GNN_run_4_14896-733342",
-                        "TD3_ActionGNN_run_2_31792-403621",
-                        "TD3_ActionGNN_run_0_27911-789299",
-                        "TD3_ActionGNN_run_3_99695-870291",
-                        "p_fail=0_SAC_ActionGNN_run_1_82892-256424",
-                        "p_fail=0.1_SAC_ActionGNN_run_1_1942-991755",
-                        "p_fail=0.2_SAC_ActionGNN_run_1_65250-438837",
-                        "SAC_ActionGNN_run_0_48341-402851",
-                    ]
-
-                    if str(algorithm) != "<class 'ev2gym.baselines.gurobi_models.tracking_error.PowerTrackingErrorrMin'>":                      
-                        if p_fail > 0:
-                            env = FailedActionCommunication(env, p_fail=p_fail)
-                        if p_delay > 0:
-                            env = DelayedObservation(env, p_delay=p_delay)
-
-                    if algorithm == "TD3_ActionGNN-782251" or \
-                            algorithm == "SAC_ActionGNN-358337" or \
-                            algorithm == "TD3_ActionGNN-485530" or \
-                            algorithm == "TD3_ActionGNN-114002" or \
-                        algorithm in list_of_alg or\
-                            algorithm == "UserSatReward_SAC_ActionGNN_run_0_65500-239537":
-                        # algorithm == ChargeAsFastAsPossible or \
-                        env = Rescale_RepairLayer(env=env)
-
                     # initialize the timer
                     timer = time.time()
                     state, _ = env.reset()
@@ -457,209 +310,93 @@ def evaluator():
                                 env = model.get_env()
                                 state = env.reset()
 
-                            elif "SAC" in algorithm:
-                                load_model_path = f'./eval_models/{algorithm}/'
-                                # Load kwargs.yaml as a dictionary
-                                with open(f'{load_model_path}kwargs.yaml') as file:
-                                    kwargs = yaml.load(
-                                        file, Loader=yaml.FullLoader)
+                            elif "gnn_in_out_dt" in algorithm:
+                                model_path = algorithm
 
-                                if hasattr(state_function, 'node_sizes'):
-                                    fx_node_sizes = state_function.node_sizes
+                                model = load_GNN_IN_OUT_DecisionTransformer_model(model_path=model_path,
+                                                                                  max_ep_len=simulation_length,
+                                                                                  env=env,
+                                                                                  config=config,
+                                                                                  device=device)
 
-                                if "ActionGNN" in algorithm:
-                                    algorithm_name = "SAC_ActionGNN"
-                                    if 'actor_num_gcn_layers' in kwargs:
-                                        model = SAC_ActionGNN(action_space=env.action_space,
-                                                              fx_node_sizes=fx_node_sizes,
-                                                              args=kwargs,)
-                                    else:
-                                        model = SAC_ActionGNN_old(action_space=env.action_space,
-                                                                  fx_node_sizes=fx_node_sizes,
-                                                                  args=kwargs,)
+                                algorithm_name = "GNN_Dec_DT"
+                                model.eval()
+                                
+                            elif "gnn_act_emb" in algorithm:
+                                model_path = algorithm
 
-                                    if "extraLayers" in algorithm:
-                                        state_dict = torch.load(f'{load_model_path}model.best')[
-                                            'policy_state_dict']
-                                        new_state_dict = {}
-                                        rename_map = {
-                                            "gcn_conv2.bias": "gcn_layers.0.bias",
-                                            "gcn_conv2.lin.weight": "gcn_layers.0.lin.weight",
-                                            "gcn_conv2_1.bias": "gcn_layers.1.bias",
-                                            "gcn_conv2_1.lin.weight": "gcn_layers.1.lin.weight",
-                                            "gcn_conv2_2.bias": "gcn_layers.2.bias",
-                                            "gcn_conv2_2.lin.weight": "gcn_layers.2.lin.weight",
-                                        }
+                                model = load_GNN_act_emb_DecisionTransformer_model(model_path=model_path,
+                                                                                  max_ep_len=simulation_length,
+                                                                                  env=env,
+                                                                                  config=config,
+                                                                                  device=device)
 
-                                        for old_key, new_key in rename_map.items():
-                                            if old_key in state_dict:
-                                                new_state_dict[new_key] = state_dict[old_key]
-                                        # Now we need to check if there are other keys in the state_dict that do not need renaming
-                                        for key in state_dict:
-                                            if key not in rename_map:
-                                                new_state_dict[key] = state_dict[key]
-
-                                        model.policy.load_state_dict(
-                                            new_state_dict)
-                                    else:
-                                        model.load(ckpt_path=f'{load_model_path}model.best',
-                                                   evaluate=True)
-
-                                elif "GNN" in algorithm:
-                                    model = SAC(num_inputs=-1,
-                                                action_space=env.action_space,
-                                                args=kwargs,
-                                                fx_node_sizes=fx_node_sizes,
-                                                GNN_fx=True)
-
-                                    algorithm_name = "SAC_GNN"
-                                    model.load(ckpt_path=f'{load_model_path}model.best',
-                                               evaluate=True)
-                                else:
-                                    state_dim = env.observation_space.shape[0]
-                                    model = SAC(num_inputs=state_dim,
-                                                action_space=env.action_space,
-                                                args=kwargs)
-
-                                    algorithm_name = "SAC"
-                                    model.load(ckpt_path=f'{load_model_path}model.best',
-                                               evaluate=True)
-
-                                if k == 0:
-                                    actor_model = model.policy
-                                    model_parameters = filter(
-                                        lambda p: p.requires_grad, actor_model.parameters())
-                                    params = sum([np.prod(p.size())
-                                                  for p in model_parameters])
-                                    print(
-                                        f'Actor model has {params} trainable parameters')
-
-                            elif "TD3" in algorithm:
-                                load_model_path = f'./eval_models/{algorithm}/'
-                                # Load kwargs.yaml as a dictionary
-                                with open(f'{load_model_path}kwargs.yaml') as file:
-                                    kwargs = yaml.load(
-                                        file, Loader=yaml.FullLoader)
-
-                                if "ActionGNN" in algorithm:
-                                    algorithm_name = "TD3_ActionGNN"
-                                    print("Loading TD3_ActionGNN")
-                                    if 'actor_num_gcn_layers' in kwargs:
-                                        model = TD3_ActionGNN(**kwargs)
-                                    else:
-                                        model = TD3_ActionGNN_old(**kwargs)
-
-                                    model.load(
-                                        filename=f'{load_model_path}model.best')
-
-                                elif "GNN" in algorithm:
-                                    model = TD3_GNN(**kwargs)
-                                    algorithm_name = "TD3_GNN"
-                                    model.load(
-                                        filename=f'{load_model_path}model.best')
-
-                                else:
-                                    print("Loading TD3 model")
-                                    model = TD3(**kwargs)
-                                    algorithm_name = "TD3"
-                                    model.load(
-                                        filename=f'{load_model_path}model.best')
-
-                                if k == 0:
-                                    actor_model = model.actor
-                                    model_parameters = filter(
-                                        lambda p: p.requires_grad, actor_model.parameters())
-                                    params = sum([np.prod(p.size())
-                                                  for p in model_parameters])
-                                    print(
-                                        f'Actor model has {params} trainable parameters')
-
-                            elif "LSTM-ModelBasedRL" in algorithm:
-                                model = ModelBasedRL_LSTM(state_dim=env.observation_space.shape[0],
-                                                          mlp_hidden_dim=32,
-                                                          hidden_state_dim=32,
-                                                          action_dim=env.action_space.shape[0],
-                                                          sequence_length=3)
-
-                                model.load(
-                                    f'./eval_models/{algorithm}/model.best')
-                                model.actor.eval()
-                                algorithm_name = "LSTM-ModelBasedRL"
-
-                            elif "ModelBasedRL" in algorithm:
-                                model = ModelBasedRL(state_dim=env.observation_space.shape[0],
-                                                     mlp_hidden_dim=64,
-                                                     action_dim=env.action_space.shape[0],)
-                                model.load(
-                                    f'./eval_models/{algorithm}/model.best')
-                                model.actor.eval()
-                                algorithm_name = "ModelBasedRL"
+                                algorithm_name = "GNN_act_emb_DT"
+                                model.eval()
 
                             else:
                                 raise ValueError(
                                     f'Unknown algorithm {algorithm}')
 
-                        # elif algorithm == DecisionTransformer:
-                        #     model_path = "K=12,embed_dim=128,n_layer=3,max_iters=2000,num_steps_per_iter=20000,batch_size=128,n_head=4,num_eval_episodes=30,scale=1-RR_10_000-231028"
-                        #     model, state_mean, state_std = load_DT_model(model_path=model_path,
-                        #                                                  max_ep_len=simulation_length,
-                        #                                                  env=env,
-                        #                                                  device=device)
-
-                        #     algorithm_name = algorithm.__name__
-                        #     model.eval()
-
                         else:
                             model = algorithm(env=env,
                                               replay_path=replay_path,
-                                              verbose=False)
+                                              verbose=False,
+                                              )
                             algorithm_name = algorithm.__name__
+
                     except Exception as error:
-                        print(error)
-                        print(
-                            f'!!!!!!!!!! Error in {algorithm} with replay {replay_path}')
-                        continue
+                        # print(error)
+                        # print(
+                        #     f'!!!!!!!!!! Error in {algorithm} with replay {replay_path}')
+                        # continue
+                        raise error
 
                     rewards = []
 
-                    for i in range(simulation_length):
-                        # print(f' Step {i+1}/{simulation_length} -- {algorithm}')
-                        ################# Evaluation ##############################
+                    DT_FLAG = False
+                    if type(algorithm) == str:
+                        if "dt" in algorithm or "gnn_act_emb" in algorithm:
+                            DT_FLAG = True
 
-                        # elif algorithm == DecisionTransformer:
-                        #     result_tuple = evaluate_episode_rtg_from_replays(env=env,
-                        #                                                      model=model,
-                        #                                                      max_ep_len=simulation_length,
-                        #                                                      device='cuda',
-                        #                                                      target_return=0,
-                        #                                                      mode='normal',
-                        #                                                      state_mean=state_mean,
-                        #                                                      state_std=state_std,)
-                        #     stats, reward = result_tuple
-                        #     done = True
+                    if DT_FLAG:
+                        result_tuple = evaluate_episode_rtg_from_replays(env=env,
+                                                                         model=model,
+                                                                         max_ep_len=simulation_length,
+                                                                         device='cuda',
+                                                                         target_return=0,
+                                                                         mode='normal',
+                                                                         )
+                        stats, rewards = result_tuple[0], [result_tuple[1]]
+                        done = True
 
-                        if type(algorithm) == str:
-                            if any(algo in algorithm for algo in ['ppo', 'a2c', 'ddpg', 'tqc', 'trpo', 'ars', 'rppo']):
-                                action, _ = model.predict(
-                                    state, deterministic=True)
-                                obs, reward, done, stats = env.step(action)
+                    else:
+                        for i in range(simulation_length):
+                            # print(
+                            #     f' Step {i+1}/{simulation_length} -- {algorithm}')
+                            ################ Evaluation #############################
 
-                                if i == simulation_length - 2:
-                                    saved_env = deepcopy(
-                                        env.get_attr('env')[0])
+                            if type(algorithm) == str:
+                                if any(algo in algorithm for algo in ['ppo', 'a2c', 'ddpg', 'tqc', 'trpo', 'ars', 'rppo']):
+                                    action, _ = model.predict(
+                                        state, deterministic=True)
+                                    obs, reward, done, stats = env.step(
+                                        action)
 
-                                stats = stats[0]
-                            elif "SAC" in algorithm or "TD3" in algorithm or \
-                                    "ModelBasedRL" in algorithm or "LSTM-ModelBasedRL" in algorithm:
-                                action = model.select_action(state,
-                                                             return_mapped_action=True)
+                                    if i == simulation_length - 2:
+                                        saved_env = deepcopy(
+                                            env.get_attr('env')[0])
 
-                                simple_state = state_function_Normal(env=env)
-                                gnn_state = state_function_GNN(env=env)
+                                    stats = stats[0]
 
-                                ev_indexes = gnn_state['action_mapper']
+                            else:
+                                simple_state = state_function_Normal(
+                                    env=env)
+                                # gnn_state = state_function_GNN(env=env)
+                                # ev_indexes = gnn_state['action_mapper']
 
-                                state, reward, done, _, stats = env.step(
+                                action = model.get_action(env=env)
+                                new_state, reward, done, _, stats = env.step(
                                     action)
 
                                 if SAVE_REPLAY_BUFFER:
@@ -675,80 +412,55 @@ def evaluator():
                                                                   done=done,
                                                                   gnn_state=gnn_state,
                                                                   gnn_next_state=next_gnn_state)
-                            else:
-                                raise ValueError(
-                                    f'Unknown algorithm {algorithm}')
+                            ############################################################
 
+                            rewards.append(reward)
+
+                    if done:
+
+                        results_i = pd.DataFrame({'run': k,
+                                                  'Algorithm': algorithm_name,
+                                                  'algorithm_version': algorithm,
+                                                  'control_horizon': h,
+                                                  'p_fail': p_fail,
+                                                  'p_delay': p_delay,
+                                                  'discharge_price_factor': config['discharge_price_factor'],
+                                                  'total_ev_served': stats['total_ev_served'],
+                                                  'total_profits': stats['total_profits'],
+                                                  'total_energy_charged': stats['total_energy_charged'],
+                                                  'total_energy_discharged': stats['total_energy_discharged'],
+                                                  'average_user_satisfaction': stats['average_user_satisfaction'],
+                                                  'power_tracker_violation': stats['power_tracker_violation'],
+                                                  'tracking_error': stats['tracking_error'],
+                                                  'energy_tracking_error': stats['energy_tracking_error'],
+                                                  'energy_user_satisfaction': stats['energy_user_satisfaction'],
+                                                  'min_energy_user_satisfaction': stats['min_energy_user_satisfaction'],
+                                                  'std_energy_user_satisfaction': stats['std_energy_user_satisfaction'],
+                                                  'total_transformer_overload': stats['total_transformer_overload'],
+                                                  'battery_degradation': stats['battery_degradation'],
+                                                  'battery_degradation_calendar': stats['battery_degradation_calendar'],
+                                                  'battery_degradation_cycling': stats['battery_degradation_cycling'],
+                                                  'total_reward': sum(rewards),
+                                                  'time': time.time() - timer,
+                                                  }, index=[counter])
+
+                        # change name of key to algorithm_name
+                        if SAVE_REPLAY_BUFFER:
+                            if k == n_test_cycles - 1:
+                                replay_buffers[algorithm_name] = replay_buffers.pop(
+                                    algorithm)
+
+                        if counter == 1:
+                            results = results_i
                         else:
-                            simple_state = state_function_Normal(env=env)
-                            gnn_state = state_function_GNN(env=env)
-                            ev_indexes = gnn_state['action_mapper']
+                            results = pd.concat(
+                                [results, results_i])
 
-                            action = model.get_action(env=env)
-                            new_state, reward, done, _, stats = env.step(
-                                action)
+                        if algorithm in [PPO, A2C, DDPG, SAC, TD3, TQC, TRPO, ARS, RecurrentPPO]:
+                            env = saved_env
 
-                            if SAVE_REPLAY_BUFFER:
-                                next_simple_state = state_function_Normal(
-                                    env=env)
-                                next_gnn_state = state_function_GNN(env=env)
-                                replay_buffers[algorithm].add(state=simple_state,
-                                                              action=action,
-                                                              ev_action=action[ev_indexes],
-                                                              next_state=next_simple_state,
-                                                              reward=reward,
-                                                              done=done,
-                                                              gnn_state=gnn_state,
-                                                              gnn_next_state=next_gnn_state)
-                        ############################################################
-
-                        rewards.append(reward)
-
-                        if done:
-
-                            results_i = pd.DataFrame({'run': k,
-                                                      'Algorithm': algorithm_name,
-                                                      'algorithm_version': algorithm,
-                                                      'control_horizon': h,
-                                                      'p_fail': p_fail,
-                                                      'p_delay': p_delay,
-                                                      'discharge_price_factor': config['discharge_price_factor'],
-                                                      'total_ev_served': stats['total_ev_served'],
-                                                      'total_profits': stats['total_profits'],
-                                                      'total_energy_charged': stats['total_energy_charged'],
-                                                      'total_energy_discharged': stats['total_energy_discharged'],
-                                                      'average_user_satisfaction': stats['average_user_satisfaction'],
-                                                      'power_tracker_violation': stats['power_tracker_violation'],
-                                                      'tracking_error': stats['tracking_error'],
-                                                      'energy_tracking_error': stats['energy_tracking_error'],
-                                                      'energy_user_satisfaction': stats['energy_user_satisfaction'],
-                                                      'min_energy_user_satisfaction': stats['min_energy_user_satisfaction'],
-                                                      'std_energy_user_satisfaction': stats['std_energy_user_satisfaction'],
-                                                      'total_transformer_overload': stats['total_transformer_overload'],
-                                                      'battery_degradation': stats['battery_degradation'],
-                                                      'battery_degradation_calendar': stats['battery_degradation_calendar'],
-                                                      'battery_degradation_cycling': stats['battery_degradation_cycling'],
-                                                      'total_reward': sum(rewards),
-                                                      'time': time.time() - timer,
-                                                      }, index=[counter])
-
-                            # change name of key to algorithm_name
-                            if SAVE_REPLAY_BUFFER:
-                                if k == n_test_cycles - 1:
-                                    replay_buffers[algorithm_name] = replay_buffers.pop(
-                                        algorithm)
-
-                            if counter == 1:
-                                results = results_i
-                            else:
-                                results = pd.concat([results, results_i])
-
-                            if algorithm in [PPO, A2C, DDPG, SAC, TD3, TQC, TRPO, ARS, RecurrentPPO]:
-                                env = saved_env
-
-                            plot_results_dict[str(algorithm)] = deepcopy(env)
-
-                            break
+                        plot_results_dict[str(
+                            algorithm)] = deepcopy(env)
 
     # save the replay buffers to a pickle file
     if SAVE_REPLAY_BUFFER:
@@ -763,7 +475,7 @@ def evaluator():
     # change from PowerTrackingErrorrMin -> PowerTrackingError
 
     # print unique algorithm versions
-    
+
     results['algorithm_version'] = results['algorithm_version'].astype(str).replace(
         "<class 'ev2gym.baselines.heuristics.ChargeAsFastAsPossible'>", 'ChargeAsFastAsPossible')
     results['algorithm_version'] = results['algorithm_version'].astype(str).replace(
@@ -777,7 +489,7 @@ def evaluator():
         'Oracle'
     )
     print(results['algorithm_version'].unique())
-    
+
     # save the results to a csv file
     results.to_csv(save_path + 'data.csv')
 
@@ -786,7 +498,8 @@ def evaluator():
 
     results = results.drop(columns=drop_columns)
 
-    results_grouped = results.groupby('algorithm_version',).agg(['mean', 'std'])
+    results_grouped = results.groupby(
+        'algorithm_version',).agg(['mean', 'std'])
 
     # print columns of the results
     # print(results_grouped.columns)
@@ -799,15 +512,16 @@ def evaluator():
     # print(results_grouped[['tracking_error', 'energy_tracking_error']])
     # print(results_grouped[['tracking_error',
     #       'total_transformer_overload', 'time']])
-    
-    #sort results by tracking error
+
+    # sort results by tracking error
     results_grouped = results_grouped.sort_values(
-        by=('tracking_error', 'mean'), ascending=True)
-    
-    print(results_grouped[['tracking_error',
-                           'energy_user_satisfaction',
-                           'min_energy_user_satisfaction'
-                           ]])
+        by=('total_reward', 'mean'), ascending=True)
+
+    print(results_grouped[['total_reward',
+                           'average_user_satisfaction',
+                           'total_profits',
+                           'power_tracker_violation']])
+
     #    ]])
     #    'average_user_satisfaction']])
     # input('Press Enter to continue')
@@ -818,41 +532,45 @@ def evaluator():
         if hasattr(algorithm, 'algo_name'):
             algorithm_names.append(algorithm.algo_name)
         elif type(algorithm) == str:
-            if "GNN" in algorithm:                
-                # algorithm_names.append('RL')
-                algorithm_names.append(algorithm.split(
-                    '_')[0] + '_' + algorithm.split('_')[1])
-                
+            if "gnn_in_out_dt" in algorithm:
+                algorithm_names.append('GNN_Dec_DT')
+            elif "gnn_act_emb" in algorithm:
+                algorithm_names.append('GNN_act_emb_DT')
+                # algorithm_names.append(algorithm.split(
+                #     '_')[0] + '_' + algorithm.split('_')[1])
+
             else:
                 algorithm_names.append(algorithm.split('_')[0])
         else:
             algorithm_names.append(algorithm.__name__)
+    
+    print(f'Algorithm names: {algorithm_names}')
 
     print(f'Plottting results at {save_path}')
 
-    # plot_total_power(results_path=save_path + 'plot_results_dict.pkl',
-    #                  save_path=save_path,
-    #                  algorithm_names=algorithm_names)
+    plot_total_power(results_path=save_path + 'plot_results_dict.pkl',
+                     save_path=save_path,
+                     algorithm_names=algorithm_names)
 
-    # plot_comparable_EV_SoC(results_path=save_path + 'plot_results_dict.pkl',
-    #                        save_path=save_path,
-    #                        algorithm_names=algorithm_names)
+    plot_comparable_EV_SoC(results_path=save_path + 'plot_results_dict.pkl',
+                           save_path=save_path,
+                           algorithm_names=algorithm_names)
 
     plot_actual_power_vs_setpoint(results_path=save_path + 'plot_results_dict.pkl',
                                   save_path=save_path,
                                   algorithm_names=algorithm_names)
 
-    # plot_total_power_V2G(results_path=save_path + 'plot_results_dict.pkl',
-    #                      save_path=save_path,
-    #                      algorithm_names=algorithm_names)
+    plot_total_power_V2G(results_path=save_path + 'plot_results_dict.pkl',
+                         save_path=save_path,
+                         algorithm_names=algorithm_names)
 
-    # plot_comparable_EV_SoC_single(results_path=save_path + 'plot_results_dict.pkl',
-    #                               save_path=save_path,
-    #                               algorithm_names=algorithm_names)
+    plot_comparable_EV_SoC_single(results_path=save_path + 'plot_results_dict.pkl',
+                                  save_path=save_path,
+                                  algorithm_names=algorithm_names)
 
-    # plot_prices(results_path=save_path + 'plot_results_dict.pkl',
-    #             save_path=save_path,
-    #             algorithm_names=algorithm_names)
+    plot_prices(results_path=save_path + 'plot_results_dict.pkl',
+                save_path=save_path,
+                algorithm_names=algorithm_names)
 
 
 if __name__ == "__main__":

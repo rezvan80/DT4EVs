@@ -166,5 +166,8 @@ replay/
 trajectories/
 wandb/
 saved_models/
+eval_replays/
+slurm_logs/
+run_tmp.sh
 
 model.lp
