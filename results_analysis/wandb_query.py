@@ -94,5 +94,5 @@ print(df["dataset"].value_counts())
 print(df["seed"].value_counts())
 
 # Save the results to a CSV file
-df.to_csv("results.csv", index=False)
+df.to_csv("./results_analysis/results.csv", index=False)
 print("Results saved to results.csv")
