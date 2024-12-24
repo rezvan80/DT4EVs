@@ -3,7 +3,7 @@ This script is used to run the batch of training sciprts for every algorithms ev
 import os
 import random
 
-seeds = [10, 20]
+seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 # seeds = [30]
 algorithms = ["TD3_GNN", "TD3_ActionGNN",
               "TD3", "SAC", "SAC_GNN", "SAC_ActionGNN"]
