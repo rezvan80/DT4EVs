@@ -77,14 +77,37 @@ def eval_policy(policy, args, eval_envs=None,
         stats_list.append(stats)
         counter += 1
 
+    keys_to_keep = [
+        'total_reward',
+        'total_profits',
+        'total_energy_charged',
+        'total_energy_discharged',
+        'average_user_satisfaction',
+        'min_user_satisfaction',
+        'power_tracker_violation',
+        'total_transformer_overload',
 
+    ]
+
+    stats = {}
+    for key in stats_list[0].keys():
+        if "opt" in key:
+            key_name = "opt/" + key.split("opt_")[1]
+            if key.split("opt_")[1] not in keys_to_keep:
+                continue
+        else:
+            if key not in keys_to_keep:
+                continue
+            key_name = "test/" + key
+        stats[key_name] = np.mean([stats_list[i][key]
+                                   for i in range(len(stats_list))])
 
     avg_reward /= counter
 
     print("---------------------------------------")
     print(f"Evaluation over {counter} episodes: {avg_reward:.3f}")
     print("---------------------------------------")
-    return avg_reward, eval_stats
+    return avg_reward, stats
 
 
 if __name__ == "__main__":
@@ -111,7 +134,7 @@ if __name__ == "__main__":
     
     parser.add_argument("--time_limit_hours", default=46 ,type=float)  # 1e7
 
-    DEVELOPMENT = True
+    DEVELOPMENT = False
 
     if DEVELOPMENT:
         parser.add_argument('--log_to_wandb', '-w', type=bool, default=False)
@@ -215,7 +238,7 @@ if __name__ == "__main__":
         os.makedirs("./results")
 
     if "PST_V2G_ProfixMax_25" in config_file:
-        args.group_name = "PST_V2G_ProfitMax_"
+        args.group_name = "25_ClassicRL_tests"
         reward_function = PST_V2G_ProfitMax_reward
         if "GNN" in args.policy:
             state_function = PST_V2G_ProfitMaxGNN_state
@@ -274,29 +297,13 @@ if __name__ == "__main__":
     number_of_charging_stations = config["number_of_charging_stations"]
     n_transformers = config["number_of_transformers"]
     simulation_length = config["simulation_length"]
-
-    if "SAC" in args.policy:
-        group_name = f'{args.group_name}GNN_SAC_{number_of_charging_stations}cs_{n_transformers}tr'
-    elif "TD3" in args.policy:
-        group_name = f'{args.group_name}GNN_TD3_{number_of_charging_stations}cs_{n_transformers}tr'
-    else:
-        raise ValueError("Policy not recognized.")
-        
-    if args.discrete_actions > 1:
-        group_name = "DiscreteActions_" + group_name
-
-    if args.no_positional_encoding:
-        group_name = "no_positional_encoding_" + group_name
-        
-    if args.full_graph:
-        group_name = "full_graph_" + group_name
     
     
     if args.load_model == "":
         exp_prefix = f'{args.name}-{random.randint(int(1e5), int(1e6) - 1)}'
     else:
         exp_prefix = args.load_model
-    print(f'group_name: {group_name}, exp_prefix: {exp_prefix}')
+    print(f'group_name: {args.group_name}, exp_prefix: {exp_prefix}')
 
     save_path = f'./saved_models/{exp_prefix}/'
     # create folder
@@ -319,8 +326,9 @@ if __name__ == "__main__":
             
         wandb.init(
             name=exp_prefix,
-            group=group_name,
+            group=args.group_name,
             id=exp_prefix,
+            entity='stavrosorf',
             project=args.project_name,
             save_code=True,
             config=config,
