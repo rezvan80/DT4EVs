@@ -25,8 +25,8 @@ print(f"Total GNN runs fetched: {len(runs)}")
 run_results = []
 # use tqdm to display a progress bar
 for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
-    if i < 100:
-        continue
+    # if i < 100:
+        # continue
     group_name = run.group
     history = run.history()
     # print(f"History keys: {history.keys()}")
@@ -45,7 +45,15 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
     #   dtype='object')
 #  clarify the algorithm used in the run, and the dataset used
     config = run.config
-    algorithm = config["model_type"]
+    # print(f'config: {config}')
+    if "model_type" not in config:
+        if "QT" not in config["name"]:
+            raise ValueError("Model type not found in config")
+        else:
+            algorithm = "QT"
+        
+    else:
+        algorithm = config["model_type"]
     K = config["K"]
     dataset = config["dataset"]
     seed = config["seed"]
@@ -70,8 +78,8 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
     run_results.append(results)
     # exit()
     
-    if i > 102:
-        break
+    # if i > 102:
+    #     break
     
 # Convert the results to a pandas DataFrame
 df = pd.DataFrame(run_results)
