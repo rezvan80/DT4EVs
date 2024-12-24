@@ -8,11 +8,11 @@ import os
 import random
 
 seeds = [10,20,30]
-# config = "PST_V2G_ProfixMax_25.yaml"
-# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
+config = "PST_V2G_ProfixMax_25.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
-config = "PST_V2G_ProfixMax_250.yaml"
-eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
+# config = "PST_V2G_ProfixMax_250.yaml"
+# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 datasets_list = [
