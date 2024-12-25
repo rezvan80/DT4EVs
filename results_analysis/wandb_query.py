@@ -29,8 +29,12 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
         # continue
     group_name = run.group
     history = run.history()
-    # print(f"History keys: {history.keys()}")
     
+    # print(f"History keys: {history.keys()}")
+    # print(f"_runtime: {history['_runtime']}")
+    # print(f"_timestamp: {history['_timestamp']}")
+    # print(f"_step: {history['_step']}")
+    # exit()
     # History keys: Index(['best', 'time/total', 'time/training', 'opt/total_transformer_overload',
     #    'test/total_energy_charged', '_step', 'time/evaluation',
     #    'test/total_profits', 'opt/average_user_satisfaction', '_timestamp',     
@@ -63,6 +67,7 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
         "K": K,
         "dataset": dataset,
         "seed": seed,
+        "runtime": np.array(history["_runtime"])[-1]/3600,
         "best": np.array(history["best"])[-1],
         "best_reward": np.array(history["best"]),
         "eval_reward": np.array(history["test/total_reward"]),
@@ -74,6 +79,11 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
         "opt_power_tracker_violation": np.array(history["opt/power_tracker_violation"])[-1],
         "opt_user_satisfaction": np.array(history["opt/average_user_satisfaction"])[-1],
     }   
+    # print(f'results_rewards: {results["eval_reward"][:40]}')
+    # print(f'results_profits: {results["eval_profits"][:40]}')
+    # print(f'results_power_tracker_violation: {results["eval_power_tracker_violation"][:40]}')
+    # print(f'results_user_satisfaction: {results["eval_user_satisfaction"][:40]}')
+    # input("Press")
     
     run_results.append(results)
     # exit()
