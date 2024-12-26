@@ -6,11 +6,11 @@ import os
 import random
 
 seeds = [10,20,30]
-config = "PST_V2G_ProfixMax_25.yaml"
-eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
+# config = "PST_V2G_ProfixMax_25.yaml"
+# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
-# config = "PST_V2G_ProfixMax_250.yaml"
-# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
+config = "PST_V2G_ProfixMax_250.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 datasets_list = [
@@ -34,6 +34,12 @@ mixed_datasets_list = [
     'optimal_75_1000',
 ]
 
+big_datasets_list = [
+    'random_250_3000',
+    'optimal_250_3000',
+    'bau_250_3000',
+]
+
 num_steps_per_iter = 1000
 max_iters = 200
 num_eval_episodes = 30
@@ -47,14 +53,14 @@ grad_norm = 15
 eta = 0.05
 embed_dim = 128
 
-for K in [2, 10]:
-    for dataset in datasets_list:
+for K in [2]:
+    for dataset in big_datasets_list:
         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
             for counter, seed in enumerate(seeds):
 
                 if "250" in config:
-                    memory = 24
-                    time = 20
+                    memory = 40
+                    time = 30
                     cpu_cores = 2
 
                     max_iters = 400

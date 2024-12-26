@@ -7,7 +7,7 @@ srun --mpi=pmix --job-name=interactive --partition=compute --cpus-per-task=1 --q
 import os
 import random
 
-seeds = [10,20,30]
+seeds = [10,20,30,40,50]
 config = "PST_V2G_ProfixMax_25.yaml"
 eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
@@ -42,6 +42,12 @@ mixed_datasets_list = [
     'optimal_75_1000',
 ]
 
+mixed_opt_datasets_list = [
+    'optimal_25_1000',
+    'optimal_50_1000',
+    'optimal_75_1000',
+]
+
 big_datasets_list = [
     'random_250_3000',
     'optimal_250_3000',
@@ -60,7 +66,7 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
         for K in [2]:
             for _ in [128]:
-                for dataset in big_datasets_list:
+                for dataset in mixed_datasets_list:
                     for _ in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
@@ -95,12 +101,10 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                     else:
                                         time = 10
 
-                                    if K > 10 and K <= 20:
-                                        time = int(time*1.5)
-                                    elif K > 20:
-                                        time = int(time*2)
-                                    elif K > 30:
-                                        time = int(time*3)
+                                    if K == 10:
+                                        time = time * 2
+                                    elif K > 10:
+                                        time = time * 3
 
                                     if time > 46:
                                         time = 46
@@ -124,7 +128,7 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
                                 # gpu-a100, gpu
                                 command = '''#!/bin/sh
 #!/bin/bash
-#SBATCH --job-name="l_dt"
+#SBATCH --job-name="m_dt"
 #SBATCH --partition=gpu
 ''' + \
                                     f'#SBATCH --time={time}:00:00' + \
