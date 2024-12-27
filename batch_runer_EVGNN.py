@@ -4,7 +4,7 @@ import os
 import random
 
 seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-# seeds = [30]
+seeds = [0]
 algorithms = ["TD3_GNN", "TD3_ActionGNN",
               "TD3", "SAC", "SAC_GNN", "SAC_ActionGNN"]
 
@@ -179,6 +179,24 @@ conda deactivate
             f.write(command)
 
         os.system('sbatch run_tmp.sh')
+        command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_RL_GNN.py' + \
+            ' --device cuda:0' + \
+            ' --policy ' + algorithm + \
+            ' --seed ' + str(seed) + \
+            ' --fx_dim ' + str(fx_dim) + \
+            ' --fx_GNN_hidden_dim ' + str(fx_GNN_hidden_dim) + \
+            ' --fx_num_heads ' + str(2) + \
+            ' --mlp_hidden_dim ' + str(mlp_hidden_dim) + \
+            ' --actor_num_gcn_layers ' + str(actor_num_gcn_layers) + \
+            ' --critic_num_gcn_layers ' + str(critic_num_gcn_layers) + \
+            ' --config ' + config + \
+            ' --project_name DT4EVs' + \
+            ' --time_limit_hours 460' + \
+            ' --batch_size ' + str(batch_size) + \
+            ' --name ' + run_name + \
+            '" Enter'
+        os.system(command=command)
+        print(command)
 
         # save the dataframe
         # runs_logger.to_csv('runs_logger.csv')
