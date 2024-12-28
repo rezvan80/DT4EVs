@@ -24,31 +24,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def dataset_info(data):
-    print("=====================================")
-    print(f' data shape: {data.shape}')
-    print(data["dataset"].value_counts()) 
-    print(data["K"].value_counts())
-    print(data["algorithm"].value_counts())
-    print(data["seed"].value_counts())
-    print("=====================================")
+from utils import dataset_info, parse_string_to_list
 
-def parse_string_to_list(rewards):
-    rewards = rewards.replace("[", "").replace("]", "").replace("\n", " ")
-    rewards = rewards.replace("'", " ")
-    rewards = rewards.replace("  ", " ")
-    rewards = rewards.replace("  ", " ")
-    rewards = rewards.replace("  ", " ")
-    rewards = rewards.replace("  ", " ")
-    # remove the last space
-    if rewards[-1] == " ":
-        rewards = rewards[:-1]
-    if rewards[0] == " ":
-        rewards = rewards[1:]
-    rewards = rewards.replace("  ", " ").split(" ")
-    # print(rewards)
-    rewards = np.array(rewards).astype(float)
-    return rewards
 
 data = pd.read_csv("./results_analysis/results.csv")
 dataset_info(data)
