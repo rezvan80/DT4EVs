@@ -11,8 +11,8 @@ api = wandb.Api()
 # Replace 'your_project_name' and 'your_entity_name' with your actual project and entity
 project_name = "DT4EVs"
 entity_name = "stavrosorf"
-# group_name = "PaperExpsDT_25cs"
-group_name = "25_ClassicRL_tests"
+group_name = "PaperExpsDT_25cs"
+# group_name = "25_ClassicRL_tests"
 # group_name = "PaperExpsDT_250cs"
 
 # Fetch runs from the specified project
@@ -106,5 +106,5 @@ print(df["dataset"].value_counts())
 print(df["seed"].value_counts())
 
 # Save the results to a CSV file
-df.to_csv("./results_analysis/resultsClassicRL25", index=False)
+df.to_csv("./results_analysis/results.csv", index=False)
 print("Results saved to results.csv")

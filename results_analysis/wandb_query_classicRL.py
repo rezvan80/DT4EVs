@@ -30,8 +30,22 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
     # if i < 100:
         # continue
     group_name = run.group
-    history = run.history()
-    
+    # history = run.history()
+    # history = run.scan_history()
+    # print(history)
+    mean_rewards = []
+    counter = 0
+    for record in run.scan_history():
+        # Process each record as needed
+        
+        if record["eval/mean_reward"] != None:
+            # print(record["eval/mean_reward"])
+            print(f'counter: {counter}')
+            # input("Press")
+            mean_rewards.append(record["eval/mean_reward"])
+        counter += 1
+    print(mean_rewards)
+    exit()
     name = run.name
     if "ActionGNN" in name:
         algorithm = name.split("_")[0] + "_ActionGNN"

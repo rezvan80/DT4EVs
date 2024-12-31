@@ -1,5 +1,5 @@
 algorithm,K,dataset,seed,runtime,best,best_reward,eval_reward,eval_profits,eval_power_tracker_violation,eval_user_satisfaction,opt_reward,opt_profits,opt_power_tracker_violation,opt_user_satisfaction
-SAC,-1,online,28808-607339,19.060043900247223,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+SAC,-1,online,28808-607339,19.120976640094998,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
@@ -135,506 +135,7 @@ SAC,-1,online,28808-607339,19.060043900247223,,"[nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-TD3,-1,online,48549-245558,19.062052359132778,,"[             nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan -301868.18428629
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan]","[             nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan -426455.37457928
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan]","[       nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan 5.95538924        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan]","[        nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan 46.07159749         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan         nan         nan         nan         nan
-         nan         nan]","[       nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan 0.54938054        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan]",,,,
-SAC_ActionGNN,-1,online,26822-465092,19.091914682416665,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
-TD3_ActionGNN,-1,online,48169-968088,19.088524608169443,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+TD3,-1,online,48549-245558,19.1245037960825,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
@@ -770,7 +271,8 @@ TD3_ActionGNN,-1,online,48169-968088,19.088524608169443,,"[nan nan nan nan nan n
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-TD3,-1,online,85653-252534,19.237960642377537,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+SAC_ActionGNN,-1,online,26822-465092,19.12942268241778,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
+TD3_ActionGNN,-1,online,48169-968088,19.096885963377222,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
@@ -906,519 +408,277 @@ TD3,-1,online,85653-252534,19.237960642377537,,"[nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
  nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-SAC,-1,online,69761-242430,19.249384366538788,,"[             nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan -204835.41844887
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan]","[             nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan -435014.27289172
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan
-              nan              nan              nan              nan]","[         nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan 174.25998801          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan
-          nan          nan          nan          nan          nan]","[       nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan 92.9770498        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan]","[       nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan 0.46520101        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan        nan        nan        nan        nan
-        nan        nan]",,,,
-TD3_ActionGNN,-1,online,2905-123494,19.25184506568644,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
-SAC_ActionGNN,-1,online,4184-867458,19.25925836443901,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
+TD3,-1,online,85653-252534,19.193560456898478,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
+SAC,-1,online,69761-242430,19.27107875227928,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
+ nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
+TD3_ActionGNN,-1,online,2905-123494,19.294608104957476,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
+SAC_ActionGNN,-1,online,4184-867458,19.294406348930465,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
