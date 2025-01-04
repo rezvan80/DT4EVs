@@ -24,7 +24,7 @@ import numpy as np
 
 from utils import dataset_info, parse_string_to_list
 
-data = pd.read_csv("./results_analysis/results.csv")
+data = pd.read_csv("./results_analysis/resultsClassicRL25")
 dataset_info(data)
 
 datasets_list = [
@@ -40,9 +40,6 @@ datasets_list = [
 ]
 
 # filter the data that have:
-# data = data[(data["K"] == 2) & (data["dataset"].str.contains("optimal"))]
-# data = data[(data["K"] == 10) & (data["dataset"].str.contains("optimal"))]
-data = data[(data["K"] == 10)]
 dataset_info(data)
 
 # For every row in the data create a new dataframe with epoch as the index and the reward as the value, keep also, the seed, algorithm and dataset
@@ -70,9 +67,7 @@ for i, row in data.iterrows():
 # print(new_df.describe())
     
 datasets_list = [
-    'optimal_10000',
-    'bau_10000',
-    'random_10000',
+    'online',
 ]
 
 # change algorithm names
@@ -91,10 +86,12 @@ for i in range(3):
     sns.lineplot(data=new_df[new_df["dataset"] == datasets_list[i]],
                  x="epoch",
                  y="reward",
-                 hue="algorithm")
+                 colors=["blue", "green", "red", "orange"],
+                 hue="algorithm"
+                 )
     
-    plt.title(f"K=10",
-              fontsize=17)
+    # plt.title(f"K=10",
+    #           fontsize=17)
     
     #add a horizontal line for the optimal reward
     plt.axhline(y=-2430, color='r', linestyle='--',

@@ -6,13 +6,13 @@ import tqdm as tqdm
 # wandb.login()
 
 # Initialize API
-api = wandb.Api()
+api = wandb.Api(timeout=120)
 
 # Replace 'your_project_name' and 'your_entity_name' with your actual project and entity
 project_name = "DT4EVs"
 entity_name = "stavrosorf"
-group_name = "PaperExpsDT_25cs"
-# group_name = "25_ClassicRL_tests"
+# group_name = "PaperExpsDT_25cs"
+group_name = "25_ClassicRL_tests"
 # group_name = "PaperExpsDT_250cs"
 
 # Fetch runs from the specified project
@@ -30,48 +30,42 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
     # if i < 100:
         # continue
     group_name = run.group
-    history = run.history()
-    
-    # print(f"History keys: {history.keys()}")
-    # print(f"_runtime: {history['_runtime']}")
-    # print(f"_timestamp: {history['_timestamp']}")
-    # print(f"_step: {history['_step']}")
-    # exit()
-    # History keys: Index(['best', 'time/total', 'time/training', 'opt/total_transformer_overload',
-    #    'test/total_energy_charged', '_step', 'time/evaluation',
-    #    'test/total_profits', 'opt/average_user_satisfaction', '_timestamp',     
-    #    'training/action_error', 'opt/total_reward',
-    #    'opt/power_tracker_violation', 'test/total_transformer_overload',        
-    #    'test/power_tracker_violation', '_runtime',
-    #    'test/average_user_satisfaction', 'training/train_loss_std',
-    #    'training/train_loss_mean', 'test/min_user_satisfaction',
-    #    'opt/min_user_satisfaction', 'opt/total_profits', 'test/total_reward',   
-    #    'opt/total_energy_charged', 'opt/total_energy_discharged',
-    #    'test/total_energy_discharged'],
-    #   dtype='object')
-#  clarify the algorithm used in the run, and the dataset used
-    config = run.config
-    # print(f'config: {config}')
-    if "model_type" not in config:
-        if "QT" not in config["name"]:
-            raise ValueError("Model type not found in config")
-        else:
-            algorithm = "QT"
-    else:
-        algorithm = config["model_type"]
+    # history = run.history()
+    # history = run.scan_history()
+    # print(history)
+    mean_rewards = []
+    counter = 0
+    for record in run.scan_history():
+        # Process each record as needed
         
-    K = config["K"]
-    dataset = config["dataset"]
-    seed = config["seed"]
+        if record["eval/mean_reward"] != None:
+            # print(record["eval/mean_reward"])
+            print(f'counter: {counter}')
+            # input("Press")
+            mean_rewards.append(record["eval/mean_reward"])
+        counter += 1
+    print(mean_rewards)
+    exit()
+    name = run.name
+    if "ActionGNN" in name:
+        algorithm = name.split("_")[0] + "_ActionGNN"
+        
+    else:
+        algorithm = name.split("_")[0]
     
+    
+    dataset = "online"
+    seed = name.split("_")[-1]
+    print(history.keys())
+    print(f'history: {history}')
     results = {
         "algorithm": algorithm,
-        "K": K,
+        "K": -1,
         "dataset": dataset,
         "seed": seed,
         "runtime": np.array(history["_runtime"])[-1]/3600,
-        "best": np.array(history["best"])[-1],
-        "best_reward": np.array(history["best"]),
+        "best": np.array(history["eval/best_reward"])[-1],
+        "best_reward": np.array(history["eval/best_reward"]),
         "eval_reward": np.array(history["test/total_reward"]),
         "eval_profits": np.array(history["test/total_profits"]),
         "eval_power_tracker_violation": np.array(history["test/power_tracker_violation"]),
@@ -101,10 +95,9 @@ print(df.shape)
 print(df.describe())
 
 print(df["algorithm"].value_counts())
-print(df["K"].value_counts())
 print(df["dataset"].value_counts())
 print(df["seed"].value_counts())
 
 # Save the results to a CSV file
-df.to_csv("./results_analysis/results.csv", index=False)
+df.to_csv("./results_analysis/resultsClassicRL25.csv", index=False)
 print("Results saved to results.csv")
