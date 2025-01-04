@@ -168,6 +168,8 @@ wandb/
 saved_models/
 eval_replays/
 slurm_logs/
+eval_logs/
+logs/
 run_tmp.sh
 
 model.lp

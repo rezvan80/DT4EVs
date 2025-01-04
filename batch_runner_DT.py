@@ -7,12 +7,12 @@ srun --mpi=pmix --job-name=interactive --partition=compute --cpus-per-task=1 --q
 import os
 import random
 
-seeds = [10,20,30,40,50]
+seeds = [70]
 config = "PST_V2G_ProfixMax_25.yaml"
 eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/"
 
-# config = "PST_V2G_ProfixMax_250.yaml"
-# eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
+config = "PST_V2G_ProfixMax_250.yaml"
+eval_replay_path = "./eval_replays/PST_V2G_ProfixMax_250_optimal_250_50/"
 
 
 datasets_list = [
@@ -49,8 +49,8 @@ mixed_opt_datasets_list = [
 ]
 
 big_datasets_list = [
-    'random_250_3000',
-    'optimal_250_3000',
+    # 'random_250_3000',
+    # 'optimal_250_3000',
     'bau_250_3000',
 ]
 
@@ -66,7 +66,7 @@ for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
     for action_mask in [True]:
         for K in [2]:
             for _ in [128]:
-                for dataset in mixed_datasets_list:
+                for dataset in big_datasets_list:
                     for _ in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
