@@ -17,8 +17,8 @@ def check_datasets():
             dataset_type = dataset_type + "_" + dataset_path.split('/')[-1].split('_')[5]
             dataset_type = dataset_type + "_" + dataset_path.split('/')[-1].split('_')[6]
             
-        if "250" not in dataset_path:            
-            continue
+        # if "250" not in dataset_path:            
+        #     continue
         print('=' * 50)
         print(f"Environment {env_size} CS | Dataset type: {dataset_type}")
 
@@ -213,7 +213,7 @@ def chop_dataset(b=3000):
         pickle.dump(trajectories, f)
     
 if __name__ == "__main__":
-    # check_datasets()
+    check_datasets()
     # chop_dataset()
     # create_mixed_dataset()
-    merge_datasets()
+    # merge_datasets()

@@ -10,7 +10,7 @@ def dataset_info(data):
     print("=====================================")
 
 def parse_string_to_list(rewards):
-    rewards = rewards.replace("[", "").replace("]", "").replace("\n", " ")
+    rewards = rewards.replace("[", "").replace("]", "").replace("\n", " ")    
     rewards = rewards.replace("'", " ")
     rewards = rewards.replace("  ", " ")
     rewards = rewards.replace("  ", " ")
@@ -23,5 +23,7 @@ def parse_string_to_list(rewards):
         rewards = rewards[1:]
     rewards = rewards.replace("  ", " ").split(" ")
     # print(rewards)
+    # remove "''" from the list
+    rewards = [x for x in rewards if x != ""]
     rewards = np.array(rewards).astype(float)
     return rewards

@@ -1,684 +1,145 @@
-algorithm,K,dataset,seed,runtime,best,best_reward,eval_reward,eval_profits,eval_power_tracker_violation,eval_user_satisfaction,opt_reward,opt_profits,opt_power_tracker_violation,opt_user_satisfaction
-SAC,-1,online,28808-607339,19.120976640094998,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-TD3,-1,online,48549-245558,19.1245037960825,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-SAC_ActionGNN,-1,online,26822-465092,19.12942268241778,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
-TD3_ActionGNN,-1,online,48169-968088,19.096885963377222,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-TD3,-1,online,85653-252534,19.193560456898478,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-SAC,-1,online,69761-242430,19.27107875227928,,"[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]","[nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan nan
- nan nan nan nan nan nan nan nan nan nan nan nan nan nan]",,,,
-TD3_ActionGNN,-1,online,2905-123494,19.294608104957476,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
-SAC_ActionGNN,-1,online,4184-867458,19.294406348930465,,[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],[nan nan nan ... nan nan nan],,,,
+algorithm ,K  ,dataset ,seed  ,runtime             ,best           ,eval_reward
+sac       ,-1 ,online  ,93303 ,11.27138811979029   ,-314094.125    ,"[-348299.6875  -314094.125   -348072.625   -374127.75    -340897.0625
+                                                                    -349066.5625  -375075.75    -331381.65625 -357829.71875 -381758.28125
+                                                                    -380647.9375  -369101.      -354997.9375  -369064.03125 -365270.53125
+                                                                    -345371.1875  -362222.28125 -372024.96875 -344155.53125 -364403.75
+                                                                    -347714.71875 -343354.875   -370052.96875 -405388.15625 -343262.25
+                                                                    -366055.59375 -411740.125   -380044.65625 -377342.5625  -379654.875
+                                                                    -369230.5625  -381831.5625  -365196.65625]"
+sac       ,-1 ,online  ,66173 ,11.210591752794054  ,-291782.15625  ,"[-291782.15625 -347843.1875  -319032.75    -360544.4375  -330967.15625
+                                                                    -328442.      -346033.90625 -330696.3125  -367659.25    -356283.28125
+                                                                    -389183.09375 -396880.34375 -326852.28125 -412677.34375 -367671.75
+                                                                    -391981.84375 -362244.09375 -381814.34375 -342611.5625  -380626.875
+                                                                    -424766.21875 -358017.4375  -416411.25    -388559.96875 -393778.28125
+                                                                    -386832.84375 -391236.65625 -399396.6875  -386444.59375 -379489.0625
+                                                                    -369996.25    -377828.65625 -401173.125  ]"
+sac       ,-1 ,online  ,64763 ,11.239343772265647  ,-323946.1875   ,"[-323946.1875  -374048.75    -358830.875   -347039.125   -373052.875
+                                                                    -360564.5     -386410.21875 -376917.65625 -367734.5     -363055.375
+                                                                    -365950.28125 -364439.59375 -365227.1875  -388955.71875 -423590.0625
+                                                                    -377100.375   -424178.90625 -379340.5625  -411112.15625 -387099.875
+                                                                    -399141.4375  -375916.53125 -378264.75    -393584.21875 -388787.6875
+                                                                    -376539.59375 -405779.9375  -384251.1875  -416870.8125  -416552.75
+                                                                    -426247.28125 -398421.4375  -403343.0625 ]"
+td3       ,-1 ,online  ,79947 , 4.657092839810583  ,-358556.78125  ,"[-375706.59375 -377532.15625 -376211.875   -382670.625   -378122.0625
+                                                                    -375112.625   -366603.03125 -381947.15625 -382472.3125  -373186.625
+                                                                    -359896.21875 -369461.78125 -380154.8125  -373485.71875 -383462.125
+                                                                    -372778.1875  -377260.40625 -373984.375   -368162.96875 -378659.09375
+                                                                    -375240.4375  -358556.78125]"
+td3       ,-1 ,online  ,44310 , 4.642444956103961  ,-434336.6875   ,"[-457413.96875 -437791.21875 -447852.46875 -450902.875   -452671.78125
+                                                                    -438215.6875  -451441.28125 -450070.5625  -450542.71875 -442284.09375
+                                                                    -445950.46875 -438710.34375 -446410.875   -435655.3125  -440816.
+                                                                    -434336.6875  -447723.375   -448663.90625 -450871.875   -451610.28125]"
+td3       ,-1 ,online  ,48945 , 4.6436902368068695 ,-423479.15625  ,"[-446041.21875 -423479.15625 -445967.40625 -458238.96875 -447368.34375
+                                                                    -437182.84375 -444754.9375  -438194.125   -454728.0625  -459518.46875
+                                                                    -440568.875   -460382.3125 ]"
+ppo       ,-1 ,online  ,33206 , 5.197703645361794  ,-77575.453125  ,"[-194533.875     -188267.71875   -165030.921875  -141304.859375
+                                                                    -142429.765625  -118238.671875  -111114.78125    -80945.203125
+                                                                    -92174.125      -83353.9296875  -89214.78125    -87059.34375
+                                                                    -84347.8671875  -84820.9296875  -90759.2421875  -90840.703125
+                                                                    -103368.4609375  -92540.6640625  -90223.1171875  -77575.453125
+                                                                    -97518.890625  -110049.875      -99963.9140625  -93086.4296875
+                                                                    -84900.96875    -86011.7421875  -85762.4140625  -91359.03125
+                                                                    -102764.078125   -98359.2578125]"
+ppo       ,-1 ,online  ,90715 , 5.190163827869627  ,-93372.109375  ,"[-211154.3125    -174853.453125  -147711.875     -147404.25
+                                                                    -145625.953125  -147343.84375   -121503.8828125 -117514.0390625
+                                                                    -125674.6640625 -106840.359375   -99594.8359375 -117840.046875
+                                                                    -133098.796875  -126753.046875  -128370.78125   -127665.21875
+                                                                    -115935.6328125 -103130.5625     -93372.109375  -100776.84375
+                                                                    -109758.1015625  -96129.9375    -106142.0546875 -108890.75
+                                                                    -114505.328125   -97835.8515625  -96751.40625    -99939.578125
+                                                                    -103914.7578125 -118195.171875 ]"
+ppo       ,-1 ,online  ,47602 , 5.203534365561273  ,-70430.296875  ,"[-190456.96875   -172955.234375  -148352.96875   -151483.765625
+                                                                    -150360.90625   -126270.265625  -113618.3125    -113994.2578125
+                                                                    -101116.5        -83172.984375   -95823.4765625  -90629.171875
+                                                                    -85643.8984375  -70430.296875   -89692.859375  -103785.890625
+                                                                    -90996.6875     -79883.15625    -84339.078125   -84766.2578125
+                                                                    -88295.5390625  -76563.8046875  -83968.875      -88184.75
+                                                                    -80660.03125    -93965.2734375  -87898.1640625  -80342.6875
+                                                                    -86688.0546875  -88267.0703125  -96403.7265625 -113924.9296875]"
+tqc       ,-1 ,online  ,28964 ,11.30483666446474   ,-329507.125    ,"[-408694.5     -329507.125   -344091.59375 -351103.84375 -374239.53125
+                                                                    -414211.40625 -407361.09375 -377964.46875 -366922.59375 -368926.65625
+                                                                    -374943.40625 -390353.09375 -377092.5     -397527.125   -383488.53125
+                                                                    -425338.8125  -428100.625   -409872.59375 -373605.03125 -375767.78125
+                                                                    -420036.40625 -428185.03125 -423297.28125 -392245.65625 -369608.3125
+                                                                    -402559.5625  -439534.125   -397933.625   -364372.03125 -405146.53125
+                                                                    -386512.71875 -412225.46875 -445833.8125 ]"
+tqc       ,-1 ,online  ,26222 ,11.270352318750488  ,-296186.9375   ,"[-303729.4375  -296186.9375  -339072.03125 -304760.8125  -342394.125
+                                                                    -337675.625   -319926.09375 -330176.75    -322043.46875 -343258.8125
+                                                                    -339624.375   -341018.96875 -354850.71875 -368547.65625 -321794.5625
+                                                                    -383116.625   -381051.4375  -356286.03125 -353098.15625 -369915.09375
+                                                                    -377519.40625 -364888.0625  -375273.65625 -363014.46875 -363347.65625
+                                                                    -402196.125   -416090.84375 -383201.09375 -402987.625   -396348.03125
+                                                                    -389702.78125 -395626.03125 -421058.40625]"
+tqc       ,-1 ,online  ,97532 ,11.304021915329827  ,-335246.28125  ,"[-370066.5     -372285.1875  -335246.28125 -352527.125   -357029.21875
+                                                                    -378928.21875 -374021.28125 -388650.09375 -416227.34375 -396660.125
+                                                                    -379193.625   -361672.34375 -377688.03125 -400079.96875 -407329.40625
+                                                                    -372235.09375 -392052.53125 -435544.8125  -396354.6875  -425997.03125
+                                                                    -412665.625   -437808.6875  -381463.625   -384573.15625 -391821.46875
+                                                                    -410735.6875  -385587.125   -412864.9375  -385249.5625  -369397.65625
+                                                                    -375041.3125  -369426.90625 -394087.34375]"
+ppo       ,-1 ,online  ,87920 , 5.022709751261605  ,-98701.7734375 ,"[-207338.8125    -212828.421875  -185555.859375  -168446.8125
+                                                                    -171407.703125  -170415.953125  -155043.125     -154271.203125
+                                                                    -165643.75      -157751.796875  -136262.65625   -136420.125
+                                                                    -141371.75      -160673.484375  -161431.90625   -143910.859375
+                                                                    -130044.125     -120526.484375  -113645.3203125 -112211.1953125
+                                                                    -132909.234375  -108893.109375   -98701.7734375]"
+ppo       ,-1 ,online  ,98143 , 5.002907315625085  ,-76674.5546875 ,"[-216360.65625   -162070.5       -141915.578125  -144226.765625
+                                                                    -138476.625     -144288.40625   -144657.921875  -137600.234375
+                                                                    -135963.8125    -129219.3828125 -134600.5       -124418.3984375
+                                                                    -128319.6953125 -101590.203125   -82503.7578125  -79927.9453125
+                                                                    -96878.609375   -90788.75       -92526.375      -93790.671875
+                                                                    -85606.5        -76674.5546875]"
+ppo       ,-1 ,online  ,10528 , 5.034041092859374  ,-73652.1015625 ,"[-186893.265625  -202707.34375   -203559.859375  -189669.265625
+                                                                    -173953.03125   -164168.21875   -158677.109375  -132838.359375
+                                                                    -131999.234375  -112033.6796875 -112846.625     -102368.3203125
+                                                                    -84993.6484375  -95942.6796875  -82373.1875    -101634.375
+                                                                    -88082.859375   -92214.0625     -78485.703125   -80042.7890625
+                                                                    -84860.3828125  -73984.9765625  -73652.1015625]"
+ppo       ,-1 ,online  ,89671 , 5.027634695370992  ,-99211.2578125 ,"[-197331.5625    -166041.734375  -127511.0625    -117055.4453125
+                                                                    -125234.390625  -114465.515625  -103079.6953125  -99211.2578125
+                                                                    -102997.390625  -121614.5703125 -108406.15625   -100172.5078125
+                                                                    -104966.359375  -111460.359375  -103815.3125    -112357.734375
+                                                                    -115529.84375   -117226.640625  -122093.4453125 -132123.765625
+                                                                    -115179.6328125 -109408.71875   -122387.8046875]"
+ppo       ,-1 ,online  ,88083 , 5.026762149466409  ,-72946.5234375 ,"[-209623.015625  -187065.171875  -169084.59375   -137012.40625
+                                                                    -126586.515625   -98623.65625    -80429.         -77052.890625
+                                                                    -92048.53125    -87168.3984375  -86318.6328125  -86897.296875
+                                                                    -83489.8203125  -89193.1875     -79953.9453125  -72946.5234375
+                                                                    -82813.8671875  -83747.859375   -84569.3203125  -99540.046875
+                                                                    -91165.6640625  -80722.890625   -81869.9375   ]"
+ppo       ,-1 ,online  ,27800 , 5.023609569999906  ,-85253.53125   ,"[-170577.796875  -176161.546875  -147280.203125  -143136.96875
+                                                                    -110646.4375     -99472.578125   -98111.3046875 -110550.890625
+                                                                    -97476.765625   -85253.53125    -97337.1328125  -99356.2734375
+                                                                    -97638.3828125 -100088.15625   -111874.2265625 -118830.3984375
+                                                                    -127756.390625  -120379.8828125 -125132.515625  -107841.6953125
+                                                                    -114936.8828125 -106490.0390625 -111790.703125 ]"
+td3       ,-1 ,online  ,20232 , 5.019291469256083  ,-319333.09375  ,"[-333283.96875 -337985.75    -334599.96875 -330002.34375 -333639.4375
+                                                                    -321469.21875 -339689.      -334645.03125 -326075.34375 -333711.03125
+                                                                    -347852.59375 -327028.875   -329500.25    -333323.0625  -325088.4375
+                                                                    -335228.3125  -338791.8125  -342508.71875 -343955.125   -328209.46875
+                                                                    -332748.1875  -319333.09375]"
+td3       ,-1 ,online  ,20606 , 5.020308502117793  ,-358348.71875  ,"[-383651.625   -375348.96875 -376855.625   -369045.59375 -371579.34375
+                                                                    -366490.46875 -358348.71875 -375290.75    -362230.96875 -368068.125
+                                                                    -376416.78125 -385596.53125 -371905.46875 -374729.8125  -372509.53125
+                                                                    -381573.5     -379875.75    -372394.6875  -380450.      -378670.78125
+                                                                    -380638.03125 -386194.875  ]"
+td3       ,-1 ,online  ,92761 , 5.022352117763625  ,-334562.8125   ,"[-356484.21875 -342770.78125 -339584.78125 -348216.15625 -351179.
+                                                                    -339653.1875  -334562.8125  -357766.65625 -355527.6875  -344706.71875
+                                                                    -347243.125   -341337.71875 -338527.625   -346998.4375  -336628.03125
+                                                                    -346232.9375  -334925.84375 -356588.84375 -348600.6875  -347384.90625
+                                                                    -346703.15625 -352563.21875]"
+td3       ,-1 ,online  ,17921 , 5.021948110792372  ,-387387.0      ,"[-409278.5625  -401976.0625  -410863.375   -398116.40625 -389444.84375
+                                                                    -399758.21875 -399812.78125 -395828.9375  -395658.75    -399414.125
+                                                                    -393914.53125 -389809.53125 -405690.21875 -398446.84375 -406179.
+                                                                    -389094.125   -388434.15625 -387387.      -394170.34375 -391765.84375
+                                                                    -389851.1875  -397370.625  ]"
+td3       ,-1 ,online  , 1635 , 5.018858115474383  ,-403353.6875   ,"[-403353.6875  -436766.09375 -422562.375   -429125.25    -429437.84375
+                                                                    -425083.40625 -423276.5625  -410381.      -412925.78125 -414979.9375
+                                                                    -417029.25    -422634.71875 -424402.0625  -412776.28125 -431453.375
+                                                                    -415504.1875  -428578.3125  -431740.96875 -422729.84375 -417837.0625
+                                                                    -426088.09375 -434427.84375]"
+td3       ,-1 ,online  ,90237 , 5.020170182320807  ,-320546.1875   ,"[-333749.28125 -333216.78125 -342967.      -332925.25    -333707.65625
+                                                                    -338926.5625  -344673.09375 -340704.71875 -333507.78125 -343579.
+                                                                    -335673.46875 -329511.28125 -331938.0625  -339482.4375  -331272.25
+                                                                    -332897.0625  -334950.21875 -331411.34375 -341170.21875 -320546.1875
+                                                                    -340726.25    -327515.90625]"

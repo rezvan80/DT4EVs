@@ -12,7 +12,7 @@ api = wandb.Api(timeout=120)
 project_name = "DT4EVs"
 entity_name = "stavrosorf"
 # group_name = "PaperExpsDT_25cs"
-group_name = "25_ClassicRL_tests"
+group_name = "25_SB3_RL_tests"
 # group_name = "PaperExpsDT_250cs"
 
 # Fetch runs from the specified project
@@ -27,53 +27,42 @@ print(f"Total GNN runs fetched: {len(runs)}")
 run_results = []
 # use tqdm to display a progress bar
 for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
-    # if i < 100:
-        # continue
+    # if i != 23:
+    #     continue
+    # print(run.name)
     group_name = run.group
-    # history = run.history()
-    # history = run.scan_history()
-    # print(history)
-    mean_rewards = []
-    counter = 0
-    for record in run.scan_history():
-        # Process each record as needed
-        
-        if record["eval/mean_reward"] != None:
-            # print(record["eval/mean_reward"])
-            print(f'counter: {counter}')
-            # input("Press")
-            mean_rewards.append(record["eval/mean_reward"])
-        counter += 1
-    print(mean_rewards)
-    exit()
+    history = run.history()
+    mean_rewards = history["eval/mean_reward"]
+    mean_rewards = [None if np.isnan(x) else x for x in mean_rewards]
+    mean_rewards = [x for x in mean_rewards if x != None]
+    print(f'{run.name} mean_rewards: {len(mean_rewards)}')
+    # continue
+    # exit()
+    
     name = run.name
-    if "ActionGNN" in name:
-        algorithm = name.split("_")[0] + "_ActionGNN"
+
+    algorithm = name.split("_")[0]
         
-    else:
-        algorithm = name.split("_")[0]
-    
-    
     dataset = "online"
     seed = name.split("_")[-1]
-    print(history.keys())
-    print(f'history: {history}')
+    # print(history.keys())
+    # print(f'history: {history}')
     results = {
         "algorithm": algorithm,
         "K": -1,
         "dataset": dataset,
         "seed": seed,
         "runtime": np.array(history["_runtime"])[-1]/3600,
-        "best": np.array(history["eval/best_reward"])[-1],
-        "best_reward": np.array(history["eval/best_reward"]),
-        "eval_reward": np.array(history["test/total_reward"]),
-        "eval_profits": np.array(history["test/total_profits"]),
-        "eval_power_tracker_violation": np.array(history["test/power_tracker_violation"]),
-        "eval_user_satisfaction": np.array(history["test/average_user_satisfaction"]),
-        "opt_reward": np.array(history["opt/total_reward"])[-1],
-        "opt_profits": np.array(history["opt/total_profits"])[-1],
-        "opt_power_tracker_violation": np.array(history["opt/power_tracker_violation"])[-1],
-        "opt_user_satisfaction": np.array(history["opt/average_user_satisfaction"])[-1],
+        "best": max(mean_rewards),
+        # "best_reward": np.array(history["eval/best_reward"]),
+        "eval_reward": np.array(mean_rewards),
+        # "eval_profits": np.array(history["test/total_profits"]),
+        # "eval_power_tracker_violation": np.array(history["test/power_tracker_violation"]),
+        # "eval_user_satisfaction": np.array(history["test/average_user_satisfaction"]),
+        # "opt_reward": np.array(history["opt/total_reward"])[-1],
+        # "opt_profits": np.array(history["opt/total_profits"])[-1],
+        # "opt_power_tracker_violation": np.array(history["opt/power_tracker_violation"])[-1],
+        # "opt_user_satisfaction": np.array(history["opt/average_user_satisfaction"])[-1],
     }   
     # print(f'results_rewards: {results["eval_reward"][:40]}')
     # print(f'results_profits: {results["eval_profits"][:40]}')

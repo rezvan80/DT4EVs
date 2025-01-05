@@ -24,129 +24,93 @@ import numpy as np
 
 from utils import dataset_info, parse_string_to_list
 
-data = pd.read_csv("./results_analysis/resultsClassicRL25")
-dataset_info(data)
+data = pd.read_csv("./results_analysis/resultsClassicRL25.csv")
+# dataset_info(data)
+print(data.columns.tolist())
 
-datasets_list = [
-    'random_100',
-    'random_1000',
-    'random_10000',
-    'optimal_100',
-    'optimal_1000',
-    'optimal_10000',
-    'bau_100',
-    'bau_1000',
-    'bau_10000',
-]
 
-# filter the data that have:
-dataset_info(data)
+# # filter the data that have:
+# dataset_info(data)
 
 # For every row in the data create a new dataframe with epoch as the index and the reward as the value, keep also, the seed, algorithm and dataset
 
 new_df = pd.DataFrame()
 for i, row in data.iterrows():
-    # print(row)
     # parse the string to a list
     rewards = parse_string_to_list(row["eval_reward"])
     
-    for j in range(250):
-        # if there is no value for the epoch, use the last value
-
+    for j in range(len(rewards)):
         reward = rewards[j] if j < len(rewards) else rewards[-1]
         entry = {
             "epoch": j,
             "reward": reward,     
-            "seed": row["seed"],
-            "algorithm": row["algorithm"],
-            "dataset": row["dataset"]
+            "seed": row["seed  "],
+            "algorithm": row["algorithm "],
+            "dataset": row["dataset "]
         }
         new_df = pd.concat([new_df, pd.DataFrame([entry])])
-    
 # print(new_df.head())    
-# print(new_df.describe())
+print(new_df.describe())
     
 datasets_list = [
     'online',
 ]
 
 # change algorithm names
+# print unique values of the algorithm column
+print(new_df["algorithm"].unique())
 # from dt to DT
-new_df["algorithm"] = new_df["algorithm"].replace("dt", "DT")
+new_df["algorithm"] = new_df["algorithm"].replace("td3       ", "TD3")
 # from QT to Q-DT
-new_df["algorithm"] = new_df["algorithm"].replace("QT", "Q-DT")
+new_df["algorithm"] = new_df["algorithm"].replace("sac       ", "SAC")
 # from gnn_act_emb to GNN-DT
-new_df["algorithm"] = new_df["algorithm"].replace("gnn_act_emb", "GNN-DT")
+new_df["algorithm"] = new_df["algorithm"].replace("tqc       ", "TQC")
+new_df["algorithm"] = new_df["algorithm"].replace("ppo       ", "PPO")
 
 # plot the data
 sns.set_theme(style="whitegrid")
 plt.rcParams['font.family'] = 'serif'
-plt.figure(figsize=(5, 6))
-for i in range(3):
-    sns.lineplot(data=new_df[new_df["dataset"] == datasets_list[i]],
-                 x="epoch",
-                 y="reward",
-                 colors=["blue", "green", "red", "orange"],
-                 hue="algorithm"
-                 )
-    
-    # plt.title(f"K=10",
-    #           fontsize=17)
-    
-    #add a horizontal line for the optimal reward
-    plt.axhline(y=-2430, color='r', linestyle='--',
-                label="Oracle")
-    
-    # create a new legend for the optimal reward and the algorithms
-    plt.legend(loc='lower right',
-               title="Algorithm",
-               title_fontsize=15,
-               fontsize=15)
-    # plt.legend(loc='upper left')
-    
-    
-    # set x and y labels font size
-    plt.xlabel("Epoch", fontsize=17)
-    plt.ylabel("Reward [-]", fontsize=17)
-    
-    #set xticks and yticks font size
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
-    
-    # put scientific notation in the y axis
-    plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-    
-    # set xlim
-    plt.xlim(0, 150)
-    plt.ylim(-400_000, 10_000)
-    plt.tight_layout()
-    
-    plt.savefig(f"results_analysis/figs/plot_performance_{datasets_list[i]}.png",
-                dpi=60)
-    plt.clf()
-    
-exit()
+plt.figure(figsize=(4, 5))
 sns.lineplot(data=new_df,
-             x="epoch",
-             y="reward",
-             hue="dataset")
-# sns.relplot(data=new_df,
-#              x="epoch",
-#              y="reward",
-#              col="dataset",
-#              kind="line",
-#              hue="algorithm")
-
-# plt.show()
-plt.savefig("results_analysis/figs/plot_performance.png",
-            dpi=60)
-
-sns.relplot(data=new_df,
                 x="epoch",
                 y="reward",
-                col="algorithm",
-                kind="line",
-                hue="dataset")
+                # colors=["blue", "green", "red", "orange"],
+                hue="algorithm",
+                # hue_order=["TD3", "SAC", "TQC", "PPO"],
+                )
+
+
+#add a horizontal line for the optimal reward
+plt.axhline(y=-2405, color='r', linestyle='--',
+            label="Oracle")
+
+# create a new legend for the optimal reward and the algorithms
+plt.legend(loc='center right',
+            title="Algorithm",
+            title_fontsize=15,
+            ncol=2,
+            columnspacing=0.4,
+            fontsize=14)
+# plt.legend(loc='upper left')
+
+# set x and y labels font size
+plt.xlabel("Epoch", fontsize=17)
+plt.ylabel("", fontsize=17)
+
+#set xticks and yticks font size
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+
+# put scientific notation in the y axis
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+# set xlim
+plt.xlim(0, 30)
+# plt.ylim(-450_000, 10_000)
+plt.tight_layout()
 # plt.show()
-plt.savefig("results_analysis/figs/plot_performance2.png",
+
+plt.savefig(f"results_analysis/figs/plot_performance_classicRL.pdf",
+            dpi=60)
+
+plt.savefig(f"results_analysis/figs/plot_performance_onlineRL.png",
             dpi=60)

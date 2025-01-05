@@ -25,7 +25,7 @@ import numpy as np
 from utils import dataset_info, parse_string_to_list
 
 data = pd.read_csv("./results_analysis/results.csv")
-dataset_info(data)
+
 
 datasets_list = [
     'random_100',
@@ -70,73 +70,69 @@ for i, row in data.iterrows():
 # print(new_df.describe())
 
 datasets_list = [
-    'optimal_10000',
-    'bau_10000',
-    'random_10000',
+    
+    'random_1000',
+    'optimal_25_1000',
+    'optimal_50_1000',
+    'optimal_75_1000',
+    'optimal_1000',
 ]
 
-# change algorithm names
+
 # from dt to DT
 new_df["algorithm"] = new_df["algorithm"].replace("dt", "DT")
-# from QT to Q-DT
-new_df["algorithm"] = new_df["algorithm"].replace("QT", "Q-DT")
-# from gnn_act_emb to GNN-DT
-new_df["algorithm"] = new_df["algorithm"].replace("gnn_act_emb", "GNN-DT")
 
 # plot the data
 sns.set_theme(style="whitegrid")
 plt.rcParams['font.family'] = 'serif'
+
+plt.figure(figsize=(4, 5))
+# keep the dataset that are in the datasets_list
+new_df = new_df[new_df["dataset"].isin(datasets_list)]
+dataset_info(new_df)
+
 # plt.figure(figsize=(4, 5))
-for i in range(3):
-    if datasets_list[i] == "optimal_10000":
-        plt.figure(figsize=(4.4, 5.5))
-    else:
-        continue
-        plt.figure(figsize=(4, 5))
-    # plt.figure(figsize=(4, 5))
-    sns.lineplot(data=new_df[new_df["dataset"] == datasets_list[i]],
-                 x="epoch",
-                 y="reward",
-                 hue="algorithm",
-                 hue_order=["DT", "Q-DT", "GNN-DT"],)
+sns.lineplot(data=new_df,
+                x="epoch",
+                y="reward",
+                hue="dataset",                
+                )
 
-    # plt.title(f"K=10",
-    #           fontsize=17)
+# plt.title(f"K=10",
+#           fontsize=17)
 
-    # add a horizontal line for the optimal reward
-    plt.axhline(y=-2405, color='r', linestyle='--',
-                label="Oracle")
+# add a horizontal line for the optimal reward
+plt.axhline(y=-2405, color='r', linestyle='--',
+            label="Oracle")
 
-    # create a new legend for the optimal reward and the algorithms
-    plt.legend(loc='lower right',
-               title="Algorithm",
-               title_fontsize=15,
-               ncol=2,
-               columnspacing=0.4,
-               fontsize=14.5)
-    # plt.legend(loc='upper left')
+# create a new legend for the optimal reward and the algorithms
+plt.legend(loc='lower right',
+            title="Algorithm",
+            title_fontsize=15,
+            ncol=2,
+            columnspacing=0.4,
+            fontsize=14.5)
+# plt.legend(loc='upper left')
 
-    # set x and y labels font size
-    plt.xlabel("Epoch", fontsize=17)
-    if datasets_list[i] == "optimal_10000":
-        plt.ylabel("Reward [-]", fontsize=17)
-    else:
-        plt.ylabel("", fontsize=17)
+# set x and y labels font size
+plt.xlabel("Epoch", fontsize=17)
 
-    # set xticks and yticks font size
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
+plt.ylabel("Reward [-]", fontsize=17)
 
-    # put scientific notation in the y axis
-    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+# set xticks and yticks font size
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
 
-    # set xlim
-    plt.xlim(0, 150)
-    plt.ylim(-450_000, 10_000)
-    plt.tight_layout()
+# put scientific notation in the y axis
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
 
-    plt.savefig(f"results_analysis/figs/plot_performance_{datasets_list[i]}.pdf",
-                dpi=60)
-    plt.savefig(f"results_analysis/figs/plot_performance_{datasets_list[i]}.png",
-                dpi=60)
-    plt.clf()
+# set xlim
+plt.xlim(0, 150)
+plt.ylim(-450_000, 10_000)
+plt.tight_layout()
+
+plt.savefig(f"results_analysis/figs/mixed_opt_performance.pdf",
+            dpi=60)
+plt.savefig(f"results_analysis/figs/mixed_opt_performance.png",
+            dpi=60)
+plt.clf()

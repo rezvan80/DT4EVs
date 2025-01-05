@@ -68,7 +68,7 @@ for i, row in data.iterrows():
                             "K": row["K"],
                             "dataset": row["dataset"],
                             "seed": row["seed"],
-                            "max_reward": max_reward,
+                            "max_reward": max_reward/100000,
                             "profits": profits[max_reward_index],
                             "user_satisfaction": user_satisfaction[max_reward_index],
                             "power_violation": power_tracker_violation[max_reward_index],
