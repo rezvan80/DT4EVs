@@ -43,7 +43,6 @@ datasets_list = [
 # data = data[(data["K"] == 2) & (data["dataset"].str.contains("optimal"))]
 # data = data[(data["K"] == 10) & (data["dataset"].str.contains("optimal"))]
 data = data[(data["K"] == 10)]
-dataset_info(data)
 
 # For every row in the data create a new dataframe with epoch as the index and the reward as the value, keep also, the seed, algorithm and dataset
 
@@ -69,13 +68,20 @@ for i, row in data.iterrows():
 # print(new_df.head())
 # print(new_df.describe())
 
-datasets_list = [
-    
+datasets_list = [    
     'random_1000',
     'optimal_25_1000',
     'optimal_50_1000',
     'optimal_75_1000',
     'optimal_1000',
+]
+
+datasets_list = [    
+    'random_1000',
+    'bau_25_1000',
+    'bau_50_1000',
+    'bau_75_1000',
+    'bau_1000',
 ]
 
 
@@ -86,10 +92,9 @@ new_df["algorithm"] = new_df["algorithm"].replace("dt", "DT")
 sns.set_theme(style="whitegrid")
 plt.rcParams['font.family'] = 'serif'
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(6,4))
 # keep the dataset that are in the datasets_list
 new_df = new_df[new_df["dataset"].isin(datasets_list)]
-dataset_info(new_df)
 
 # plt.figure(figsize=(4, 5))
 sns.lineplot(data=new_df,
@@ -107,7 +112,7 @@ plt.axhline(y=-2405, color='r', linestyle='--',
 
 # create a new legend for the optimal reward and the algorithms
 plt.legend(loc='lower right',
-            title="Algorithm",
+            title="Dataset",
             title_fontsize=15,
             ncol=2,
             columnspacing=0.4,
