@@ -44,9 +44,9 @@ for i, row in data.iterrows():
         entry = {
             "epoch": j,
             "reward": reward,     
-            "seed": row["seed  "],
-            "algorithm": row["algorithm "],
-            "dataset": row["dataset "]
+            "seed": row["seed"],
+            "algorithm": row["algorithm"],
+            "dataset": row["dataset"]
         }
         new_df = pd.concat([new_df, pd.DataFrame([entry])])
 # print(new_df.head())    
@@ -55,17 +55,21 @@ print(new_df.describe())
 datasets_list = [
     'online',
 ]
+# if algorithm is  a2c remove it
+new_df = new_df[new_df["algorithm"] != "a2c"]
 
 # change algorithm names
 # print unique values of the algorithm column
 print(new_df["algorithm"].unique())
 # from dt to DT
-new_df["algorithm"] = new_df["algorithm"].replace("td3       ", "TD3")
+new_df["algorithm"] = new_df["algorithm"].replace("td3", "TD3")
 # from QT to Q-DT
-new_df["algorithm"] = new_df["algorithm"].replace("sac       ", "SAC")
+new_df["algorithm"] = new_df["algorithm"].replace("sac", "SAC")
 # from gnn_act_emb to GNN-DT
-new_df["algorithm"] = new_df["algorithm"].replace("tqc       ", "TQC")
-new_df["algorithm"] = new_df["algorithm"].replace("ppo       ", "PPO")
+new_df["algorithm"] = new_df["algorithm"].replace("tqc", "TQC")
+new_df["algorithm"] = new_df["algorithm"].replace("ppo", "PPO")
+new_df["algorithm"] = new_df["algorithm"].replace("trpo", "TRPO")
+new_df["algorithm"] = new_df["algorithm"].replace("ddpg", "DDPG")
 
 # plot the data
 sns.set_theme(style="whitegrid")
@@ -87,10 +91,10 @@ plt.axhline(y=-2405, color='r', linestyle='--',
 # create a new legend for the optimal reward and the algorithms
 plt.legend(loc='center right',
             title="Algorithm",
-            title_fontsize=15,
+            title_fontsize=14,
             ncol=2,
             columnspacing=0.4,
-            fontsize=14)
+            fontsize=13)
 # plt.legend(loc='upper left')
 
 # set x and y labels font size
