@@ -56,7 +56,7 @@ def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ############# Simulation Parameters #################
-    n_test_cycles = 100
+    n_test_cycles = 1
     SAVE_REPLAY_BUFFER = False
     SAVE_EV_PROFILES = False
 
@@ -74,9 +74,9 @@ def evaluator():
     config_file = "./config_files/PST_V2G_ProfixMax_25_G3.yaml"
     config_file = "./config_files/PST_V2G_ProfixMax_25_G4.yaml"
     config_file = "./config_files/PST_V2G_ProfixMax_25_G5.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G6.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G7.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G8.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G6.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G7.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G8.yaml"
     
     # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
@@ -105,7 +105,7 @@ def evaluator():
         # RoundRobin_GF,
         # RoundRobin,
 
-        # mo_PST_V2GProfitMaxOracleGB
+        mo_PST_V2GProfitMaxOracleGB
         # eMPC_V2G,
         # eMPC_V2G_v2,
         # # V2GProfitMaxLoadsOracle,
