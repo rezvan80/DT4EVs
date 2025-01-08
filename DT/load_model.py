@@ -107,6 +107,7 @@ def load_QT_model(model_path, max_ep_len, env,  device):
     load_path = f"saved_models/{model_path}"
 
     load_model_path = f"{load_path}/model.best"
+    load_critic_path = f"{load_path}/critic.best"
 
     state_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
@@ -132,7 +133,8 @@ def load_QT_model(model_path, max_ep_len, env,  device):
     critic = Critic(
         state_dim, act_dim, hidden_dim=vars['embed_dim']
     )   
-
+    critic.load_state_dict(torch.load(load_critic_path))
+    
     model.load_state_dict(torch.load(load_model_path))
     model.to(device=device)
     critic = critic.to(device=device)
