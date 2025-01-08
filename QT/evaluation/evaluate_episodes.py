@@ -194,6 +194,7 @@ def evaluate_episode_rtg(
 def QT_evaluate_episode_rtg_from_replays(
         env,
         model,
+        critic,
         max_ep_len=1000,
         scale=1.,
         state_mean=0.,
@@ -209,8 +210,8 @@ def QT_evaluate_episode_rtg_from_replays(
     model.eval()
     model.to(device=device)
 
-    state_mean = torch.from_numpy(state_mean).to(device=device)
-    state_std = torch.from_numpy(state_std).to(device=device)
+    # state_mean = torch.from_numpy(state_mean).to(device=device)
+    # state_std = torch.from_numpy(state_std).to(device=device)
 
     test_rewards = []
     test_stats = []

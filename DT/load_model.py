@@ -8,6 +8,7 @@ from DT.models.decision_transformer import DecisionTransformer
 from DT.models.gnn_In_Out_decision_transformer import GNN_IN_OUT_DecisionTransformer
 from DT.models.gnn_emb_decision_transformer import GNN_act_emb_DecisionTransformer
 from QT.models.ql_DT import DecisionTransformer as QT_DecisionTransformer
+from QT.models.ql_DT import Critic
 
 def load_GNN_act_emb_DecisionTransformer_model(model_path, max_ep_len, env, config,  device):
         
@@ -127,8 +128,13 @@ def load_QT_model(model_path, max_ep_len, env,  device):
         resid_pdrop=0.1,
         attn_pdrop=0.1,
     )
+    
+    critic = Critic(
+        state_dim, act_dim, hidden_dim=vars['embed_dim']
+    )   
 
     model.load_state_dict(torch.load(load_model_path))
     model.to(device=device)
+    critic = critic.to(device=device)
 
-    return model
+    return model, critic

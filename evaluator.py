@@ -56,7 +56,7 @@ def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ############# Simulation Parameters #################
-    n_test_cycles = 1
+    n_test_cycles = 2
     SAVE_REPLAY_BUFFER = False
     SAVE_EV_PROFILES = False
 
@@ -86,8 +86,8 @@ def evaluator():
         # "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
 
         ################## Best models ##################################
-        # 'gnn_act_emb_run_40_K=10_dataset=optimal_25_1000_25724_537244',
-        # 'dt_run_10_K=10_dataset=bau_10000_94967_118081',
+        'gnn_act_emb_run_40_K=10_dataset=optimal_25_1000_25724_537244',
+        'dt_run_10_K=10_dataset=bau_10000_94967_118081',
         'QT_run_10_K=2_dataset=bau_10000_82795_466555',
         #################################################################
 
@@ -335,7 +335,7 @@ def evaluator():
                             elif "QT" in algorithm:
                                 model_path = algorithm
 
-                                model = load_QT_model(model_path=model_path,
+                                model, critic = load_QT_model(model_path=model_path,
                                                       max_ep_len=simulation_length,
                                                       env=env,
                                                       #   config=config,
@@ -382,6 +382,7 @@ def evaluator():
                         elif "QT" in algorithm_name:
                             result_tuple = QT_evaluate_episode_rtg_from_replays(env=env,
                                                                                model=model,
+                                                                               critic=critic,
                                                                                max_ep_len=simulation_length,
                                                                                scale=1.,
                                                                                device='cuda',
