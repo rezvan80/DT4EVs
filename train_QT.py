@@ -420,6 +420,8 @@ def experiment(
             # save pytorch model
             torch.save(model.state_dict(),
                        f'saved_models/{exp_prefix}/model.best')
+            torch.save(critic.state_dict(),
+                       f'saved_models/{exp_prefix}/critic.best')
             print(
                 f' Saving best model with reward {best_reward} at path saved_models/{exp_prefix}/model.best')
 
@@ -429,6 +431,7 @@ def experiment(
             wandb.log(outputs)
 
     torch.save(model.state_dict(), f'{save_path}/model.last')
+    torch.save(critic.state_dict(), f'{save_path}/critic.last')
 
     if log_to_wandb:
         wandb.finish()

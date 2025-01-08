@@ -197,6 +197,7 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         batch = np.repeat(np.arange(len(sample_node_length)),
                           sample_node_length)
         batch = torch.from_numpy(batch).to(device=self.device)
+        batch = batch.to(torch.int64)
 
         # Graph Embedding
         pooled_embedding = global_mean_pool(x_gnn, batch=batch)

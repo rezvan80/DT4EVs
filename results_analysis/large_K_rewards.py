@@ -29,7 +29,6 @@ data["max_reward"] = data["max_reward"]*10_0000
 data = data[data["K"] != 100]
 data = data[data["K"] != 50]
 
-
 print(data.head())
 
 plt.figure(figsize=(6, 4))

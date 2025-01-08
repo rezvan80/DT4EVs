@@ -64,6 +64,10 @@ for i, run in tqdm.tqdm(enumerate(runs), total=len(runs)):
     dataset = config["dataset"]
     seed = config["seed"]
     
+    if '_runtime' not in history:
+        print(f"Run {run.id} has no _runtime key")
+        continue
+    
     results = {
         "algorithm": algorithm,
         "K": K,

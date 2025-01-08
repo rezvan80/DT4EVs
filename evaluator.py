@@ -1,7 +1,8 @@
 # This script reads the replay files and evaluates the performance.
 
-from DT.load_model import load_DT_model, load_GNN_IN_OUT_DecisionTransformer_model, load_GNN_act_emb_DecisionTransformer_model
+from DT.load_model import load_DT_model, load_QT_model, load_GNN_act_emb_DecisionTransformer_model
 from DT.evaluation.evaluate_episodes import evaluate_episode_rtg_from_replays
+from QT.evaluation.evaluate_episodes import QT_evaluate_episode_rtg_from_replays
 
 import gymnasium as gym
 # from state_action_eda import AnalysisReplayBuffer
@@ -60,7 +61,7 @@ def evaluator():
     SAVE_EV_PROFILES = False
 
     # values in [0-1] probability of communication failure
-    p_fail_list = [0, 0.1, 0.25, 0.5]
+    # p_fail_list = [0, 0.1, 0.25, 0.5]
     p_fail_list = [0]  # values in [0-1] probability of communication failure
 
     # p_delay_list = [0, 0.1, 0.2, 0.3]
@@ -74,16 +75,6 @@ def evaluator():
         state_function_Normal = PST_V2G_ProfitMax_state
         state_function_GNN = None
         reward_function = PST_V2G_ProfitMax_reward
-
-    elif "V2G_ProfixMaxWithLoads" in config_file:
-        state_function_Normal = V2G_profit_max_loads
-        # state_function_GNN = V2G_ProfitMax_with_Loads_GNN
-        reward_function = profit_maximization
-
-    elif "PST" in config_file:
-        state_function_Normal = PublicPST
-        # state_function_GNN = PublicPST_GNN
-        reward_function = SimpleReward
     else:
         raise ValueError(f'Unknown config file {config_file}')
 
@@ -92,13 +83,20 @@ def evaluator():
     algorithms = [
         ChargeAsFastAsPossible,
         # "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
-        "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
+        # "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
+
+        ################## Best models ##################################
+        # 'gnn_act_emb_run_40_K=10_dataset=optimal_25_1000_25724_537244',
+        # 'dt_run_10_K=10_dataset=bau_10000_94967_118081',
+        'QT_run_10_K=2_dataset=bau_10000_82795_466555',
+        #################################################################
+
         # ChargeAsLateAsPossible,
         # RoundRobin_GF_off_allowed,
         # RoundRobin_GF,
         # RoundRobin,
 
-        mo_PST_V2GProfitMaxOracleGB
+        # mo_PST_V2GProfitMaxOracleGB
         # eMPC_V2G,
         # eMPC_V2G_v2,
         # # V2GProfitMaxLoadsOracle,
@@ -310,28 +308,40 @@ def evaluator():
                                 env = model.get_env()
                                 state = env.reset()
 
-                            elif "gnn_in_out_dt" in algorithm:
-                                model_path = algorithm
-
-                                model = load_GNN_IN_OUT_DecisionTransformer_model(model_path=model_path,
-                                                                                  max_ep_len=simulation_length,
-                                                                                  env=env,
-                                                                                  config=config,
-                                                                                  device=device)
-
-                                algorithm_name = "GNN_Dec_DT"
-                                model.eval()
-                                
                             elif "gnn_act_emb" in algorithm:
                                 model_path = algorithm
 
                                 model = load_GNN_act_emb_DecisionTransformer_model(model_path=model_path,
-                                                                                  max_ep_len=simulation_length,
-                                                                                  env=env,
-                                                                                  config=config,
-                                                                                  device=device)
+                                                                                   max_ep_len=simulation_length,
+                                                                                   env=env,
+                                                                                   config=config,
+                                                                                   device=device)
 
                                 algorithm_name = "GNN_act_emb_DT"
+                                model.eval()
+
+                            elif "dt" in algorithm:
+                                model_path = algorithm
+
+                                model, state_mean, state_std = load_DT_model(model_path=model_path,
+                                                                             max_ep_len=simulation_length,
+                                                                             env=env,
+                                                                             #   config=config,
+                                                                             device=device)
+
+                                algorithm_name = "DT"
+                                model.eval()
+
+                            elif "QT" in algorithm:
+                                model_path = algorithm
+
+                                model = load_QT_model(model_path=model_path,
+                                                      max_ep_len=simulation_length,
+                                                      env=env,
+                                                      #   config=config,
+                                                      device=device)
+
+                                algorithm_name = "QT"
                                 model.eval()
 
                             else:
@@ -356,17 +366,29 @@ def evaluator():
 
                     DT_FLAG = False
                     if type(algorithm) == str:
-                        if "dt" in algorithm or "gnn_act_emb" in algorithm:
+                        if "dt" in algorithm or "gnn_act_emb" in algorithm or "QT" in algorithm:
                             DT_FLAG = True
 
                     if DT_FLAG:
-                        result_tuple = evaluate_episode_rtg_from_replays(env=env,
-                                                                         model=model,
-                                                                         max_ep_len=simulation_length,
-                                                                         device='cuda',
-                                                                         target_return=0,
-                                                                         mode='normal',
-                                                                         )
+                        if "DT" in algorithm_name or "gnn_act_emb" in algorithm_name:
+                            
+                            result_tuple = evaluate_episode_rtg_from_replays(env=env,
+                                                                            model=model,
+                                                                            max_ep_len=simulation_length,
+                                                                            device='cuda',
+                                                                            target_return=0,
+                                                                            mode='normal',
+                                                                            )
+                        elif "QT" in algorithm_name:
+                            result_tuple = QT_evaluate_episode_rtg_from_replays(env=env,
+                                                                               model=model,
+                                                                               max_ep_len=simulation_length,
+                                                                               scale=1.,
+                                                                               device='cuda',
+                                                                               target_return=0,
+                                                                               mode='normal',
+                                                                               )    
+                        
                         stats, rewards = result_tuple[0], [result_tuple[1]]
                         done = True
 
@@ -543,7 +565,7 @@ def evaluator():
                 algorithm_names.append(algorithm.split('_')[0])
         else:
             algorithm_names.append(algorithm.__name__)
-    
+
     print(f'Algorithm names: {algorithm_names}')
 
     print(f'Plottting results at {save_path}')
