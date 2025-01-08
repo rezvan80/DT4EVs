@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from utils import dataset_info, parse_string_to_list
+from res_utils import dataset_info, parse_string_to_list
 
 data = pd.read_csv("./results_analysis/resultsClassicRL25.csv")
 # dataset_info(data)

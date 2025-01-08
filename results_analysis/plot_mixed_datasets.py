@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from utils import dataset_info, parse_string_to_list
+from res_utils import dataset_info, parse_string_to_list
 
 fig, axs = plt.subplots(1, 2, figsize=(12, 6))
 
