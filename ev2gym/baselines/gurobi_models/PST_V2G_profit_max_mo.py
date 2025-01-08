@@ -19,7 +19,7 @@ class mo_PST_V2GProfitMaxOracleGB():
 
     def __init__(self,
                  replay_path=None,
-                 timelimit=1000,
+                 timelimit=None,
                  MIPGap=None,
                  verbose=True,
                  **kwargs):
@@ -361,8 +361,7 @@ class mo_PST_V2GProfitMaxOracleGB():
             for i in range(self.n_cs):
                 for p in range(self.number_of_ports_per_cs):
                     if t_dep[p, i, t] == 1:
-                        # self.m.addLConstr(energy[p, i, t] >= ev_max_energy_at_departure[p, i, t],
-
+                        # self.m.addLConstr(energy[p, i, t] >= ev_des_energy[p, i, t],
                         #                   name=f'ev_departure_energy.{p}.{i}.{t}')
                         
                         self.m.addConstr(user_satisfaction[p, i, t] == \

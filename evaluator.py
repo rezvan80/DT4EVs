@@ -56,7 +56,7 @@ def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ############# Simulation Parameters #################
-    n_test_cycles = 10
+    n_test_cycles = 1
     SAVE_REPLAY_BUFFER = False
     SAVE_EV_PROFILES = False
 
@@ -87,8 +87,8 @@ def evaluator():
 
         ################## Best models ##################################
         'gnn_act_emb_run_40_K=10_dataset=optimal_25_1000_25724_537244',
-        'dt_run_10_K=10_dataset=bau_10000_94967_118081',
-        'QT_run_30_K=2_dataset=optimal_1000_87175_301984',
+        # 'dt_run_10_K=10_dataset=bau_10000_94967_118081',
+        # 'QT_run_30_K=2_dataset=optimal_1000_87175_301984',
         #################################################################
 
         # ChargeAsLateAsPossible,
@@ -96,7 +96,7 @@ def evaluator():
         # RoundRobin_GF,
         # RoundRobin,
 
-        # mo_PST_V2GProfitMaxOracleGB
+        mo_PST_V2GProfitMaxOracleGB
         # eMPC_V2G,
         # eMPC_V2G_v2,
         # # V2GProfitMaxLoadsOracle,

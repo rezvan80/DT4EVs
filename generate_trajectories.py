@@ -29,16 +29,16 @@ if __name__ == "__main__":
         args.config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
     else:
         raise ValueError(f"Environment {args.env} not supported")
-    
+
     reward_function = PST_V2G_ProfitMax_reward
     state_function = PST_V2G_ProfitMax_state
     problem = args.config_file.split("/")[-1].split(".")[0]
-    
+
     env = EV2Gym(config_file=args.config_file,
-                state_function=state_function,
-                reward_function=reward_function,
-                save_replay=SAVE_EVAL_REPLAYS,
-                )
+                 state_function=state_function,
+                 reward_function=reward_function,
+                 save_replay=SAVE_EVAL_REPLAYS,
+                 )
 
     temp_env = EV2Gym(config_file=args.config_file,
                       save_replay=True,
@@ -60,7 +60,7 @@ if __name__ == "__main__":
                             ]:
         raise ValueError(
             f"Trajectories type {args.dataset} not supported")
-        
+
     trajecotries_type = args.dataset  # random, optimal, bau
 
     file_name = f"{problem}_{trajecotries_type}_{number_of_charging_stations}_{n_trajectories}.pkl"
@@ -97,19 +97,19 @@ if __name__ == "__main__":
             agent = RandomAgent(env)
         elif trajecotries_type == "bau":
             agent = RoundRobin_GF(env)
-        
+
         elif trajecotries_type == "mixed_bau_50":
             if i % 2 == 0:
                 agent = RoundRobin_GF(env)
             else:
                 agent = RandomAgent(env)
-                
+
         elif trajecotries_type == "mixed_bau_25":
             if i % 4 == 0:
                 agent = RoundRobin_GF(env)
             else:
                 agent = RandomAgent(env)
-                
+
         elif trajecotries_type == "mixed_bau_75":
             if i % 4 == 0:
                 agent = RandomAgent(env)
@@ -134,13 +134,11 @@ if __name__ == "__main__":
 
             elif args.env == "250":
                 timelimit = 180
-                
+
             agent = mo_PST_V2GProfitMaxOracleGB(new_replay_path,
                                                 timelimit=timelimit,
                                                 MIPGap=None,
                                                 )
-
-            
 
         elif trajecotries_type == "mpc":
             agent = eMPC_V2G_v2(env,
@@ -160,9 +158,9 @@ if __name__ == "__main__":
                          save_replay=SAVE_EVAL_REPLAYS,
                          )
             os.remove(new_replay_path)
-            
+
         state, _ = env.reset()
-        
+
         if SAVE_EVAL_REPLAYS:
             env.eval_mode = "optimal"
 
@@ -171,15 +169,13 @@ if __name__ == "__main__":
             actions = agent.get_action(env)
 
             new_state, reward, done, truncated, stats = env.step(actions)
-            
 
             trajectory_i["observations"].append(state)
             trajectory_i["actions"].append(actions)
             trajectory_i["rewards"].append(reward)
             trajectory_i["dones"].append(done)
             trajectory_i["action_mask"].append(stats['action_mask'])
-            
-            
+
             state = new_state
 
             if done:
@@ -188,7 +184,7 @@ if __name__ == "__main__":
                     replay_path = env.replay_path + 'replay_' + env.sim_name + '.pkl'
                     new_replay_path = f"./eval_replays/{file_name}/replay_{env.sim_name}_{i}.pkl"
                     shutil.move(replay_path, new_replay_path)
-                    
+
                 break
         print(f'Stats: {env.stats["total_reward"]}')
         trajectory_i["observations"] = np.array(trajectory_i["observations"])
@@ -203,10 +199,10 @@ if __name__ == "__main__":
             divident = 100
         else:
             divident = 1000
-            
+
         if i % divident == 0 and not SAVE_EVAL_REPLAYS and i > 0:
             print(f'Saving trajectories to {save_folder_path+file_name}')
-            
+
             with gzip.open(save_folder_path+file_name+".gz", 'wb') as f:
                 pickle.dump(trajectories, f)
 
@@ -219,10 +215,9 @@ if __name__ == "__main__":
         # print(trajectories[:1])
         print(f'Saving trajectories to {save_folder_path+file_name}')
 
-        
         with gzip.open(save_folder_path+file_name+".gz", 'wb') as f:
             pickle.dump(trajectories, f)
-            
+
         # To read the compressed pickle file
         with gzip.open(save_folder_path+file_name+".gz", 'rb') as f:
             loaded_data = pickle.load(f)
