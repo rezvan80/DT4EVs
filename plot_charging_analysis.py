@@ -46,6 +46,19 @@ def plot_comparable_EV_SoC(results_path,
         for cs in env.charging_stations:
 
             plt.subplot(dim_x, dim_y, counter)
+            
+            if counter == 25 and index == 0:
+                plt.axhline(y=0.8,
+                    color='blue',
+                    linestyle='--',
+                    alpha=0.5,
+                    label='Desired SoC')
+            else:
+                plt.axhline(y=0.8,
+                    color='blue',
+                    linestyle='--',
+                    alpha=0.5)
+                
             df = pd.DataFrame([], index=date_range)
 
             for port in range(cs.n_ports):
@@ -72,19 +85,21 @@ def plot_comparable_EV_SoC(results_path,
                                  where='post',
                                  color=color_list[index],
                                  marker=marker_list[index],
-                                 label=algorithm_names[index]
+                                 label=algorithm_names[index],
+                                 zorder=10
                                  )
                     else:
                         plt.step(df.index,
                                  y,
                                  where='post',
                                  color=color_list[index],
-                                 marker=marker_list[index]
+                                 marker=marker_list[index],
+                                 zorder=10
                                  )
 
                     # change the marker spacing and distance
-                    plt.setp(plt.gca().get_lines(), markersize=2)
-                    plt.setp(plt.gca().get_lines(), markeredgewidth=0.5)
+                    plt.setp(plt.gca().get_lines(), markersize=0.5)
+                    plt.setp(plt.gca().get_lines(), markeredgewidth=0.3)
 
             plt.title(f'CS {cs.id + 1}', fontsize=12)
 
@@ -118,7 +133,7 @@ def plot_comparable_EV_SoC(results_path,
             counter += 1
 
     plt.legend(loc='upper center', bbox_to_anchor=(-1.75, -0.35),
-               fancybox=True, shadow=True, ncol=5, fontsize=14)
+               fancybox=True, shadow=True, ncol=6, fontsize=14)
 
     plt.grid(True, which='minor', axis='both')
     plt.tight_layout()
@@ -130,9 +145,101 @@ def plot_comparable_EV_SoC(results_path,
     fig_name = f'{save_path}EV_Energy_Level.png'
     plt.savefig(fig_name, format='png',
                 dpi=300, bbox_inches='tight')
+    plt.savefig(f'{save_path}EV_Energy_Level.pdf',
+                format='pdf',
+                # dpi=300,
+                bbox_inches='tight')
+    
     # plt.show()
 
+def plot_actual_power_vs_setpoint(results_path,
+                                  save_path=None,
+                                  algorithm_names=None):
+    
+    '''
+    This function is used to plot the actual power vs the setpoint power.
+    It plots the behavior of each algorithm in subplots vertically.
+    '''
+    
+    with open(results_path, 'rb') as f:
+        replay = pickle.load(f)
 
+    plt.close('all')
+    plt.figure(figsize=(12,6))
+    plt.rc('font', family='serif')    
+
+    for index, key in enumerate(replay.keys()):        
+        env = replay[key]
+
+        date_range = pd.date_range(start=env.sim_starting_date,
+                                   end=env.sim_starting_date +
+                                   (env.simulation_length - 1) *
+                                   datetime.timedelta(
+                                       minutes=env.timescale),
+                                   freq=f'{env.timescale}min')
+        date_range_print = pd.date_range(start=env.sim_starting_date,
+                                         end=env.sim_date,
+                                         periods=7)
+
+        #plot the actual power vs the setpoint power for each algorithm in subplots                
+        plt.subplot(2, 3, index+1)
+        plt.grid(True, which='major', axis='both')
+        
+        actual_power = env.current_power_usage        
+        setpoints = env.power_setpoints                
+
+        plt.step(date_range, actual_power.T, alpha=0.9, color='#00429d')
+        plt.step(date_range, setpoints.T, alpha=1, color='#93003a')
+        
+        plt.axhline(0, color='black', lw=2)
+        plt.title(f'{algorithm_names[index]}', fontsize=14)
+        
+        plt.yticks(fontsize=14)
+        
+        # if index == len(replay) - 1:
+        plt.xticks(ticks=date_range_print,
+                       labels=[f'{d.hour:2d}:{d.minute:02d}' for d in date_range_print],
+                       rotation=45,
+                       fontsize=14)
+            # plt.xlabel('Time', fontsize=28)
+        # else:
+        #     plt.xticks(ticks=date_range_print,
+        #                labels=[' ' for d in date_range_print])
+        
+        # if index == len(replay) // 2:
+        plt.ylabel('Power (kW)', fontsize=14)               
+            
+        plt.xlim([env.sim_starting_date, env.sim_date])
+        plt.ylim([0, 90])
+        
+    # Put the legend under the plot in a separate axis           
+    plt.legend(['Actual Power', 'Power Setpoint'], loc='upper center',
+               bbox_to_anchor=(1.7, 0.7),
+               fancybox=True, shadow=True, ncol=1, fontsize=14)
+    
+    plt.subplots_adjust(
+        left=0.055,    # Space from the left of the figure
+        bottom=0.1,   # Space from the bottom of the figure
+        right=0.986,   # Space from the right of the figure
+        top=0.955,     # Space from the top of the figure
+        hspace=0.4,    # Height space between subplots
+        wspace=0.229    # Width space between subplots
+    )
+        
+    # plt.tight_layout()
+    fig_name = f'{save_path}/Actual_vs_Setpoint_Power.png'
+    plt.savefig(fig_name, format='png',
+                dpi=300,
+                bbox_inches='tight',
+                )    
+    plt.savefig(f'{save_path}/Actual_vs_Setpoint_Power.pdf',
+                format='pdf',
+                # dpi=300,
+                bbox_inches='tight',
+                )
+    
+    # plt.show()
+    
 def plot_comparable_EV_SoC_single(results_path,
                                   save_path=None,
                                   algorithm_names=None,
@@ -610,29 +717,40 @@ def plot_comparable_CS_Power(results_path, save_path=None, algorithm_names=None)
 
 if __name__ == '__main__':
 
-    results_path = './results/eval_25cs_1tr_PST_V2G_ProfixMax_25_5_algos_1_exp_2025_01_08_315329/'
+    results_path = './results/eval_25cs_1tr_PST_V2G_ProfixMax_25_5_algos_1_exp_2025_01_09_503369/'
     save_path = './results_analysis/figs/'
 
-    algorithm_names = ['CAFAP', 'GNN-DT', 'DT', 'QT', 'Optimal (Offline)']
+    algorithm_names = ['BaU', 'GNN-DT', 'DT', 'QT', 'Optimal (Offline)']
     marker_list = ['o', 's', 'D', '^', 'v']
     color_list = ['b', 'g', 'r', 'c', 'm']
 
     plt.rcParams['font.family'] = 'serif'
 
-    plot_comparable_EV_SoC_single(results_path=results_path + 'plot_results_dict.pkl',
-                                  save_path=save_path,
-                                  algorithm_names=algorithm_names,
-                                  color_list=color_list,
-                                  marker_list=marker_list
-                                  )
+    # plot_comparable_EV_SoC_single(results_path=results_path + 'plot_results_dict.pkl',
+    #                               save_path=save_path,
+    #                               algorithm_names=algorithm_names,
+    #                               color_list=color_list,
+    #                               marker_list=marker_list
+    #                               )
+    # plot_comparable_CS_Power(
+    #     results_path=results_path + 'plot_results_dict.pkl',
+    #     save_path=save_path,
+    #     algorithm_names=algorithm_names
+    # )
 
     # exit()
-    # plot_comparable_EV_SoC(results_path=results_path + 'plot_results_dict.pkl',
-    #                        save_path=save_path,
-    #                        algorithm_names=algorithm_names,
-    #                        color_list=color_list,
-    #                        marker_list=marker_list
-    #                        )
+    plot_comparable_EV_SoC(results_path=results_path + 'plot_results_dict.pkl',
+                           save_path=save_path,
+                           algorithm_names=algorithm_names,
+                           color_list=color_list,
+                           marker_list=marker_list
+                           )
+    
+    plot_actual_power_vs_setpoint(
+        results_path=results_path + 'plot_results_dict.pkl',
+        save_path=save_path,
+        algorithm_names=algorithm_names
+    )
 
     # plot_total_power_V2G(
     #     results_path=results_path + 'plot_results_dict.pkl',
@@ -640,8 +758,4 @@ if __name__ == '__main__':
     #     algorithm_names=algorithm_names
     # )
 
-    plot_comparable_CS_Power(
-        results_path=results_path + 'plot_results_dict.pkl',
-        save_path=save_path,
-        algorithm_names=algorithm_names
-    )
+    

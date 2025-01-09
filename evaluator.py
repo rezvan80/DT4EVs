@@ -57,7 +57,7 @@ def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ############# Simulation Parameters #################
-    n_test_cycles = 100
+    n_test_cycles = 1
     SAVE_REPLAY_BUFFER = False
     SAVE_EV_PROFILES = False
 
@@ -70,9 +70,9 @@ def evaluator():
     p_delay_list = [0]
 
     config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"    
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G1.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G2.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G3.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G1.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G2.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_G3.yaml"
 
     #diffrent CS number comparison
     # config_file = "./config_files/PST_V2G_ProfixMax_25_CS5.yaml"
@@ -93,19 +93,20 @@ def evaluator():
     # Algorithms to compare:
     # Use algorithm name or the saved RL model path as string
     algorithms = [
-        ChargeAsFastAsPossible,
+        # ChargeAsFastAsPossible,
+        RoundRobin_GF,
         # "gnn_in_out_dt_run_20_K=10_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=427839.optimal_2000.527996",
         # "gnn_act_emb_run_42_K=2_batch=128_dataset=optimal_2000_embed_dim=128_n_layer=3_n_head=451760.optimal_2000.835025",
 
         ################## Best models ##################################
         'gnn_act_emb_run_40_K=10_dataset=optimal_25_1000_25724_537244',
-        # 'dt_run_10_K=10_dataset=bau_10000_94967_118081',
-        # 'QT_run_30_K=2_dataset=optimal_1000_87175_301984',
+        'dt_run_10_K=10_dataset=bau_10000_94967_118081',
+        'QT_run_30_K=2_dataset=optimal_1000_87175_301984',
         #################################################################
 
         # ChargeAsLateAsPossible,
         # RoundRobin_GF_off_allowed,
-        RoundRobin_GF,
+        # RoundRobin_GF,
         # RoundRobin,
 
         mo_PST_V2GProfitMaxOracleGB

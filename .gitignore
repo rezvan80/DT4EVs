@@ -173,4 +173,6 @@ eval_logs/
 logs/
 run_tmp.sh
 
+results_analysis/data/
+
 model.lp

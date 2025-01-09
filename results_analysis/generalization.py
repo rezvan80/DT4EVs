@@ -17,11 +17,11 @@ import matplotlib.patches
 
 
 def plot_optimality_gap_in_generalization():
-    config_files = [
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
+    config_files =[
+        "./results_analysis/data/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_100_exp_2025_01_09_961980/",
+        "./results_analysis/data/eval_25cs_1tr_PST_V2G_ProfixMax_25_G1_6_algos_100_exp_2025_01_09_226756/",
+        "./results_analysis/data/eval_25cs_1tr_PST_V2G_ProfixMax_25_G2_6_algos_100_exp_2025_01_09_062671/",
+        "./results_analysis/data/eval_25cs_1tr_PST_V2G_ProfixMax_25_G3_6_algos_100_exp_2025_01_09_071941/",
     ]
 
     columns_to_keep = [
@@ -113,25 +113,56 @@ def plot_optimality_gap_in_generalization():
 
     # make subplots
 
-    sns.boxplot(x="case",
+    # sns.boxplot(x="case",
+    #             y="reward",
+    #             hue="Algorithm",
+    #             # remove outliers
+    #             showfliers=False,
+    #             notch=True,
+    #             hue_order=[
+    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
+    #                 'Optimal\n(Oracle)'],
+    #             data=all_data,
+    #             # alpha=0.9,
+    #             saturation=1,
+    #             # palette=custom_palette,
+    #             )
+    
+    sns.barplot(x="case",
                 y="reward",
                 hue="Algorithm",
                 # remove outliers
-                showfliers=False,
-                notch=True,
+                # showfliers=False,
+                # notch=True,
                 hue_order=[
                     'BaU','DT', 'Q-DT', 'GNN-DT',
                     'Optimal\n(Oracle)'],
                 data=all_data,
                 # alpha=0.9,
-                saturation=1,
+                # saturation=1,
                 # palette=custom_palette,
+                zorder=2,
                 )
+    
+    # sns.catplot(x="case",
+    #             y="reward",
+    #             hue="Algorithm",
+    #             kind='bar',
+    #             hue_order=[
+    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
+    #                 'Optimal\n(Oracle)'],
+    #             data=all_data,
+
+    #             # alpha=0.9,
+    #             # saturation=1,
+    #             # palette=custom_palette,
+    #             zorder=2,
+    #             )
 
     # show grid
     plt.grid(axis='y', linestyle='--', alpha=0.5)
-    plt.grid(
-        which='major', linestyle='-', alpha=0.5)
+    # plt.grid(
+    #     which='major', linestyle='-', alpha=0.5)
     # make scientific notation
     plt.ticklabel_format(axis='y',
                          style='sci',
@@ -147,7 +178,7 @@ def plot_optimality_gap_in_generalization():
                title=' ',
                title_fontsize=12,
                frameon=False,
-               bbox_to_anchor=(0.4, -0.15),
+               bbox_to_anchor=(0.45, -0.15),
                )
     
     plt.tight_layout()

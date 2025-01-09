@@ -68,12 +68,25 @@ plt.legend([
     'Random',
 ],
     loc='lower center',
-    title="Dataset",
+    title="",
     title_fontsize=14,
-    bbox_to_anchor=(0.5, 1.03),
+    # bbox_to_anchor=(0.53, 1.03),
+    bbox_to_anchor=(0.53, -0.35),
     ncol=3,
+    frameon=False,
     fontsize=13
 )
+
+#make legend title bold
+# plt.setp(plt.gca().get_legend().get_title(), fontsize=12, fontweight='bold')
+# put a  text on the top left corner of the plot
+# plt.text(-0.15, 1.14, "Dataset:",
+plt.text(-0.1, -0.23, "Dataset:",
+         transform=plt.gca().transAxes,
+         fontsize=13,
+        #  fontweight='bold',
+         verticalalignment='top',
+         bbox=dict(facecolor='white', alpha=0.5))
 
 # plt.show()
 plt.savefig("./results_analysis/figs/max_rewards_K.png",
