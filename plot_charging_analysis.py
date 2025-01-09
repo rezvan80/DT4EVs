@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
 import math
-
+import seaborn as sns
 
 def plot_comparable_EV_SoC(results_path,
                            save_path=None,
@@ -26,8 +26,15 @@ def plot_comparable_EV_SoC(results_path,
     for index, key in enumerate(replay.keys()):
         env = replay[key]
 
-        color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
-        color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
+        # color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
+        # color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
+        color_list = [
+            sns.color_palette()[3],
+            sns.color_palette()[2],   
+            sns.color_palette()[0],
+            sns.color_palette()[1],   
+            sns.color_palette()[7],                                  
+        ]
 
         date_range = pd.date_range(start=env.sim_starting_date,
                                    end=env.sim_starting_date +
@@ -49,13 +56,13 @@ def plot_comparable_EV_SoC(results_path,
             
             if counter == 25 and index == 0:
                 plt.axhline(y=0.8,
-                    color='blue',
+                    color=sns.color_palette()[4],
                     linestyle='--',
                     alpha=0.5,
                     label='Desired SoC')
             else:
                 plt.axhline(y=0.8,
-                    color='blue',
+                    color=sns.color_palette()[4],
                     linestyle='--',
                     alpha=0.5)
                 
@@ -271,7 +278,7 @@ def plot_comparable_EV_SoC_single(results_path,
 
     # plot a horizontal line at 0.8
     plt.axhline(y=0.8,
-                color='blue',
+                color=sns.color_palette()[4],
                 linestyle='--',
                 alpha=0.5,
                 label='Desired SoC')
@@ -292,6 +299,16 @@ def plot_comparable_EV_SoC_single(results_path,
 
         color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
         color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
+        
+        
+        color_list = [
+            sns.color_palette()[3],
+            sns.color_palette()[2],   
+            sns.color_palette()[0],
+            sns.color_palette()[1],   
+            sns.color_palette()[7],
+                                  
+        ]
 
         cs_to_plot = 24
         counter = 1
@@ -586,6 +603,15 @@ def plot_comparable_CS_Power(results_path, save_path=None, algorithm_names=None)
 
         color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
         color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
+        
+        color_list = [
+            sns.color_palette()[3],
+            sns.color_palette()[2],   
+            sns.color_palette()[0],
+            sns.color_palette()[1],   
+            sns.color_palette()[7],
+                                  
+        ]
 
         cs_to_plot = 24
         counter = 1

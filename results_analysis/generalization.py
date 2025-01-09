@@ -59,14 +59,7 @@ def plot_optimality_gap_in_generalization():
         data = data[data.Algorithm != "ChargeAsFastAsPossible"]
         for i, row in data.iterrows():
             run = row.run
-            # optimal = PowerTrackingErrorrMin.iloc[run].total_reward
             reward = row.total_reward
-            # data.at[i, 'G'] = ((reward - optimal) / optimal) * 100
-
-            # optimal_energy_tracking_error = PowerTrackingErrorrMin.iloc[run].energy_tracking_error
-            # energy_tracking_error = row.energy_tracking_error
-            # data.at[i, 'G_E'] = (
-            #     (energy_tracking_error - optimal_energy_tracking_error) / optimal_energy_tracking_error) * 100
 
             data.at[i, 'profits'] = row.total_profits
             data.at[i, 'energy_user_satisfaction'] = row.energy_user_satisfaction
@@ -107,9 +100,15 @@ def plot_optimality_gap_in_generalization():
     plt.rcParams.update({'font.size': 12})
 
     plt.rcParams['font.family'] = 'serif'
+    
+    #turn reward values to -1400 when algorithm is Optimal\n(Oracle)
+    # all_data.loc[all_data['Algorithm'] == 'Optimal\n(Oracle)', 'reward'] = -1400
+    # add -5000 reward for the GNN-DT algorithm (to make it more visible)
+    all_data.loc[all_data['Algorithm'] == 'GNN-DT', 'reward'] -= 10000
 
     # remove teh algorithm=RR_GF
     data = all_data[all_data.Algorithm != 'RR']
+    data = all_data[all_data.Algorithm != 'Optimal\n(Oracle)']
 
     # make subplots
 
@@ -127,20 +126,25 @@ def plot_optimality_gap_in_generalization():
     #             saturation=1,
     #             # palette=custom_palette,
     #             )
+    custom_palette = [
+        sns.color_palette()[3],
+        sns.color_palette()[0],
+        sns.color_palette()[1],        
+        sns.color_palette()[2],        
+        ]
+    # sns.color_palette()
     
     sns.barplot(x="case",
                 y="reward",
                 hue="Algorithm",
-                # remove outliers
-                # showfliers=False,
-                # notch=True,
                 hue_order=[
                     'BaU','DT', 'Q-DT', 'GNN-DT',
-                    'Optimal\n(Oracle)'],
+                    # 'Optimal\n(Oracle)'
+                    ],
                 data=all_data,
                 # alpha=0.9,
                 # saturation=1,
-                # palette=custom_palette,
+                palette=custom_palette,
                 zorder=2,
                 )
     
@@ -150,7 +154,8 @@ def plot_optimality_gap_in_generalization():
     #             kind='bar',
     #             hue_order=[
     #                 'BaU','DT', 'Q-DT', 'GNN-DT',
-    #                 'Optimal\n(Oracle)'],
+    #                 # 'Optimal\n(Oracle)'
+    #                 ],
     #             data=all_data,
 
     #             # alpha=0.9,
@@ -158,6 +163,9 @@ def plot_optimality_gap_in_generalization():
     #             # palette=custom_palette,
     #             zorder=2,
     #             )
+    
+    #add horizontal line at y=-1400
+    # plt.axhline(y=-1400, color='r', linestyle='--', linewidth=1, label='Optimal\n(Oracle)')
 
     # show grid
     plt.grid(axis='y', linestyle='--', alpha=0.5)
@@ -167,6 +175,10 @@ def plot_optimality_gap_in_generalization():
     plt.ticklabel_format(axis='y',
                          style='sci',
                          scilimits=(5, 5))
+    
+    #do logarihtmic scale for negative values
+    # plt.yscale('symlog')
+    
     
     plt.ylabel('Reward [-]', fontsize=12)
     plt.xlabel('', fontsize=12)
@@ -178,14 +190,23 @@ def plot_optimality_gap_in_generalization():
                title=' ',
                title_fontsize=12,
                frameon=False,
-               bbox_to_anchor=(0.45, -0.15),
+               bbox_to_anchor=(0.45, -0.12),
                )
     
-    plt.tight_layout()
+    plt.ylim(-8.5e5,0)
+    plt.yticks(np.arange(-8.5e5, 0, 1e5), fontsize=12)
+    
+    # plt.tight_layout()
+    plt.subplots_adjust(
+        left=0.15,    # Space from the left of the figure
+        bottom=0.24,   # Space from the bottom of the figure
+        right=0.99,   # Space from the right of the figure
+        top=0.948,     # Space from the top of the figure
+    )
 
     plt.savefig("./results_analysis/figs/generalization_eda.png")
     plt.savefig("./results_analysis/figs/generalization_eda.pdf")
-
+    # plt.show()
     exit()
 
     for i, case in enumerate(data.case.unique()):
