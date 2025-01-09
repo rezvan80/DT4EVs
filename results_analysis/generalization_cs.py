@@ -50,15 +50,10 @@ def plot_optimality_gap_in_generalization():
         print(data.columns)
         print(data.Algorithm.unique())
 
-        # ChargeAsFastAsPossible
-
-        PowerTrackingErrorrMin = data[data.Algorithm ==
-                                      "PowerTrackingErrorrMin"]
-        # print(PowerTrackingErrorrMin.head(20))
-
-        # find the mean and std of the optimality gap for each algorithm
 
         data = data[data.Algorithm != "ChargeAsFastAsPossible"]
+        print(data.Algorithm.unique())
+        
         for i, row in data.iterrows():
             run = row.run
             reward = row.total_reward

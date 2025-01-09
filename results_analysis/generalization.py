@@ -45,18 +45,11 @@ def plot_optimality_gap_in_generalization():
             data = pd.read_csv(f)
 
         data = data[columns_to_keep]
-        print(data.columns)
         print(data.Algorithm.unique())
 
-        # ChargeAsFastAsPossible
-
-        PowerTrackingErrorrMin = data[data.Algorithm ==
-                                      "PowerTrackingErrorrMin"]
-        # print(PowerTrackingErrorrMin.head(20))
-
-        # find the mean and std of the optimality gap for each algorithm
-
         data = data[data.Algorithm != "ChargeAsFastAsPossible"]
+        print(data.Algorithm.unique())
+        
         for i, row in data.iterrows():
             run = row.run
             reward = row.total_reward
@@ -67,7 +60,7 @@ def plot_optimality_gap_in_generalization():
 
             data.at[i, 'reward'] = reward
             if index == 0:
-                case_name = "Original\n(Trained)"
+                case_name = "Original\n(Trained Env.)"
             elif index == 1:
                 case_name = "Small\nVariation"
             elif index == 2:
