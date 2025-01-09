@@ -22,7 +22,7 @@ hour: 5 # Simulation starting hour (24 hour format)
 minute: 0 # Simulation starting minute (0-59)
 
 # Simulate weekdays, weekends, or both
-simulation_days: weekdays # weekdays, weekends, or both
+simulation_days: weekends # weekdays, weekends, or both
 
 # EV Spawn Behavior
 scenario: public # public, private, or workplace
@@ -49,7 +49,7 @@ charging_network_topology: None #./config_files/charging_topology_10.json
 ##############################################################################
 # How much the power setpoints can vary in percentage compared to the nominal power
 # The higher the number the easier it is to meet the power setpoints, the opposite for negative numbers
-power_setpoint_flexiblity: 80 # (in percentage +/- %)
+power_setpoint_flexiblity: 60 # (in percentage +/- %)
 
 ##############################################################################
 # Inflexible Loads, Solar Generation, and Demand Response

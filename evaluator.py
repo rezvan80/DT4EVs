@@ -16,6 +16,7 @@ from ev2gym.baselines.gurobi_models.profit_max import V2GProfitMaxOracleGB
 from ev2gym.baselines.gurobi_models.tracking_error import PowerTrackingErrorrMin
 
 from utils import PST_V2G_ProfitMax_state, PST_V2G_ProfitMax_reward
+from ev2gym.baselines.heuristics import RoundRobin_GF
 
 from sb3_contrib import TQC, TRPO, ARS, RecurrentPPO
 from stable_baselines3 import PPO, A2C, DDPG, SAC, TD3
@@ -56,7 +57,7 @@ def evaluator():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ############# Simulation Parameters #################
-    n_test_cycles = 1
+    n_test_cycles = 100
     SAVE_REPLAY_BUFFER = False
     SAVE_EV_PROFILES = False
 
@@ -68,15 +69,17 @@ def evaluator():
     # values in [0-1] probability of obs-delayed communication
     p_delay_list = [0]
 
-    config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"
+    config_file = "./config_files/PST_V2G_ProfixMax_25.yaml"    
     config_file = "./config_files/PST_V2G_ProfixMax_25_G1.yaml"
     config_file = "./config_files/PST_V2G_ProfixMax_25_G2.yaml"
     config_file = "./config_files/PST_V2G_ProfixMax_25_G3.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G4.yaml"
-    config_file = "./config_files/PST_V2G_ProfixMax_25_G5.yaml"
-    # config_file = "./config_files/PST_V2G_ProfixMax_25_G6.yaml"
-    # config_file = "./config_files/PST_V2G_ProfixMax_25_G7.yaml"
-    # config_file = "./config_files/PST_V2G_ProfixMax_25_G8.yaml"
+
+    #diffrent CS number comparison
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_CS5.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_CS50.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_CS75.yaml"
+    # config_file = "./config_files/PST_V2G_ProfixMax_25_CS100.yaml"    
+
     
     # config_file = "./config_files/PST_V2G_ProfixMax_250.yaml"
 
@@ -102,7 +105,7 @@ def evaluator():
 
         # ChargeAsLateAsPossible,
         # RoundRobin_GF_off_allowed,
-        # RoundRobin_GF,
+        RoundRobin_GF,
         # RoundRobin,
 
         mo_PST_V2GProfitMaxOracleGB
