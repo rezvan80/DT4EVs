@@ -17,12 +17,13 @@ import matplotlib.patches
 
 
 def plot_optimality_gap_in_generalization():
-    config_files = [
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
-        "./results/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_1_exp_2025_01_09_265600/",
+
+    config_files =[
+        "./results_analysis/data/eval_5cs_1tr_PST_V2G_ProfixMax_25_CS5_4_algos_100_exp_2025_01_09_631870/",
+        "./results_analysis/data/eval_25cs_1tr_PST_V2G_ProfixMax_25_6_algos_100_exp_2025_01_09_961980/",
+        "./results_analysis/data/eval_50cs_1tr_PST_V2G_ProfixMax_25_CS50_4_algos_100_exp_2025_01_09_665893/",
+        "./results_analysis/data/eval_75cs_1tr_PST_V2G_ProfixMax_25_CS75_4_algos_100_exp_2025_01_09_217362/",
+        "./results_analysis/data/eval_100cs_1tr_PST_V2G_ProfixMax_25_CS100_4_algos_100_exp_2025_01_09_771332/",
     ]
 
     columns_to_keep = [
@@ -60,14 +61,7 @@ def plot_optimality_gap_in_generalization():
         data = data[data.Algorithm != "ChargeAsFastAsPossible"]
         for i, row in data.iterrows():
             run = row.run
-            # optimal = PowerTrackingErrorrMin.iloc[run].total_reward
             reward = row.total_reward
-            # data.at[i, 'G'] = ((reward - optimal) / optimal) * 100
-
-            # optimal_energy_tracking_error = PowerTrackingErrorrMin.iloc[run].energy_tracking_error
-            # energy_tracking_error = row.energy_tracking_error
-            # data.at[i, 'G_E'] = (
-            #     (energy_tracking_error - optimal_energy_tracking_error) / optimal_energy_tracking_error) * 100
 
             data.at[i, 'profits'] = row.total_profits
             data.at[i, 'energy_user_satisfaction'] = row.energy_user_satisfaction
@@ -77,24 +71,16 @@ def plot_optimality_gap_in_generalization():
             if index == 0:
                 case_name = "5 CS"
             elif index == 1:
-                case_name = "25 CS\n(Trained)"
+                case_name = "25 CS\n(Trained Env.)"
             elif index == 2:
                 case_name = "50 CS"
             elif index == 3:
-                case_name = "75 CS"                
+                case_name = "75 CS"
             elif index == 4:
                 case_name = "100 CS"
                 
             data.at[i, 'case'] = case_name
 
-        data['Algorithm'] = data['Algorithm'].replace({"<class 'ev2gym.baselines.heuristics.ChargeAsFastAsPossible'>": 'AFAP',
-                                                       "ChargeAsFastAsPossible": 'AFAP',
-                                                       "RoundRobin": 'RR',
-                                                       "<class 'ev2gym.baselines.heuristics.RoundRobin_GF'>": 'RR_GF',
-                                                       "<class 'ev2gym.baselines.heuristics.RoundRobin'>": 'RR',
-                                                       "<class 'ev2gym.baselines.gurobi_models.tracking_error.PowerTrackingErrorrMin'>": 'Optimal',
-                                                       "PowerTrackingErrorrMin": 'Optimal'}
-                                                      )
 
         # change Algorithm if string is in Algorithm
         data['Algorithm'] = data['Algorithm'].apply(
@@ -102,7 +88,7 @@ def plot_optimality_gap_in_generalization():
         data['Algorithm'] = data['Algorithm'].apply(
             lambda x: 'Q-DT' if 'QT' in x else x)
         data['Algorithm'] = data['Algorithm'].apply(
-            lambda x: 'Optimal\n(Oracle)' if 'mo_PST_V2GProfitMaxOracleGB' in x else x)
+            lambda x: 'Optimal (Oracle)' if 'mo_PST_V2GProfitMaxOracleGB' in x else x)
         data['Algorithm'] = data['Algorithm'].apply(
             lambda x: 'BaU' if 'RoundRobin_GF' in x else x)
 
@@ -111,56 +97,40 @@ def plot_optimality_gap_in_generalization():
     plt.rcParams.update({'font.size': 12})
 
     plt.rcParams['font.family'] = 'serif'
-    data = all_data[all_data.Algorithm != 'Q-DT']
-    data = all_data[all_data.Algorithm != 'DT']
+    
+    # add -5000 reward for the GNN-DT algorithm (to make it more visible on the plot)
+    all_data.loc[all_data['Algorithm'] == 'GNN-DT', 'reward'] -= 10000
 
-    # make subplots
+    # remove teh algorithm=RR_GF
+    data = all_data[all_data.Algorithm != 'RR']
+    # data = all_data[all_data.Algorithm != 'Optimal (Oracle)']
+    # add -5000 reward for the GNN-DT algorithm (to make it more visible on the plot)
+    all_data.loc[all_data['Algorithm'] == 'Optimal (Oracle)', 'reward'] -= 2500
 
-    # sns.boxplot(x="case",
-    #             y="reward",
-    #             hue="Algorithm",
-    #             # remove outliers
-    #             showfliers=False,
-    #             notch=True,
-    #             hue_order=[
-    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
-    #                 'Optimal\n(Oracle)'],
-    #             data=all_data,
-    #             # alpha=0.9,
-    #             saturation=1,
-    #             # palette=custom_palette,
-    #             )
+    custom_palette = [
+        sns.color_palette()[3],
+        # sns.color_palette()[0],
+        # sns.color_palette()[1],        
+        sns.color_palette()[2],        
+        sns.color_palette()[7],        
+        ]
+    # sns.color_palette()
     
     sns.barplot(x="case",
                 y="reward",
                 hue="Algorithm",
-                # remove outliers
-                # showfliers=False,
-                # notch=True,
-                # hue_order=[
-                #     'BaU','DT', 'Q-DT', 'GNN-DT',
-                #     'Optimal\n(Oracle)'],
+                hue_order=[
+                    'BaU',
+                    # 'DT', 'Q-DT',
+                    'GNN-DT',
+                    'Optimal (Oracle)'
+                    ],
                 data=all_data,
                 # alpha=0.9,
                 # saturation=1,
-                # palette=custom_palette,
+                palette=custom_palette,
                 zorder=2,
                 )
-    
-    # sns.catplot(x="case",
-    #             y="reward",
-    #             hue="Algorithm",
-    #             kind='bar',
-    #             hue_order=[
-    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
-    #                 'Optimal\n(Oracle)'],
-    #             data=all_data,
-
-    #             # alpha=0.9,
-    #             # saturation=1,
-    #             # palette=custom_palette,
-    #             zorder=2,
-    #             )
 
     # show grid
     plt.grid(axis='y', linestyle='--', alpha=0.5)
@@ -170,6 +140,10 @@ def plot_optimality_gap_in_generalization():
     plt.ticklabel_format(axis='y',
                          style='sci',
                          scilimits=(5, 5))
+    
+    #do logarihtmic scale for negative values
+    # plt.yscale('symlog')
+    
     
     plt.ylabel('Reward [-]', fontsize=12)
     plt.xlabel('', fontsize=12)
@@ -181,14 +155,22 @@ def plot_optimality_gap_in_generalization():
                title=' ',
                title_fontsize=12,
                frameon=False,
-               bbox_to_anchor=(0.45, -0.15),
+               bbox_to_anchor=(0.45, -0.08),
                )
     
-    plt.tight_layout()
+    plt.ylim(-2.75e5,0)
+    plt.yticks(np.arange(-2.75e5, 0.2e5, 0.25e5), fontsize=12)
+        
+    plt.subplots_adjust(
+        left=0.15,    # Space from the left of the figure
+        bottom=0.202,   # Space from the bottom of the figure
+        right=0.99,   # Space from the right of the figure
+        top=0.948,     # Space from the top of the figure
+    )
 
     plt.savefig("./results_analysis/figs/generalization_eda_CS.png")
     plt.savefig("./results_analysis/figs/generalization_eda_CS.pdf")
-
+    # plt.show()
 
 if __name__ == "__main__":
     plot_optimality_gap_in_generalization()

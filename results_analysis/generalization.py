@@ -76,14 +76,6 @@ def plot_optimality_gap_in_generalization():
                 case_name = "Extreme\nVariation"
             data.at[i, 'case'] = case_name
 
-        data['Algorithm'] = data['Algorithm'].replace({"<class 'ev2gym.baselines.heuristics.ChargeAsFastAsPossible'>": 'AFAP',
-                                                       "ChargeAsFastAsPossible": 'AFAP',
-                                                       "RoundRobin": 'RR',
-                                                       "<class 'ev2gym.baselines.heuristics.RoundRobin_GF'>": 'RR_GF',
-                                                       "<class 'ev2gym.baselines.heuristics.RoundRobin'>": 'RR',
-                                                       "<class 'ev2gym.baselines.gurobi_models.tracking_error.PowerTrackingErrorrMin'>": 'Optimal',
-                                                       "PowerTrackingErrorrMin": 'Optimal'}
-                                                      )
 
         # change Algorithm if string is in Algorithm
         data['Algorithm'] = data['Algorithm'].apply(
@@ -101,31 +93,13 @@ def plot_optimality_gap_in_generalization():
 
     plt.rcParams['font.family'] = 'serif'
     
-    #turn reward values to -1400 when algorithm is Optimal\n(Oracle)
-    # all_data.loc[all_data['Algorithm'] == 'Optimal\n(Oracle)', 'reward'] = -1400
-    # add -5000 reward for the GNN-DT algorithm (to make it more visible)
+    # add -5000 reward for the GNN-DT algorithm (to make it more visible on the plot)
     all_data.loc[all_data['Algorithm'] == 'GNN-DT', 'reward'] -= 10000
 
     # remove teh algorithm=RR_GF
     data = all_data[all_data.Algorithm != 'RR']
     data = all_data[all_data.Algorithm != 'Optimal\n(Oracle)']
 
-    # make subplots
-
-    # sns.boxplot(x="case",
-    #             y="reward",
-    #             hue="Algorithm",
-    #             # remove outliers
-    #             showfliers=False,
-    #             notch=True,
-    #             hue_order=[
-    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
-    #                 'Optimal\n(Oracle)'],
-    #             data=all_data,
-    #             # alpha=0.9,
-    #             saturation=1,
-    #             # palette=custom_palette,
-    #             )
     custom_palette = [
         sns.color_palette()[3],
         sns.color_palette()[0],
@@ -147,25 +121,6 @@ def plot_optimality_gap_in_generalization():
                 palette=custom_palette,
                 zorder=2,
                 )
-    
-    # sns.catplot(x="case",
-    #             y="reward",
-    #             hue="Algorithm",
-    #             kind='bar',
-    #             hue_order=[
-    #                 'BaU','DT', 'Q-DT', 'GNN-DT',
-    #                 # 'Optimal\n(Oracle)'
-    #                 ],
-    #             data=all_data,
-
-    #             # alpha=0.9,
-    #             # saturation=1,
-    #             # palette=custom_palette,
-    #             zorder=2,
-    #             )
-    
-    #add horizontal line at y=-1400
-    # plt.axhline(y=-1400, color='r', linestyle='--', linewidth=1, label='Optimal\n(Oracle)')
 
     # show grid
     plt.grid(axis='y', linestyle='--', alpha=0.5)
@@ -207,106 +162,6 @@ def plot_optimality_gap_in_generalization():
     plt.savefig("./results_analysis/figs/generalization_eda.png")
     plt.savefig("./results_analysis/figs/generalization_eda.pdf")
     # plt.show()
-    exit()
-
-    for i, case in enumerate(data.case.unique()):
-
-        ax = plt.subplot(1, 4, i+1)
-        # all_data = all_data[all_data.case == 'Original']
-        # all_data = all_data[all_data.case == 'Small']
-        # all_data = all_data[all_data.case == 'Medium']
-        all_data = data[data.case == case]
-
-        custom_palette = [
-            '#8C8C8C',
-            '#b6db97', '#64B5CD',
-            '#C44E52', '#DD8452',
-            '#55A868', '#4C72B0',
-        ]
-
-        # use a boxplot instead
-        ax1 = sns.boxplot(x="Algorithm",
-                          y="reward",
-                            # remove outliers
-                            showfliers=False,
-                            notch=True,
-                            # order=['AFAP',
-                            #        'SAC', 'TD3',
-                            #        '  SAC  \nFX-GNN', '  TD3  \nFX-GNN',
-                            #        '  SAC  \nEV-GNN', '  TD3  \nEV-GNN'],
-                            data=all_data,
-                            # alpha=0.9,
-                            saturation=1,
-                            ax=ax,
-                            palette=custom_palette,
-                          )
-        # show the x-ticks
-        ax.set_xticks([0, 1, 2, 3, 4, 5, 6],
-                      ['']*7,
-                      fontsize=11)
-
-        # add grid
-        # plt.grid(axis='y', linestyle='--', alpha=0.5)
-        ax.grid(which='minor', linestyle='--', alpha=0.3)
-        ax.grid(
-            which='major', linestyle='-', alpha=0.5)
-        ax.grid(
-            axis="x",
-            which='major', linestyle='--', alpha=0.2)
-
-        plt.yticks(fontsize=11)
-        plt.xlabel(f'Algorithm', fontsize=11)
-
-        # if i == 0:
-        plt.ylabel('Episode Reward [-]', fontsize=11)
-        plt.ticklabel_format(axis='y',
-                             style='sci',
-                             scilimits=(5, 5))
-
-        if i == 0:
-            plt.title(f'{case}\nDistribution', fontsize=12)
-        else:
-            plt.title(f'{case}\nVariation', fontsize=12)
-
-        if i == 2:
-            size = 12
-            # make legedn outside the plot for the 7 algorithms used
-            custom_patches = [
-                mpatches.Patch(facecolor=custom_palette[0],
-                               edgecolor='black', label='AFAP'),
-                mpatches.Patch(facecolor=custom_palette[1],
-                               edgecolor='black', label='SAC'),
-                mpatches.Patch(facecolor=custom_palette[2],
-                               edgecolor='black', label='TD3'),
-                mpatches.Patch(facecolor=custom_palette[3],
-                               edgecolor='black', label='   SAC\nFX-GNN'),
-                mpatches.Patch(facecolor=custom_palette[4],
-                               edgecolor='black', label='   TD3\nFX-GNN'),
-                # mpatches.Patch(facecolor=custom_palette[5],
-                #                edgecolor='black', label='  SAC\nEV-GNN'),
-                # mpatches.Patch(facecolor=custom_palette[6],
-                #                edgecolor='black', label='  TD3\nEV-GNN')
-            ]
-
-            # Add the legend with the custom patches
-            plt.legend(handles=custom_patches,
-                       loc='upper center',
-                       fontsize=10,
-                       ncol=7,
-                       title='',
-                       title_fontsize=12,
-                       frameon=False,
-                       bbox_to_anchor=(-0.305, -0.12),
-                       )
-
-    # set left and right margins
-    plt.subplots_adjust(left=0.089, right=0.992, top=0.867, bottom=0.207)
-
-    # set wspace and hspace
-    plt.subplots_adjust(wspace=0.372, hspace=0.3)
-
-    plt.savefig("./results_analysis/figs/generalization_eda.png")
-    plt.savefig("./results_analysis/figs/generalization_eda.pdf")
 
 
 if __name__ == "__main__":
