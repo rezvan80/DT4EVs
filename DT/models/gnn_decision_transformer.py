@@ -6,8 +6,6 @@ import transformers
 
 from DT.models.model import TrajectoryModel
 from DT.models.trajectory_gpt2 import GPT2Model
-from transformers import GPTNeoForCausalLM, GPT2Tokenizer
-# from transformers import MambaConfig, MambaForCausalLM, AutoTokenizer
 
 from utils import PST_V2G_ProfitMax_state_to_GNN
 from torch_geometric.data import Data
