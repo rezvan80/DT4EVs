@@ -63,10 +63,10 @@ if not os.path.exists('./slurm_logs'):
 
 # 'gnn_dt', 'gnn_in_out_dt', 'dt'
 for model_type in ['gnn_act_emb']:  # 'dt','gnn_act_emb
-    for action_mask in [True]:
+    for action_mask in [False]:
         for K in [2]:
             for _ in [128]:
-                for dataset in big_datasets_list:
+                for dataset in ['optimal_1000']:
                     for _ in [128]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
                             for counter, seed in enumerate(seeds):
@@ -196,29 +196,29 @@ conda deactivate
 
                                 os.system('sbatch run_tmp.sh')
 
-                                # command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
-                                #     ' --dataset ' + dataset + \
-                                #     ' --K ' + str(K) + \
-                                #     ' --device cuda:0' + \
-                                #     ' --model_type ' + model_type + \
-                                #     ' --embed_dim ' + str(embed_dim) + \
-                                #     ' --n_layer ' + str(n_layer) + \
-                                #     ' --n_head ' + str(n_head) + \
-                                #     ' --seed ' + str(seed) + \
-                                #     ' --max_iters=' + str(1) + \
-                                #     ' --batch_size=' + str(batch_size) + \
-                                #     ' --num_steps_per_iter=' + str(1) + \
-                                #     ' --feature_dim ' + str(feature_dim) + \
-                                #     ' --GNN_hidden_dim ' + str(GNN_hidden_dim) + \
-                                #     ' --act_GNN_hidden_dim ' + str(act_GNN_hidden_dim) + \
-                                #     ' --action_masking ' + str(action_mask) + \
-                                #     ' --group_name ' + '"2ndTests_"' + \
-                                #     ' --config_file ' + config + \
-                                #     ' --eval_replay_path ' + eval_replay_path + \
-                                #     ' --name ' + str(run_name) + \
-                                #     '" Enter'
+                                command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
+                                    ' --dataset ' + dataset + \
+                                    ' --K ' + str(K) + \
+                                    ' --device cuda:0' + \
+                                    ' --model_type ' + model_type + \
+                                    ' --embed_dim ' + str(embed_dim) + \
+                                    ' --n_layer ' + str(n_layer) + \
+                                    ' --n_head ' + str(n_head) + \
+                                    ' --seed ' + str(seed) + \
+                                    ' --max_iters=' + str(1) + \
+                                    ' --batch_size=' + str(batch_size) + \
+                                    ' --num_steps_per_iter=' + str(1) + \
+                                    ' --feature_dim ' + str(feature_dim) + \
+                                    ' --GNN_hidden_dim ' + str(GNN_hidden_dim) + \
+                                    ' --act_GNN_hidden_dim ' + str(act_GNN_hidden_dim) + \
+                                    ' --action_masking ' + str(action_mask) + \
+                                    ' --group_name ' + '"2ndTests_"' + \
+                                    ' --config_file ' + config + \
+                                    ' --eval_replay_path ' + eval_replay_path + \
+                                    ' --name ' + str(run_name) + \
+                                    '" Enter'
                                     
-                                # os.system(command=command)
-                                # print(command)       
-                                # import time as timer                      
-                                # timer.sleep(5)
+                                os.system(command=command)
+                                print(command)       
+                                import time as timer                      
+                                timer.sleep(5)
