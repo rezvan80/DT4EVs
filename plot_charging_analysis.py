@@ -6,6 +6,7 @@ import datetime
 import math
 import seaborn as sns
 
+
 def plot_comparable_EV_SoC(results_path,
                            save_path=None,
                            algorithm_names=None,
@@ -30,10 +31,10 @@ def plot_comparable_EV_SoC(results_path,
         # color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
         color_list = [
             sns.color_palette()[3],
-            sns.color_palette()[2],   
+            sns.color_palette()[2],
             sns.color_palette()[0],
-            sns.color_palette()[1],   
-            sns.color_palette()[7],                                  
+            sns.color_palette()[1],
+            sns.color_palette()[7],
         ]
 
         date_range = pd.date_range(start=env.sim_starting_date,
@@ -53,19 +54,19 @@ def plot_comparable_EV_SoC(results_path,
         for cs in env.charging_stations:
 
             plt.subplot(dim_x, dim_y, counter)
-            
+
             if counter == 25 and index == 0:
                 plt.axhline(y=0.8,
-                    color=sns.color_palette()[4],
-                    linestyle='--',
-                    alpha=0.5,
-                    label='Desired SoC')
+                            color=sns.color_palette()[4],
+                            linestyle='--',
+                            alpha=0.5,
+                            label='Desired SoC')
             else:
                 plt.axhline(y=0.8,
-                    color=sns.color_palette()[4],
-                    linestyle='--',
-                    alpha=0.5)
-                
+                            color=sns.color_palette()[4],
+                            linestyle='--',
+                            alpha=0.5)
+
             df = pd.DataFrame([], index=date_range)
 
             for port in range(cs.n_ports):
@@ -156,26 +157,26 @@ def plot_comparable_EV_SoC(results_path,
                 format='pdf',
                 # dpi=300,
                 bbox_inches='tight')
-    
+
     # plt.show()
+
 
 def plot_actual_power_vs_setpoint(results_path,
                                   save_path=None,
                                   algorithm_names=None):
-    
     '''
     This function is used to plot the actual power vs the setpoint power.
     It plots the behavior of each algorithm in subplots vertically.
     '''
-    
+
     with open(results_path, 'rb') as f:
         replay = pickle.load(f)
 
     plt.close('all')
-    plt.figure(figsize=(12,6))
-    plt.rc('font', family='serif')    
+    plt.figure(figsize=(12, 6))
+    plt.rc('font', family='serif')
 
-    for index, key in enumerate(replay.keys()):        
+    for index, key in enumerate(replay.keys()):
         env = replay[key]
 
         date_range = pd.date_range(start=env.sim_starting_date,
@@ -188,42 +189,43 @@ def plot_actual_power_vs_setpoint(results_path,
                                          end=env.sim_date,
                                          periods=7)
 
-        #plot the actual power vs the setpoint power for each algorithm in subplots                
+        # plot the actual power vs the setpoint power for each algorithm in subplots
         plt.subplot(2, 3, index+1)
         plt.grid(True, which='major', axis='both')
-        
-        actual_power = env.current_power_usage        
-        setpoints = env.power_setpoints                
+
+        actual_power = env.current_power_usage
+        setpoints = env.power_setpoints
 
         plt.step(date_range, actual_power.T, alpha=0.9, color='#00429d')
         plt.step(date_range, setpoints.T, alpha=1, color='#93003a')
-        
+
         plt.axhline(0, color='black', lw=2)
         plt.title(f'{algorithm_names[index]}', fontsize=14)
-        
+
         plt.yticks(fontsize=14)
-        
+
         # if index == len(replay) - 1:
         plt.xticks(ticks=date_range_print,
-                       labels=[f'{d.hour:2d}:{d.minute:02d}' for d in date_range_print],
-                       rotation=45,
-                       fontsize=14)
-            # plt.xlabel('Time', fontsize=28)
+                   labels=[
+                       f'{d.hour:2d}:{d.minute:02d}' for d in date_range_print],
+                   rotation=45,
+                   fontsize=14)
+        # plt.xlabel('Time', fontsize=28)
         # else:
         #     plt.xticks(ticks=date_range_print,
         #                labels=[' ' for d in date_range_print])
-        
+
         # if index == len(replay) // 2:
-        plt.ylabel('Power (kW)', fontsize=14)               
-            
+        plt.ylabel('Power (kW)', fontsize=14)
+
         plt.xlim([env.sim_starting_date, env.sim_date])
         plt.ylim([0, 90])
-        
-    # Put the legend under the plot in a separate axis           
+
+    # Put the legend under the plot in a separate axis
     plt.legend(['Actual Power', 'Power Setpoint'], loc='upper center',
                bbox_to_anchor=(1.7, 0.7),
                fancybox=True, shadow=True, ncol=1, fontsize=14)
-    
+
     plt.subplots_adjust(
         left=0.055,    # Space from the left of the figure
         bottom=0.1,   # Space from the bottom of the figure
@@ -232,21 +234,22 @@ def plot_actual_power_vs_setpoint(results_path,
         hspace=0.4,    # Height space between subplots
         wspace=0.229    # Width space between subplots
     )
-        
+
     # plt.tight_layout()
     fig_name = f'{save_path}/Actual_vs_Setpoint_Power.png'
     plt.savefig(fig_name, format='png',
                 dpi=300,
                 bbox_inches='tight',
-                )    
+                )
     plt.savefig(f'{save_path}/Actual_vs_Setpoint_Power.pdf',
                 format='pdf',
                 # dpi=300,
                 bbox_inches='tight',
                 )
-    
+
     # plt.show()
-    
+
+
 def plot_comparable_EV_SoC_single(results_path,
                                   save_path=None,
                                   algorithm_names=None,
@@ -299,15 +302,14 @@ def plot_comparable_EV_SoC_single(results_path,
 
         color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
         color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
-        
-        
+
         color_list = [
             sns.color_palette()[3],
-            sns.color_palette()[2],   
+            sns.color_palette()[2],
             sns.color_palette()[0],
-            sns.color_palette()[1],   
+            sns.color_palette()[1],
             sns.color_palette()[7],
-                                  
+
         ]
 
         cs_to_plot = 24
@@ -603,14 +605,14 @@ def plot_comparable_CS_Power(results_path, save_path=None, algorithm_names=None)
 
         color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
         color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
-        
+
         color_list = [
             sns.color_palette()[3],
-            sns.color_palette()[2],   
+            sns.color_palette()[2],
             sns.color_palette()[0],
-            sns.color_palette()[1],   
+            sns.color_palette()[1],
             sns.color_palette()[7],
-                                  
+
         ]
 
         cs_to_plot = 24
@@ -738,7 +740,102 @@ def plot_comparable_CS_Power(results_path, save_path=None, algorithm_names=None)
                 dpi=300,
                 bbox_inches='tight')
 
-    # plt.show()
+
+def plot_comparable_CS_Power_scatterplot(results_path, save_path=None, algorithm_names=None):
+
+    with open(results_path, 'rb') as f:
+        replay = pickle.load(f)
+
+    plt.close('all')
+    fig, ax = plt.subplots(figsize=(6, 3))
+    plt.rc('font', family='serif')
+    # ax.spines['right'].set_visible(False)
+    # ax.spines['top'].set_visible(False)
+
+    # ax.spines['left'].set_linewidth(2)
+    # ax.spines['bottom'].set_linewidth(2)
+
+    plt.grid(True, which='major', axis='both')
+
+    all_data = pd.DataFrame([], index=[])
+    for index, key in enumerate(replay.keys()):
+        env = replay[key]
+
+        date_range = pd.date_range(start=env.sim_starting_date,
+                                   end=env.sim_starting_date +
+                                   (env.simulation_length - 1) *
+                                   datetime.timedelta(
+                                       minutes=env.timescale),
+                                   freq=f'{env.timescale}min')
+        date_range_print = pd.date_range(start=env.sim_starting_date,
+                                         end=env.sim_date,
+                                         periods=7)
+
+        color_list_map = plt.cm.get_cmap('Set1', len(replay.keys()))
+        color_list = color_list_map(np.linspace(0, 1, len(replay.keys())))
+
+        color_list = [
+            sns.color_palette()[3],
+            sns.color_palette()[2],
+            sns.color_palette()[0],
+            sns.color_palette()[1],
+            sns.color_palette()[7],
+
+        ]
+
+        cs_to_plot = 24
+        actions = []
+        counter = 1
+        for cs in env.charging_stations:
+
+            for port in range(cs.n_ports):
+                for i, (t_arr, t_dep) in enumerate(env.port_arrival[f'{cs.id}.{port}']):
+
+                    actions.append(env.port_current[port, cs.id, t_arr:t_dep] *
+                                   cs.voltage * math.sqrt(cs.phases) / 1000)
+                    act = (env.port_current[port, cs.id, t_arr:t_dep] *
+                                   cs.voltage * math.sqrt(cs.phases) / 1000)
+                    
+                    for a in act:                                                
+                        df = pd.DataFrame({
+                            'Action': [a],
+                            'Algorithm': algorithm_names[index]
+                        })
+                        all_data = pd.concat([all_data, df])
+                        
+    all_data = all_data.reset_index(drop=True)
+    
+    sns.stripplot(data=all_data,
+                  x='Algorithm',
+                  y='Action',
+                  hue='Algorithm',                  
+                  jitter=0.35,
+
+                  palette=color_list,
+                  size=2)
+    
+    plt.xlabel('', fontsize=14)
+    plt.ylabel(f'Action [kW]', fontsize=14)
+    plt.yticks([-11, -9,  -6, -3, 0, 3, 6, 9,  11],
+                fontsize=14)
+    #plot a line at y=0
+    plt.axhline(y=0,
+                color='black',
+                # linestyle='--',
+                linewidth=0.5,
+                alpha=0.7)
+    
+    plt.grid(True, which='major', axis='both',
+             linestyle='--', linewidth=0.5)
+    
+
+    fig_name = f'{save_path}/CS_Power_scatter.png'
+    plt.savefig(fig_name, format='png',
+                dpi=300, bbox_inches='tight')
+    plt.savefig(f'{save_path}/CS_Power_scatter.pdf',
+                format='pdf',
+                dpi=300,
+                bbox_inches='tight')
 
 
 if __name__ == '__main__':
@@ -764,24 +861,28 @@ if __name__ == '__main__':
     #     algorithm_names=algorithm_names
     # )
 
-    # exit()
-    plot_comparable_EV_SoC(results_path=results_path + 'plot_results_dict.pkl',
-                           save_path=save_path,
-                           algorithm_names=algorithm_names,
-                           color_list=color_list,
-                           marker_list=marker_list
-                           )
-    
-    plot_actual_power_vs_setpoint(
+    plot_comparable_CS_Power_scatterplot(
         results_path=results_path + 'plot_results_dict.pkl',
         save_path=save_path,
         algorithm_names=algorithm_names
     )
+
+    # exit()
+    # plot_comparable_EV_SoC(results_path=results_path + 'plot_results_dict.pkl',
+    #                        save_path=save_path,
+    #                        algorithm_names=algorithm_names,
+    #                        color_list=color_list,
+    #                        marker_list=marker_list
+    #                        )
+
+    # plot_actual_power_vs_setpoint(
+    #     results_path=results_path + 'plot_results_dict.pkl',
+    #     save_path=save_path,
+    #     algorithm_names=algorithm_names
+    # )
 
     # plot_total_power_V2G(
     #     results_path=results_path + 'plot_results_dict.pkl',
     #     save_path=save_path,
     #     algorithm_names=algorithm_names
     # )
-
-    
