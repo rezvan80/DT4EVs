@@ -1,4 +1,4 @@
-# 🚀 GNN-DT: Graph Neural Network Enhanced Decision Transformer for Efficient Optimization in Dynamic Environments 🌍
+# 🚀 GNN-DT: Graph Neural Network Enhanced Decision Transformer for Efficient Optimization in Dynamic Environments
 
 ## ✨ Introduction
 GNN-DT (Graph Neural Network Enhanced Decision Transformer) is a **next-generation AI framework** that seamlessly blends the power of **Graph Neural Networks (GNNs)** with **Decision Transformers (DTs)** to redefine decision-making in dynamic environments. 
