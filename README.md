@@ -11,13 +11,13 @@ GNN-DT (Graph Neural Network Enhanced Decision Transformer) is a **next-generati
 💡 By leveraging the permutation-equivariant nature of **GNNs** and introducing an **innovative residual connection mechanism**, GNN-DT sets a new benchmark in optimization and AI-driven decision-making. 
 
 📌 This repository provides **everything you need** to explore and implement GNN-DT, including:
-✅ Dataset generation
-✅ Model training
-✅ Evaluation scripts
+- ✅ Dataset generation
+- ✅ Model training
+- ✅ Evaluation scripts
 
 Whether applied to **electric vehicle (EV) charging optimization** or other **complex decision-making tasks**, GNN-DT is your gateway to the **AI-driven optimization.** 🚀
 
-📄 [Read the Preprint](path/to/preprint) *(Replace with actual link)*
+📄 [Read the Preprint](https://arxiv.org/abs/2502.01778)
 
 ![image](https://github.com/user-attachments/assets/6de6459b-e681-4f7e-ac2f-10236979b109)
 
@@ -50,11 +50,14 @@ Whether applied to **electric vehicle (EV) charging optimization** or other **co
 If you find this repository useful in your research, please cite our paper:
 
 ```
-@article{gnn-dt2025,
-  title={GNN-DT: Graph Neural Network Enhanced Decision Transformer for Efficient Optimization in Dynamic Environments},
-  author={},
-  journal={},
-  year={2025}
+@misc{orfanoudakis2025gnndt,
+      title={GNN-DT: Graph Neural Network Enhanced Decision Transformer for Efficient Optimization in Dynamic Environments}, 
+      author={Stavros Orfanoudakis and Nanda Kishor Panda and Peter Palensky and Pedro P. Vergara},
+      year={2025},
+      eprint={2502.01778},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2502.01778}, 
 }
 
 
