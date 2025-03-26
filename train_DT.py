@@ -420,6 +420,7 @@ def experiment(vars):
             num_act_gcn_layers=vars['num_act_gcn_layers'],
             config=config,
             device=device,
+            gnn_type=vars['gnn_type'],
         )
     elif model_type == 'bc':
         model = MLPBCModel(
@@ -551,7 +552,7 @@ if __name__ == '__main__':
     parser.add_argument('--config_file', type=str,
                         default="PST_V2G_ProfixMax_25.yaml")
 
-    parser.add_argument('--num_eval_episodes', type=int, default=30)
+    parser.add_argument('--num_eval_episodes', type=int, default=50)
     parser.add_argument('--eval_replay_path', type=str,
                         default="./eval_replays/PST_V2G_ProfixMax_25_optimal_25_50/")
 
@@ -566,6 +567,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_gcn_layers', type=int, default=3)
     parser.add_argument('--act_GNN_hidden_dim', type=int, default=32)
     parser.add_argument('--num_act_gcn_layers', type=int, default=3)
+    parser.add_argument('--gnn_type', type=str, default='GCN')
 
     args = parser.parse_args()
 

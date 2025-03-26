@@ -11,7 +11,7 @@ from transformers import GPTNeoForCausalLM, GPT2Tokenizer
 
 from utils import PST_V2G_ProfitMax_state_to_GNN
 from torch_geometric.data import Data
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, GATConv, TAGConv
 from torch_geometric.nn import global_mean_pool
 import torch.nn.functional as F
 
@@ -40,6 +40,7 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
             action_masking=False,
             config=None,
             device=None,
+            gnn_type='GCN',
             **kwargs
     ):
         super().__init__(state_dim, act_dim, max_length=max_length)
@@ -75,10 +76,23 @@ class GNN_act_emb_DecisionTransformer(TrajectoryModel):
         self.gcn_conv = GCNConv(feature_dim, GNN_hidden_dim)
 
         if num_gcn_layers == 3:
-            self.gcn_layers = nn.ModuleList(
+            
+            print(f"GNN type: {gnn_type}")
+            if gnn_type == 'GCN':
+                self.gcn_layers = nn.ModuleList(
                 [GCNConv(GNN_hidden_dim, 2*GNN_hidden_dim),
                     # GCNConv(2*GNN_hidden_dim, 3*GNN_hidden_dim)])
                     GCNConv(2*GNN_hidden_dim, hidden_size)])
+            elif gnn_type == 'GAT':
+                self.gcn_layers = nn.ModuleList(
+                    [GATConv(GNN_hidden_dim, 2*GNN_hidden_dim),
+                        GATConv(2*GNN_hidden_dim, hidden_size)])
+            elif gnn_type == 'TagConv':
+                self.gcn_layers = nn.ModuleList(
+                    [TAGConv(GNN_hidden_dim, 2*GNN_hidden_dim),
+                        TAGConv(2*GNN_hidden_dim, hidden_size)])
+            
+            
             mlp_layer_features = hidden_size
 
         elif num_gcn_layers == 4:

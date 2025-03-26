@@ -8,48 +8,59 @@ import random
 
 # run train_DT.py in a tmux pane for each K and dataset
 
-# batch_size = 64
+batch_size = 128
 num_steps_per_iter = 1000
-max_iters = 350
+max_iters = 250
 num_eval_episodes = 30
-seed = 42
+embed_dim = 128
 
 counter = 0
-for model_type in ["gnn_act_emb"]:  # dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
-    for action_mask in [True]:
-        for K in [2]:
-            for batch_size in [128]:
-                # "bau_25_1000", "bau_50_1000", "bau_75_1000"
-                for dataset in ["optimal_100"]:
-                    for embed_dim in [128]:  # 128, 512
-                        #   ' --device cuda:0' + str(counter % 2) + \
+
+# DT: dt
+# DT + DT + state-GNN: gnn_dt
+# DT + state-GNN + residual connection: gnn_in_out_dt
+# DT + state-GNN + action-GNN residual connection: --
+# DT + state-GNN + action-GNN residual connection + no action masking: gnn_act_embNoMask
+# GNN-DT with GAT: 10
+# GNN-DT (full version): gnn_act_emb
+
+for model_type in ["gnn_act_emb",
+                   "dt",
+                   "gnn_dt",
+                   "gnn_in_out_dt",
+                   ]:  # dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
+    for action_mask in [True, False]:
+    # for action_mask in [True]:
+
+        if model_type != "gnn_act_emb" and not action_mask:
+            continue
+
+        for K in [10]:
+            for gnn_type in ['GCN', 'GAT', 'TagConv']:
+
+                if gnn_type != 'GCN' and model_type != 'gnn_act_emb':
+                    continue
+                
+                if model_type == "gnn_act_emb" and not action_mask and gnn_type != 'GCN':
+                    continue
+                            
+                for dataset in ["optimal_25_1000"]:
+                    for seed in [0]:  # 128, 512
                         for n_layer, n_head in [(3, 4)]:  # (3, 1),(3,4)
 
                             # a10 machine config
                             # command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
                             # iepg machine config
                             # command = 'tmux new-session -d \; send-keys "  /home/sorfanoudakis/.conda/envs/dt3/bin/python train_DT.py' + \
-                            run_name = f'{model_type}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
-                            run_name += str(random.randint(0, 100000))
 
-                            # command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
-                            #     ' --dataset ' + dataset + \
-                            #     ' --K ' + str(K) + \
-                            #     ' --device cuda:0' + \
-                            #     ' --seed ' + str(seed) + \
-                            #     ' --model_type ' + model_type + \
-                            #     ' --embed_dim ' + str(embed_dim) + \
-                            #     ' --n_layer ' + str(n_layer) + \
-                            #     ' --n_head ' + str(n_head) + \
-                            #     ' --max_iters=' + str(max_iters) + \
-                            #     ' --batch_size=' + str(batch_size) + \
-                            #     ' --num_steps_per_iter=' + str(num_steps_per_iter) + \
-                            #     ' --num_eval_episodes=' + str(num_eval_episodes) + \
-                            #     ' --log_to_wandb True' + \
-                            #     ' --action_masking ' + str(action_mask) + \
-                            #     ' --group_name ' + '"ablation"' + \
-                            #     ' --name ' +  str(run_name) + \
-                            #     '" Enter'
+                            temp_name = model_type
+                            if model_type == "gnn_act_emb" and not action_mask:
+                                temp_name += "NoMask"
+                            elif model_type == "gnn_act_emb" and action_mask:
+                                temp_name += f"_{gnn_type}"
+
+                            run_name = f'{temp_name}_run_{seed}_K={K}_batch={batch_size}_dataset={dataset}_embed_dim={embed_dim}_n_layer={n_layer}_n_head={n_head}'
+                            run_name += str(random.randint(0, 100000))
 
                             command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
                                 ' --dataset ' + dataset + \
@@ -57,19 +68,40 @@ for model_type in ["gnn_act_emb"]:  # dt, gnn_dt, gnn_in_out_dt, bc, gnn_act_emb
                                 ' --device cuda:0' + \
                                 ' --seed ' + str(seed) + \
                                 ' --model_type ' + model_type + \
-                                ' --embed_dim ' + str(32) + \
-                                ' --n_layer ' + str(3) + \
-                                ' --n_head ' + str(1) + \
-                                ' --max_iters=' + str(10) + \
-                                ' --batch_size=' + str(16) + \
-                                ' --num_steps_per_iter=' + str(2) + \
-                                ' --num_eval_episodes=' + str(2) + \
+                                ' --embed_dim ' + str(embed_dim) + \
+                                ' --n_layer ' + str(n_layer) + \
+                                ' --n_head ' + str(n_head) + \
+                                ' --max_iters=' + str(max_iters) + \
+                                ' --batch_size=' + str(batch_size) + \
+                                ' --num_steps_per_iter=' + str(num_steps_per_iter) + \
+                                ' --num_eval_episodes=' + str(num_eval_episodes) + \
+                                ' --log_to_wandb True' + \
                                 ' --action_masking ' + str(action_mask) + \
-                                ' --group_name ' + '"ablation"' + \
-                                ' --name ' + str(run_name) + \
+                                ' --gnn_type ' + str(gnn_type) + \
+                                ' --group_name ' + '"ablation_1"' + \
+                                ' --name ' +  str(run_name) + \
                                 '" Enter'
-                            # os.system(command=command)
+
+                            # command = 'tmux new-session -d \; send-keys " /home/sorfanouda/anaconda3/envs/dt/bin/python train_DT.py' + \
+                            #     ' --dataset ' + dataset + \
+                            #     ' --K ' + str(K) + \
+                            #     ' --device cuda:0' + \
+                            #     ' --seed ' + str(seed) + \
+                            #     ' --model_type ' + model_type + \
+                            #     ' --embed_dim ' + str(32) + \
+                            #     ' --n_layer ' + str(3) + \
+                            #     ' --n_head ' + str(1) + \
+                            #     ' --max_iters=' + str(10) + \
+                            #     ' --batch_size=' + str(16) + \
+                            #     ' --num_steps_per_iter=' + str(2) + \
+                            #     ' --num_eval_episodes=' + str(2) + \
+                            #     ' --action_masking ' + str(action_mask) + \
+                            #     ' --group_name ' + '"ablation"' + \
+                            #     ' --gnn_type ' + str(gnn_type) + \
+                            #     ' --name ' + str(run_name) + \
+                            #     '" Enter'
+                            os.system(command=command)
                             print(command)
                             # wait for 20 seconds before starting the next experiment
-                            time.sleep(15)
+                            time.sleep(3)
                             counter += 1
