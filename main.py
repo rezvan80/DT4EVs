@@ -34,7 +34,7 @@ def eval():
     Runs an evaluation of the ev2gym environment.
     """
 
-    save_plots = True
+    save_plots = False
 
     replay_path = "./replay/replay_sim_2024_02_21_056441.pkl"
     replay_path = None

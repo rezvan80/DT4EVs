@@ -120,7 +120,7 @@ class EV2Gym(gym.Env):
             self.simulation_length = int(self.config['simulation_length'])
             # Simulation time
             self.optimal_stats = None
-                    
+
             if self.config['random_day']:
                 if "random_hour" in self.config:
                     if self.config["random_hour"]:
@@ -195,7 +195,7 @@ class EV2Gym(gym.Env):
                     *np.arange(self.number_of_transformers)] * (self.cs // self.number_of_transformers)
                 self.cs_transformers = np.arange(self.number_of_transformers)
                 self.cs_transformers = np.repeat(
-                    self.cs_transformers, self.cs // self.number_of_transformers,axis=0)                
+                    self.cs_transformers, self.cs // self.number_of_transformers, axis=0)
                 self.cs_transformers = self.cs_transformers.tolist()
                 self.cs_transformers += random.sample(
                     [*np.arange(self.number_of_transformers)], self.cs % self.number_of_transformers)
@@ -224,6 +224,7 @@ class EV2Gym(gym.Env):
         self.EVs = []
 
         # Load Electricity prices for every charging station
+        self.price_data = None
         self.charge_prices, self.discharge_prices = load_electricity_prices(
             self)
 
@@ -267,8 +268,6 @@ class EV2Gym(gym.Env):
 
         # Observation mask: is a vector of size ("Sum of all ports of all charging stations") showing in which ports an EV is connected
         self.observation_mask = np.zeros(self.number_of_ports)
-        
-
 
     def reset(self, seed=None, options=None, **kwargs):
         '''Resets the environment to its initial state'''
@@ -329,6 +328,10 @@ class EV2Gym(gym.Env):
         self.EVs_profiles = load_ev_profiles(self)
         self.power_setpoints = load_power_setpoints(self)
         self.EVs = []
+
+        self.charge_prices, self.discharge_prices = load_electricity_prices(
+
+            self)
 
         # print(f'Simulation starting date: {self.sim_date}')
 
@@ -514,12 +517,12 @@ class EV2Gym(gym.Env):
         '''Checks if the episode is done or any constraint is violated'''
         truncated = False
         action_mask = np.zeros(self.number_of_ports)
-        #action mask is 1 if an EV is connected to the port
+        # action mask is 1 if an EV is connected to the port
         for i, cs in enumerate(self.charging_stations):
             for j in range(cs.n_ports):
                 if cs.evs_connected[j] is not None:
-                    action_mask[i*cs.n_ports + j] = 1                    
-        
+                    action_mask[i*cs.n_ports + j] = 1
+
         # Check if the episode is done or any constraint is violated
         if self.current_step >= self.simulation_length or \
             (any(tr.is_overloaded() > 0 for tr in self.transformers)
@@ -533,12 +536,12 @@ class EV2Gym(gym.Env):
                 Carefull: if generate_rnd_game is True,
                 the simulation might end up in infeasible problem
                 """
-                
+
             self.stats = get_statistics(self)
-            
+
             self.stats['action_mask'] = action_mask
             self.cost = cost
-            
+
             if self.verbose:
                 print_statistics(self)
 
@@ -558,8 +561,6 @@ class EV2Gym(gym.Env):
                     self.renderer = None
                     pickle.dump(self, f)
                 ev_city_plot(self)
-            
-            
 
             if self.cost_function is not None:
                 return self._get_observation(), reward, True, truncated, self.stats
@@ -570,7 +571,7 @@ class EV2Gym(gym.Env):
                 'cost': cost,
                 'action_mask': action_mask,
             }
-            
+
             if self.cost_function is not None:
                 return self._get_observation(), reward, False, truncated, stats
             else:
