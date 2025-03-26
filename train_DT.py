@@ -175,7 +175,11 @@ def experiment(vars):
                           state_function=state_function,
                           reward_function=reward_function,
                           )
+                
         eval_envs.append(eval_env)
+        
+        if len(eval_envs) >= vars['num_eval_episodes']:
+            break
 
     print(f'Loaded {len(eval_envs)} evaluation replays')
 
