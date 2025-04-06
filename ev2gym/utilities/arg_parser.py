@@ -47,7 +47,7 @@ def arg_parser():
                         action="store_true",
                         help="Save evaluation replays (default: False)")
                         
-    parser.add_argument("--dataset", default="random_1000", type=str)
+    parser.add_argument("--dataset", default="random", type=str)
     
 
     return parser.parse_args()
