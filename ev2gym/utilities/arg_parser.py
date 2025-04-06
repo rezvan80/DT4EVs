@@ -40,10 +40,10 @@ def arg_parser():
 
     # Generate trajectories specific arguments
     parser.add_argument("--n_trajectories", "--n",
-                        default=2, type=int,
+                        default=100, type=int,
                         help="Num. of trajectories to generate (default: 10)")
     parser.add_argument("--save_eval_replays","--s",
-                        default=False, 
+                        default=True, 
                         action="store_true",
                         help="Save evaluation replays (default: False)")
                         
